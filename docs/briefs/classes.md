@@ -1,6 +1,6 @@
 # classes (class selection)
 
-**Status:** in progress
+**Status:** review
 **Created:** 2026-11-25 · **Depends on:** none
 
 ## Goal
@@ -73,8 +73,8 @@ Art sources live in `design/scripts/` (helpers and hand-edited grids in subfolde
 ## Status
 | Agent | Status | Branch | Verdict | Notes |
 |---|---|---|---|---|
-| model-designer | A1 approved; A2 done, final tweaks | `classes/model-designer` | | Warrior, Archer, Mage beard, Captain moustache |
-| plugin-coder | running | `classes/plugin-coder` | | in parallel with the art tweaks (contract is fixed) |
+| model-designer | merged | `classes/model-designer` | asset checks pass | final tweaks done; in-game check open |
+| plugin-coder | merged | `classes/plugin-coder` | build passes | not run in-game |
 
 ## Merge order
 1. model-designer
