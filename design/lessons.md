@@ -13,3 +13,12 @@
 - 2026-11-25: `despeckle()` after the render took the figure from 85 lone texels to about 11, all deliberate eye and gauntlet highlights.
 - 2026-11-25: Name plate lettering with its ring and drop needs one clear field row before the trim; fill enclosed holes in the ring.
 - 2026-11-25: Passes: about 17 render, look and fix rounds for page 1.
+- 2026-11-25: "A bit more minecraft ish" worked as small touches on the same art: near-cube helm, two-square eyes, a 4 px screen-aligned snap on item edges only, stone bricks, square sparks. A first idea of rebuilding the figures from textured player-model boxes was dropped when the user asked for a subtle shift; clarify the size of a style change early.
+- 2026-11-25: Snapping a blade works only if all its facets share one group; otherwise separation lines turn into dark specks. A snapped brow and horn lost their shape: build those from hand-stepped boxes or leave them smooth.
+- 2026-11-25: Posing every hero facing right and mirroring the geometry before lighting gave correct left-facing versions for free. Symbols with a reading direction (music notes) must not be mirrored.
+- 2026-11-25: Convex hulls silently turn a four-point star into an octagon. Build concave shapes from convex slivers.
+- 2026-11-25: A banner behind the head vanishes. Fly the flag away from the head into empty sky and give the swallowtail a deep notch.
+- 2026-11-25: A war horn whose thin end is hidden reads as a goblet. Show the whole curve from mouthpiece to bell, held at the bottom of the U.
+- 2026-11-25: A bowstring with only its upper half visible reads as an antenna. Run the upper half behind the head and the lower half in front of the body.
+- 2026-11-25: White brows next to white eyes merge. A 2 px dark lid row separates them.
+- 2026-11-25: Passes for A2: Warrior touch-up 4 rounds, Archer 5, Mage 3, Captain 4, then about 5 on the whole set, screens and sprites.

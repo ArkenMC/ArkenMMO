@@ -1,63 +1,75 @@
-# Asset: class selection pages
+# Asset: class selection menus
 
-**Status:** placeholder (page 1, waiting for the user's approval of the Warrior panel; the right panel is a deliberate placeholder)
-**Brief:** `docs/briefs/classes.md`, task A1
+**Status:** placeholder until the user approves task A2 (A1 was approved before the "more minecraft ish" change)
+**Brief:** `docs/briefs/classes.md`
 **Pipeline:** plain vanilla resource pack, Paper 26.3. `pack.mcmeta` uses `min_format [97, 1]` and `max_format 97` ([Pack format](https://minecraft.wiki/w/Pack_format), 26.3 = 97.1, checked 2026-11-25). A 26.4 target needs a new check.
 **Style:** `design/gui-style-guide.md`
 
 ## Purpose
-The painted background of the class menu (a 9x6 chest): header, two class panels with name plates, the divider with page pips and the page arrow, and the player-inventory area. It is drawn as four bitmap font glyphs in the inventory title.
+Painted backgrounds for the six class menu screens (9x6 chests), four tooltip styles, an invisible slot highlight, the invisible clickable item and the pack icon.
 
 ## Files
 | File | What |
 |---|---|
-| `resourcepack/pack.mcmeta` | pack format 97.1 |
-| `resourcepack/assets/arkenmmo/font/gui.json` | font `arkenmmo:gui`: the shifts plus two bitmap providers |
-| `resourcepack/assets/arkenmmo/textures/font/gui/class_select_1_top.png` | 352x222: cells TL and TR |
-| `resourcepack/assets/arkenmmo/textures/font/gui/class_select_1_bottom.png` | 352x222: cells BL and BR |
-| `design/scripts/titles.json` | generated title strings, as `\uXXXX` escapes |
-| `design/scripts/gui_class_select.py`, `design/scripts/pixelkit/` | generators (`mise run assets`) |
+| `resourcepack/pack.mcmeta`, `pack.png` | pack format 97.1; 128x128 icon with the four heads |
+| `resourcepack/assets/arkenmmo/font/gui.json` | font `arkenmmo:gui`: shifts plus two bitmap providers per screen |
+| `resourcepack/assets/arkenmmo/textures/font/gui/<screen>_{top,bottom}.png` | 352x222 each; screens `class_select_1`, `class_select_2`, `confirm_{warrior,archer,mage,captain}` |
+| `resourcepack/assets/arkenmmo/textures/gui/sprites/tooltip/<class>_{background,frame}.png` (+ `.mcmeta`) | 100x100 tooltip sprites |
+| `resourcepack/assets/arkenmmo/items/gui/blank.json` | `minecraft:empty` |
+| `resourcepack/assets/minecraft/textures/gui/sprites/container/slot_highlight_{back,front}.png` (+ `.mcmeta`) | fully transparent, 24x24, nine-slice border 4 |
+| `design/scripts/titles.json` | generated title strings as `\uXXXX` escapes |
+| `design/scripts/gui_class_select.py`, `gui_items.py`, `pixelkit/` | generators (`mise run assets`) |
 | `design/scripts/zz_gui_preview.py` | preview compositor, writes `target/previews/gui/` (not committed) |
+| `design/scripts/reference/page1_approved_a1.png` | the approved A1 page, for the before/after view only (not in the pack) |
 
-There are no models, animations or pivots.
+There are no 3D item models, animations or pivots: the heroes are rendered to flat PNGs by the scripts.
 
 ## For the coder
-| Item | Value |
-|---|---|
-| Font | `arkenmmo:gui` |
-| Page 1 glyphs (TL, TR, BL, BR) | `U+E001` `U+E002` `U+E003` `U+E004` |
-| Shifts | `U+F801..U+F809` = -1, -2, -4 ... -256; `U+F821..U+F829` = +1 ... +256 |
-| Page 1 title, in order | `F804 E001 F801 E002 F808 F806 F805 F801 E003 F801 E004` |
-| Same as a string escape | `` |
-| MiniMessage | `<!shadow><white><font:arkenmmo:gui>TITLE</font></white>` |
-| Inventory | 54 slots |
+| Screen | Glyphs (TL, TR, BL, BR) | Title string |
+|---|---|---|
+| Class page 1 (Warrior, Archer) | `E001 E002 E003 E004` | `` |
+| Class page 2 (Mage, Captain) | `E005 E006 E007 E008` | `` |
+| Confirm Warrior | `E101 E102 E103 E104` | `` |
+| Confirm Archer | `E105 E106 E107 E108` | `` |
+| Confirm Mage | `E109 E10A E10B E10C` | `` |
+| Confirm Captain | `E10D E10E E10F E110` | `` |
 
-- `TITLE` is the real characters, not the escape text, unless the config format decodes escapes (a double-quoted YAML string does).
-- Title decoded: -8, TL, -1, TR, -177, BL, -1, BR. Page 2 (A2) swaps in `E005..E008` with the same shifts.
-- After the title the pen is at GUI x 177 (not 8).
-- Slots: left panel = columns 0-3 of rows 0-5; right panel = columns 5-8 of rows 0-5; page arrow = slots 40 and 49. Column 4 slots 4, 13, 22 and 31 do nothing.
+- MiniMessage: `<!shadow><white><font:arkenmmo:gui>TITLE</font></white>`. `TITLE` is the real characters, not the escape text, unless the config format decodes escapes (a double-quoted YAML string does). 54 slots.
+- Title decoded: -8, TL, -1, TR, -177, BL, -1, BR. Afterwards the pen is at GUI x 177.
+- Shifts: `U+F801..F809` = -1, -2, -4 ... -256; `U+F821..F829` = +1 ... +256.
+- **Class pages:** left panel = columns 0-3, rows 0-5; right panel = columns 5-8, rows 0-5; page arrow = slots 40 and 49 (next on page 1, back on page 2). Slots 4, 13, 22 and 31 do nothing.
+- **Confirm screens:** Confirm = columns 5-8, rows 1-2 (slots 14-17 and 23-26); Back = columns 5-8, rows 3-4 (slots 32-35 and 41-44). Columns 0-4 and rows 0 and 5 do nothing.
+- Item model for the invisible clickable stacks: `arkenmmo:gui/blank`.
+- Tooltip styles: `arkenmmo:warrior`, `arkenmmo:archer`, `arkenmmo:mage`, `arkenmmo:captain`.
+- The slot highlight needs no code. It is hidden in **every** inventory while the pack is loaded.
+- The art already shows "CHOOSE YOUR CLASS", the class names, "CONFIRM CHOICE", "THIS CHOICE IS FINAL", "CONFIRM" and "BACK". These are painted pixels, so changing config text does not change them.
 
-## Dimensions
-| Region | Art px (half-open) |
+## Dimensions (art px, half-open; 2 per GUI px)
+| Region | Art px |
 |---|---|
-| Master | 352x444 (176x222 GUI); the last 2 rows are below the vanilla panel and clear |
+| Master per screen | 352x444 (176x222 GUI); the last 2 rows are below the vanilla panel and clear |
 | Header | y 0..34 |
-| Left panel (click area) | x 14..158, y 34..250; frame from x 8 |
+| Left panel (click area on pages) | x 14..158, y 34..250; frame from x 8 |
 | Divider | x 158..194, y 34..250 |
-| Right panel (click area) | x 194..338, y 34..250; frame to x 344 |
+| Right panel | x 194..338, y 34..250; frames and buttons reach x 344 |
 | Name plates | y 214..250 |
 | Page arrow | x 158..194, y 178..250 |
-| "Inventory" plate | x 10..180, y 252..274 (GUI 5..90, 126..137; the research note proposed 6..90, widened by 1 so the label does not touch the edge) |
+| Confirm / Back | y 70..142 / 142..214 (click areas x 194..338) |
+| "Inventory" plate | x 10..180, y 252..274 (GUI 5..90; the research note proposed 6..90) |
 | Player cells | 36x36 at x 14 + 36c; y 276, 312, 348; hotbar 392 |
 
 No art overflows above or below the panel.
 
-## Warrior panel
-Great helm with ember eyes and a swept crimson crest, layered pauldrons with a steel horn, a crimson breastplate with a gold collar, a hooked cleaver hoisted over the right shoulder, a tower shield with a chevron and diamond, braced toward the centre. Backdrop: fortress at dusk, rays and a halo behind the helm, stone dais. Figure 124x158 art px, 22 colours; panel 39 colours; whole page 47; all from the frozen palette, no partial alpha.
+## Art
+| Class | Figure (art px, colours) | Panel colours | Facing |
+|---|---|---|---|
+| Warrior | 122x157, 22 | 39 | right on page 1 and confirm |
+| Archer | 131x150, 34 | 51 | left on page 1, right on confirm |
+| Mage | 135x154, 32 | 45 | right on page 2 and confirm |
+| Captain | 132x157, 30 | 44 | left on page 2, right on confirm |
 
 ## Placeholders
-- The whole right panel (dim bow emblem and dim `ARCHER` plate). A2 replaces it.
-- All Warrior art until the user approves it.
+All of this art counts as placeholder until the user approves it.
 
-## Checked in the simulation, not in a client
-The preview reads the real `font/gui.json`, PNGs and title string. The vanilla panel, "Inventory" letters and player items are our own stand-ins; no Mojang texture is used or committed, so the vanilla corner shape was **not** compared with `generic_54.png`. In game, still check: background alignment, player-row positions, the "Inventory" label on its plate, the corners, and the art at the GUI scales in use.
+## Checked in a simulation, not in a client
+The preview reads the real `font/gui.json`, PNGs, `.mcmeta` files and title strings. The vanilla panel, the "Inventory" letters, player items and tooltip text are our own stand-ins. The tooltip placement (sprite drawn 12 GUI px outside the text) is from memory and unverified. Two vanilla tooltip sprites were downloaded to a scratch folder to measure their alpha geometry, then deleted; nothing of Mojang's is committed. `generic_54.png` was not compared. In game, check: alignment, player rows, the "Inventory" plate, corners, art at the used GUI scales, all four tooltips and the hidden highlight.
