@@ -36,8 +36,6 @@ Last checked: 2026-10-18
 | `mise run sound-check` | measures every `.ogg` (duration, channels, rate, peak, LUFS/RMS); fails on stereo outside `stereo/`, peaks above -1 dBFS, leading silence, an abrupt (unfaded) ending or a wrong format; loudness off-target is a warning (`tools/sound_check.py`) |
 | `mise run vfx-previews` | runs the `*PreviewExport` JUnit tests (real shape code → `target/vfx-points/*.csv`), then `design/vfx-scripts/*.py` plots them to `design/vfx-previews/` |
 | `mise run validate-assets` | checks every JSON/YAML/`.mcmeta`/`.bbmodel` parses; item definitions, models, textures and `sounds.json` entries resolve; `sounds.yml` keys exist, have a `minecraft:` fallback, volume ≤ 1.0 and a valid `source`; subtitle keys exist in `lang/en_us.json`; `effects.yml` presets have layers (`tools/validate_assets.py`) |
-| `mise run balance` | (repos with an economy) simulates the play profiles in `docs/balance/targets.md` against the balance configs; writes `docs/balance/report-<date>.md`, plots and `golden-values.json` (`tools/balance/`) |
-| `mise run balance-check` | same simulation, writes nothing, fails if a target in `docs/balance/targets.md` is violated; passes when the repo has no simulator |
 | `mise run review` | renders sound previews, then builds `design/review/index.html` (git-ignored, local only): every texture pixelated, every `.ogg` with a player and measurements, every effect preview, grouped per feature brief, with spec notes and a placeholder/final label (`tools/review.py`). An asset counts as final when its spec says `Status: final` |
 | `mise run check-quiet` | same `mvn -B clean verify` as `check`, but prints only the aggregated `Tests run:` line, `BUILD SUCCESS/FAILURE`, on failure up to 40 `[ERROR]` lines (incl. failing tests) and the log path; full output goes to `.check.log` (git-ignored); exits with Maven's code; extra flags via `MAVEN_ARGS`. For agents (saves tokens) |
 | `mise run team` | commits per team member (`git shortlog -sn --all`) |
@@ -76,7 +74,7 @@ description = "Run unit tests"
 run = "mvn -B test"
 
 [tasks.check]
-description = "Full clean build, as the tester runs it"
+description = "Full clean build"
 run = "mvn -B clean verify"
 ```
 
@@ -96,7 +94,7 @@ description = "Run unit tests"
 run = "mvn -B test"
 
 [tasks.check]
-description = "Full clean build, as the tester runs it"
+description = "Full clean build"
 run = "mvn -B clean verify"
 ```
 
@@ -104,22 +102,6 @@ Notes:
 - Always name the vendor (`temurin-…`), so every machine and worktree resolves the same JDK build.
 - `"3.9"` means "latest 3.9.x". If `maven` doesn't resolve on your machine, run `mise registry maven` to see the available backends.
 - `-B` (batch mode) keeps Maven output clean for agents.
-
-### Optional: test server task
-
-To start a local Paper server with the same JDK (paper.jar downloaded yourself into `run/`):
-
-```toml
-[tasks.server]
-description = "Copy the plugin into the test server and start it"
-depends = ["build"]
-run = """
-cp target/*.jar run/plugins/
-cd run && java -Xms2G -Xmx2G -jar paper.jar --nogui
-"""
-```
-
-Add `run/` to `.gitignore`.
 
 ---
 

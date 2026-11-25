@@ -8,13 +8,15 @@
     "Each agent also owns its own persistent memory folder .claude/agent-memory/mc-plugin-team-<agent>/ (plugin agents run as mc-plugin-team:<agent>; memory: project)."
   ],
   "orchestrator": {
-    "name": "Rickroll Rick",
-    "email": "rick@team.invalid",
+    "name": "Casper Schotman",
+    "email": "163063653+Casper-RS@users.noreply.github.com",
     "paths": [
       "CLAUDE.md",
       "docs/briefs/**",
       "docs/design.md",
-      ".github/**"
+      ".github/**",
+      "mise.toml",
+      "docs/toolchain.md"
     ]
   },
   "agents": {
@@ -34,12 +36,12 @@
         "!src/main/java/**/vfx/**",
         "!src/main/resources/sounds.yml",
         "!src/main/resources/effects.yml",
-        "!src/main/resources/balance/**",
+        "src/test/**",
+        "!src/test/java/**/vfx/**",
         "pom.xml",
         "tools/**",
-        "!tools/balance/**",
-        "!tools/**/test_*.py",
         "mise.toml",
+        "docs/architecture.md",
         ".gitignore",
         ".gitattributes",
         ".mailmap",
@@ -49,17 +51,6 @@
         "docs/minimessage.md",
         "docs/integrations.md",
         ".claude/agent-memory/mc-plugin-team-plugin-coder/**"
-      ]
-    },
-    "plugin-tester": {
-      "name": "Gandalf",
-      "email": "gandalf@team.invalid",
-      "paths": [
-        "src/test/**",
-        "tools/**/test_*.py",
-        "docs/reviews/**",
-        "docs/architecture.md",
-        ".claude/agent-memory/mc-plugin-team-plugin-tester/**"
       ]
     },
     "model-designer": {
@@ -112,24 +103,6 @@
         "design/vfx-*/**",
         "design/effects.md",
         ".claude/agent-memory/mc-plugin-team-vfx-designer/**"
-      ]
-    },
-    "balance-designer": {
-      "name": "Stonks Stan",
-      "email": "stan@team.invalid",
-      "paths": [
-        "src/main/resources/balance/**",
-        "tools/balance/**",
-        "!tools/**/test_*.py",
-        "docs/balance/**",
-        ".claude/agent-memory/mc-plugin-team-balance-designer/**"
-      ]
-    },
-    "repo-watcher": {
-      "name": "Gossip Gus",
-      "email": "gus@team.invalid",
-      "paths": [
-        ".claude/agent-memory/mc-plugin-team-repo-watcher/**"
       ]
     }
   },

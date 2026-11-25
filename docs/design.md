@@ -10,7 +10,7 @@ The user's design document and the source of truth for what this plugin should b
 What the plugin is, who plays/uses it, and how it should feel.
 
 ## 2. …
-<!-- Add a section per system: mechanics, commands, GUIs, economy, progression, assets, tech. Numbers here are guidelines; real balance values live in the balance configs. -->
+<!-- Add a section per system: mechanics, commands, GUIs, economy, progression, assets, tech. -->
 
 ## Differences from the current build
 Maintained by the orchestrator. Each line is resolved by a future feature (then removed here).

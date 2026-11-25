@@ -25,9 +25,6 @@ As a player, I … so that … (one short paragraph describing the experience, i
 
 (Write "none" for a kind that isn't needed.)
 
-## Balance impact
-New or changed buildings, upgrades, prices, rewards or timings, or "none". Anything here goes to the balance-designer and must keep `mise run balance-check` passing.
-
 ## Research needed
 Open technical questions for the researcher (API, resource pack format, version support), or "none".
 
@@ -40,7 +37,6 @@ Questions for the user that block or shape the design. The brief isn't approved 
 | item model | `<ns>:<id>` | model-designer | |
 | sound event | `<event>` | sound-designer | key `<ns>:<category>.<name>`, fallback `minecraft:…` |
 | effect | `<effect_id>` | vfx-designer | placeholders: … |
-| building / upgrade | `<id>` | balance-designer | |
 | message key | `<section.key>` | plugin-coder | in messages.yml |
 | config key | `<file>: <path>` | owner | |
 
@@ -51,10 +47,7 @@ Questions for the user that block or shape the design. The brief isn't approved 
 | model-designer | … | contract | `<feature>/model-designer` |
 | sound-designer | … | contract | `<feature>/sound-designer` |
 | vfx-designer | … | contract | `<feature>/vfx-designer` |
-| balance-designer | … | contract | `<feature>/balance-designer` |
 | plugin-coder | … | contract, research, APIs on the feature branch | `<feature>/plugin-coder` |
-| plugin-tester | review each branch, then integration | owner DONE | (reviewed branch) |
-
 ## Status
 | Agent | Status | Branch | Verdict | Notes |
 |---|---|---|---|---|

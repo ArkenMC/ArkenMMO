@@ -16,7 +16,7 @@ description = "Run unit tests"
 run = "mvn -B test"
 
 [tasks.check]
-description = "Full clean build, as the tester runs it"
+description = "Full clean build"
 run = "mvn -B clean verify"
 
 [tasks.check-quiet]
@@ -96,16 +96,6 @@ done
 [tasks.pack]
 description = "Zip resourcepack/ to target/resourcepack.zip and print its SHA-1"
 run = "python tools/pack.py"
-
-[tasks.balance]
-description = "Simulate pacing for all profiles; write docs/balance/report-<date>.md, plots and golden values"
-depends = ["assets-deps"]
-run = "[ -f tools/balance/main.py ] && python tools/balance/main.py report || echo 'No balance simulator (tools/balance/main.py) in this repo'"
-
-[tasks.balance-check]
-description = "Simulate pacing and fail if any target in docs/balance/targets.md is violated"
-depends = ["assets-deps"]
-run = "if [ -f tools/balance/main.py ]; then python tools/balance/main.py check; else echo 'No balance simulator in this repo: nothing to check'; fi"
 
 [tasks.review]
 description = "Build design/review/index.html (local asset review page: textures, sounds, effects)"
