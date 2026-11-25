@@ -22,3 +22,9 @@
 - 2026-11-25: A bowstring with only its upper half visible reads as an antenna. Run the upper half behind the head and the lower half in front of the body.
 - 2026-11-25: White brows next to white eyes merge. A 2 px dark lid row separates them.
 - 2026-11-25: Passes for A2: Warrior touch-up 4 rounds, Archer 5, Mage 3, Captain 4, then about 5 on the whole set, screens and sprites.
+- 2026-11-25: The user preferred the A1 cleaver and slanted eyes over the stair-stepped blade and square eyes. Keep Minecraft touches off the features that give a hero its character.
+- 2026-11-25: To keep a drawn string off the face and torso, plan in screen space (yaw shifts x by 0.41 per unit of depth): move the head back, anchor the draw hand beside the chin and put the bow far out, so the whole string triangle sits in the gap.
+- 2026-11-25: Hand grids on both archer hands (fingers round the grip, fingers hooked on the string) made the draw readable where cube fists did not.
+- 2026-11-25: Layered polygon locks (`facet_art`) beat stacked boxes for beards. A separate darker handlebar on a lighter jaw beard finally read as a moustache.
+- 2026-11-25: Eyes read as spectacles when brow, lid, nose and sideburns frame them on all sides. Keep bare skin beside and between them and stop sideburns below the moustache.
+- 2026-11-25: A random backdrop spark beside a hand looked like a stray pixel; change the seed when one lands next to a focal point.

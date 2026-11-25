@@ -2,15 +2,15 @@
 
 Rules for every class panel and menu screen. The Warrior panel is the reference. The palette is frozen: `design/scripts/pixelkit/palette.py` is the source, and art may use no other colour.
 
-**Status:** the Warrior panel and page frame (A1, commit `2ff9e7c`) were **approved by the user** on 2026-11-25. The user then asked for the style to be "a bit more minecraft ish" (a subtle shift, same artwork). That version of the Warrior, and the other three classes, **wait for the user's approval**. The approved render is kept in `design/scripts/reference/page1_approved_a1.png`; `target/previews/gui/warrior_before_after.png` compares the two. The page frame is unchanged.
+**Status:** the Warrior panel and page frame (A1, commit `2ff9e7c`) were **approved by the user** on 2026-11-25. The user then asked for the style to be "a bit more minecraft ish" (a subtle shift, same artwork). On the next round the user asked to combine both: the stone bricks, square sparks and boxier helm and plates stay, while the **A1 cleaver and eyes are restored**. The same round asked for a readable Archer draw and a polished Mage beard and Captain moustache. All of that, and the other three classes, **waits for the user's approval**. The approved A1 render is kept in `design/scripts/reference/page1_approved_a1.png`; `target/previews/gui/warrior_before_after.png` compares it with the current Warrior. The page frame is unchanged.
 
 ## Direction
 Chunky, faceted blocky heroes, like painted miniatures: flat planes with 3-4 tones per surface, bright trim, big head, oversized prop, three-quarter pose facing the centre of the menu. Original designs only. No Mojang textures are copied or traced.
 
 ## Minecraft touches (subtle: they season the faceted style, they do not replace it)
 - **Boxy heads and plates:** chamfers are 1-2.5 units, helms and hoods are near-cubes, limbs are near-cuboids with a little taper. No plain player-skin mannequins, and the faceted shading stays.
-- **Square eyes:** two squares per eye, white or glow outside and iris inside, 4-5 art px each (`block_eye`). A dark lid row separates them from pale brows.
-- **Stair-stepped item edges:** groups listed in `Figure(blocky=...)` are snapped to a screen-aligned 4 px grid: blades, bows, crests, hat tips, flags, cloth hems and plumes. Do not snap faces, armour, hands or anything whose shape needs a curve (the pauldron horn and war horn stay smooth).
+- **Square eyes:** two squares per eye, white outside and iris inside, 4-5 art px each (`block_eye`), with a dark lid row under pale brows. Exceptions: the Warrior keeps his slanted A1 eyes, and the Captain's eyes have lid and brow as one stroke with bare skin around them (a frame all round reads as spectacles).
+- **Stair-stepped item edges:** groups listed in `Figure(blocky=...)` are snapped to a screen-aligned 4 px grid: bows, crests, hat tips, flags, cloth hems and plumes. Do not snap the Warrior's cleaver (the user chose its smooth A1 edge), faces, armour, hands or anything whose shape needs a curve (the pauldron horn and war horn stay smooth).
 - **Square effects:** flames, sparks, notes and motes are drawn in square blocks.
 - **Block backdrops:** stone-brick courses, block trees, stepped hills and tents, rectangular clouds, a stair-stepped halo disc, a dais with block joints.
 
@@ -42,7 +42,7 @@ Chunky, faceted blocky heroes, like painted miniatures: flat planes with 3-4 ton
 | `iron` | `#0d0b14` `#1a1925` `#282a39` `#3a3e50` `#525869` `#747b8a` | page frame, inventory cells |
 
 ## Colour budget
-At most 64 per panel (Warrior 39, Archer 51, Mage 45, Captain 44). Per figure the research note suggests 24-28; the Warrior has 22, but the Archer (34), Mage (32) and Captain (30) are over it, because each mixes more materials. Do not add ramps to a figure without removing one. Per figure: identity about half, support about 30 %, accent about 10 %.
+At most 64 per panel (Warrior 39, Archer 50, Mage 45, Captain 44). Per figure the research note suggests 24-28; the Warrior has 22, but the Archer (33), Mage (32) and Captain (31) are over it, because each mixes more materials. Do not add ramps to a figure without removing one. Per figure: identity about half, support about 30 %, accent about 10 %.
 
 ## Figure rules
 - Built with `pixelkit/hullrig.py` and painted through `pixelkit/figure.py`. Every part is the **convex hull** of its points: build stars, forks and notches from several convex pieces.
@@ -54,7 +54,9 @@ At most 64 per panel (Warrior 39, Archer 51, Mage 45, Captain 44). Per figure th
 - Outline: 2 px in step 0 of the neighbouring material, the outer ring lifted to step 1 on lit edges. Inner separation lines are 1 px in the farther material's darker step. Contact shadows are one step down. No distance-based shading.
 - Large faces stay at mid steps; the top steps are for top faces and trim.
 - Rim light: 1 px of bounce on right-facing edges, never on blades, bows, strings or banners.
-- Clean-up order: render, rim light, `despeckle()`, then the hand-placed grids (eyes, brows, hands, flame, notes).
+- Clean-up order: render, rim light, `despeckle()`, then the hand-placed details (eyes, brows, hands, flame, notes, hair).
+- **Beards and moustaches** are not boxes. Draw them with `facet_art`: overlapping hand-shaped locks, each one flat tone with a darker inner rim, 1 px strand lines, lighter on the top left, and an outline against robe or skin. A moustache must differ from the beard in shape and value (the Captain's is two steps darker) and leave the mouth visible below it.
+- **A drawn bow:** one string runs from each limb tip to the nock, and the draw hand hooks it. Pose it so the whole string lies in open sky between body and bow; it never passes behind the head or across the torso. The bow hand wraps the grip with the arrow resting above it, a gap of sky separates the bow arm from the arrow, and the arrowhead stands clear of the limb.
 
 | Class | Silhouette | Identity | Prop | Rim |
 |---|---|---|---|---|
@@ -66,7 +68,7 @@ At most 64 per panel (Warrior 39, Archer 51, Mage 45, Captain 44). Per figure th
 Captain against Warrior is the confusion risk. Keep the Captain's open face, banner, cape and raised horn; he gets no tower shield, horn pauldron or raised blade, and he stays the brightest figure while the Warrior is among the darkest.
 
 ## Backdrop rules
-Layers, all darker and quieter than the figure: a vertical sky with 8 px dithered transitions; faint rays and a stepped halo disc behind the head; one or two block clouds where they fit; a far and a nearer, darker silhouette, each with a lit 1 px crest; a floor with seams and the octagonal dais (top step 4, front 2, shadow side 0); a few square sparks. Hue should contrast with the figure (the Warrior's red stands on cool plum, the Mage's violet on teal).
+Layers, all darker and quieter than the figure: a vertical sky with 8 px dithered transitions; faint rays and a stepped halo disc behind the head; one or two block clouds where they fit; a far and a nearer, darker silhouette, each with a lit 1 px crest; a floor with seams and the octagonal dais (top step 4, front 2, shadow side 0); a few square sparks. Hue should contrast with the figure (the Warrior's red stands on cool plum, the Mage's violet on teal). The floor must contrast too: the Archer stands on slate, not on green.
 
 ## Screen chrome
 - Every screen: iron shell opaque over the whole vanilla panel (one GUI px per corner clear), header plaque with pixel capitals and gem ornaments, recessed inventory cells on the slot grid, parchment plate under the vanilla label.

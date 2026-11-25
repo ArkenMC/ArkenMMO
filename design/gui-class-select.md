@@ -63,10 +63,10 @@ No art overflows above or below the panel.
 ## Art
 | Class | Figure (art px, colours) | Panel colours | Facing |
 |---|---|---|---|
-| Warrior | 122x157, 22 | 39 | right on page 1 and confirm |
-| Archer | 131x150, 34 | 51 | left on page 1, right on confirm |
+| Warrior | 124x158, 22 | 39 | right on page 1 and confirm |
+| Archer | 133x147, 33 | 50 | left on page 1, right on confirm |
 | Mage | 135x154, 32 | 45 | right on page 2 and confirm |
-| Captain | 132x157, 30 | 44 | left on page 2, right on confirm |
+| Captain | 132x157, 31 | 44 | left on page 2, right on confirm |
 
 ## Placeholders
 All of this art counts as placeholder until the user approves it.
