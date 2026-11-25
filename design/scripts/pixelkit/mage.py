@@ -1,7 +1,7 @@
 """The Mage: a tall triangle. Stepped wizard hat, block beard, flared robe, orb staff and arcane flame."""
 import numpy as np
 
-from .figure import Figure, block_eye, grid_detail, pixel_blocks
+from .figure import Figure, block_eye, facet_art, facet_detail, grid_detail, mirrored_x, pixel_blocks
 from .hullrig import Rig, box, euler, prism, slab
 
 HEAD_CENTRE = np.array((3.0, 101.0, 5.0))
@@ -27,6 +27,33 @@ FLAME = [
     "....000....",
 ]
 FLAME_LEGEND = {str(step): ("arcane", step) for step in range(5)}
+def _beard():
+    """Moustache and beard around the point under the nose: overlapping locks, lit from the top left."""
+    base = [(-15, 0), (15, 0), (18, 7), (15, 15), (7, 20), (0, 29), (-7, 20), (-15, 15), (-18, 7)]
+    outer = [(-17, 3), (-9, 6), (-9, 14), (-14, 21), (-13, 15), (-18, 9)]
+    middle = [(-12, 5), (-3, 7), (-3, 17), (-9, 26), (-8, 18), (-13, 12)]
+    centre = [(-6, 7), (0, 7), (0, 34), (-5, 23), (-6, 15)]
+    # one handlebar wing: thick at the nose, drooping, then curling up at the tip
+    wing = [(0, -1), (-6, -3), (-12, -1), (-15, 3), (-19, 3), (-22, -1), (-22, 5), (-17, 9), (-10, 8), (-4, 5), (0, 3)]
+    shine = [(-1, 0), (-6, -2), (-11, 0), (-14, 3), (-9, 2), (-5, 1)]
+    lit, mid, shade, line = ("ivory", 4), ("ivory", 3), ("ivory", 2), ("ivory", 1)
+    return facet_art([
+        (base, shade, line),
+        (outer, mid, shade), (mirrored_x(outer), shade, line),
+        (middle, lit, shade), (mirrored_x(middle), mid, shade),
+        (centre, lit, mid), (mirrored_x(centre), mid, shade),
+        # strands
+        ([(-3, 13), (-3, 22)], mid, None), ([(2, 14), (2, 25)], shade, None),
+        ([(-8, 10), (-7, 19)], mid, None), ([(8, 10), (7, 19)], shade, None),
+        ([(-14, 9), (-13, 14)], shade, None), ([(14, 9), (13, 14)], line, None),
+        ([(-4, 5), (4, 5), (3, 8), (-3, 8)], ("skin", 1), ("skin", 0)),
+        (wing, mid, line), (mirrored_x(wing), mid, line),
+        (shine, lit, None), (mirrored_x(shine), lit, None),
+        ([(-6, 4), (-15, 6)], shade, None), ([(6, 4), (15, 6)], shade, None),
+        ([(0, -1), (0, 3)], line, None),
+    ], ring=("ivory", 0), face_ring=("skin", 2), face_line=4)
+
+
 # the casting hand, hand-placed over the flame: palm up, fingers curling round its base
 CUPPED_HAND = [
     ".kk.................",
@@ -55,7 +82,7 @@ def build(facing=1):
     _hat(rig)
     _staff(rig)
     _arms(rig)
-    details = []
+    details = [facet_detail(HEAD_CENTRE + HEAD_TURN @ np.array((1.0, -9.0, 23.0)), _beard())]
     for x, mirrored in ((-7.0, False), (8.5, True)):
         anchor = HEAD_CENTRE + HEAD_TURN @ np.array((x, 1.5, 18.5))
         eye = block_eye("w", "i", "g", mirrored, block=5)
@@ -123,13 +150,6 @@ def _head(rig):
     for side in (-1, 1):
         put(box(8, 31, 26, 1.5), "ivory", 3, "hair", (side * 19, -4, -2))
     put(box(36, 32, 8, 1.5), "ivory", 2, "hair", (0, -3, -14))
-    # moustache and a beard that steps down to a point
-    for side in (-1, 1):
-        put(prism([(0, -6), (side * 17, -8), (side * 19, -15), (side * 3, -11)], 17, 23), "ivory", 4, "moustache",
-            (0, 0, 0))
-    for (width, y, depth, z) in ((35, -14, 13, 14), (27, -22, 12, 17), (18, -30, 11, 19), (9, -37, 9, 20)):
-        put(box(width, 9, depth, 1.5), "ivory", 3, "beard", (1, y, z))
-    put(box(8, 4, 3, 1), "skin", 1, "mouth", (1, -11, 21))
 
 
 def _hat(rig):

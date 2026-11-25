@@ -1,11 +1,11 @@
 """The Warrior: wide, low, square. Great helm, huge pauldrons, tower shield, cleaver hoisted high."""
 import numpy as np
 
-from .figure import Figure, block_eye, grid_detail
+from .figure import Figure, grid_detail
 from .hullrig import Rig, box, euler, prism, slab
 
 SWORD_GRIP = (-46.0, 74.0, 31.0)
-SWORD_TIP = (-66.0, 164.5, -6.0)
+SWORD_TIP = (-66.0, 168.0, -6.0)
 HEAD_CENTRE = (4.0, 115.0, 7.0)
 HEAD_TURN = euler(yaw=10, pitch=4, roll=-3)
 
@@ -18,18 +18,26 @@ def build(facing=1):
     _sword_arm(rig)
     _shield_arm(rig)
     details = [grid_detail(GAUNTLET, GAUNTLET_LEGEND, SWORD_GRIP, offset=(-10, -7))]
-    # narrowed, glowing block eyes inside the visor slot
-    for x, mirrored in ((-9.5, False), (10.5, True)):
-        anchor = np.array(HEAD_CENTRE) + HEAD_TURN @ np.array((x, -0.5, 22.0))
-        details.append(grid_detail(block_eye("o", "y", "W", mirrored, block=5), EYE_LEGEND, anchor))
+    # narrowed, glowing eyes inside the visor slot
+    for x, mirrored in ((-8.5, False), (9.5, True)):
+        anchor = np.array(HEAD_CENTRE) + HEAD_TURN @ np.array((x, 1.5, 22.0))
+        rows = [row[::-1] for row in EYE] if mirrored else EYE
+        details.append(grid_detail(rows, EYE_LEGEND, anchor, offset=(-4, -2), flip=False))
     # leans into a lunge toward the centre of the menu
     return Figure(rig, lean=-4.5, facing=facing,
-                    blocky=("edge", "guard", "crest"),
+                    blocky=("crest",),
                     rim={"steel": ("crimson", 3), "crimson": ("crimson", 4)},
-                    no_rim=("edge", "pauldron1spike"), details=details)
+                    no_rim=("edge", "spine", "pauldron1spike"), details=details)
 
 
-EYE_LEGEND = {"o": ("crimson", 4), "y": ("gold", 4), "W": ("gold", 5)}
+# Narrowed, glowing eyes inside the visor slot; the inner corners dip. The bright core is two rows
+# thick so it survives GUI scale 3, where the client samples the 2x art unevenly.
+EYE = ["rr.......",
+       "oyyoor...",
+       "oyWWyyoor",
+       ".ooyyyyor",
+       "...rrooor"]
+EYE_LEGEND = {"r": ("crimson", 3), "o": ("crimson", 4), "y": ("gold", 4), "W": ("gold", 5)}
 
 
 # The sword hand, hand-placed: thumb over the top, four fingers wrapped round the grip.
@@ -180,7 +188,7 @@ def _pauldron(rig, side, at, scale=1.0):
 def _sword_arm(rig):
     """His right arm (screen left): elbow flung out, fist gripping the raised cleaver."""
     shoulder, elbow, hand = (-33, 90, 0), (-55, 70, 5), (-47, 70, 25)
-    rig.bone(shoulder, elbow, (19, 20), (16, 17), "steel", 2, "arm_r_up", 1.5)
+    rig.bone(shoulder, elbow, (19, 20), (15, 16), "steel", 2, "arm_r_up", 4)
     rig.bone(elbow, hand, (18, 19), (19, 19), "crimson", 1, "arm_r_fore", 1.5)
     _pauldron(rig, -1, (-37, 96, -2))
     _sword(rig, np.array(SWORD_GRIP), np.array(SWORD_TIP))
@@ -227,18 +235,20 @@ def _sword(rig, grip, tip):
     # crossguard with down-turned quillons
     blade([(12, -6), (21, -6), (21, 6), (12, 6)], 11, "gold", 3, "guard")
     blade([(15, 5), (21, 5), (15, 20), (10, 21)], 8, "gold", 3, "guard")
-    blade([(14, -5), (21, -5), (15, -21), (9, -22)], 8, "gold", 2, "guard")
+    blade([(15, -5), (21, -5), (15, -19), (10, -20)], 8, "gold", 2, "guard")
     blade([(14, -3), (19, -3), (19, 3), (14, 3)], 3, "crimson", 3, "guardgem", lift=6)
     length = float(np.linalg.norm(tip - grip))
     # blade: a bright bevelled edge and a darker flat, ending in a heavy clipped point
     blade([(20, 0), (20, 10), (31, 13), (length - 13, 15), (length - 13, 0)], 5, "steel", 4, "edge", hi=5)
-    blade([(length - 13, 0), (length - 13, 15), (length + 6, 2), (length - 3, 0)], 5, "steel", 4, "edge", hi=5)
-    blade([(20, -10), (20, 0), (length - 13, 0), (length - 13, -11), (31, -9)], 5, "steel", 3, "edge", hi=3)
-    blade([(length - 13, -11), (length - 13, 0), (length - 3, 0)], 5, "steel", 3, "edge", hi=3)
+    blade([(length - 13, 0), (length - 13, 15), (length + 1, 2), (length - 3, 0)], 5, "steel", 4, "edge", hi=5)
+    blade([(20, -10), (20, 0), (length - 13, 0), (length - 13, -11), (31, -9)], 5, "steel", 3, "spine", hi=3)
+    blade([(length - 13, -11), (length - 13, 0), (length - 3, 0)], 5, "steel", 3, "spine", hi=3)
     # back hook below the point: the cleaver's signature shape in silhouette
-    blade([(length - 36, -8), (length - 21, -8), (length - 18, -20), (length - 24, -17)], 5, "steel", 3, "edge", hi=3)
-    blade([(20, 10), (31, 13), (length - 13, 15), (length - 15, 10), (31, 8), (20, 5)], 1, "steel", 6, "edge",
+    blade([(length - 36, -8), (length - 21, -8), (length - 18, -20), (length - 24, -17)], 5, "steel", 3, "spine", hi=3)
+    blade([(20, 10), (31, 13), (length - 13, 15), (length - 15, 11), (31, 9), (20, 6)], 1, "steel", 6, "edgeline",
           lift=3, lo=6)
+    blade([(24, -2.5), (24, 2.5), (length - 30, 2.5), (length - 23, 0), (length - 30, -2.5)], 1, "steel", 2,
+          "fuller", lift=3, lo=2, hi=2)
 
 
 def _shield_arm(rig):

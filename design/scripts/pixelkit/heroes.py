@@ -28,8 +28,8 @@ IVORY_LETTERS = (("ivory", 4), ("ivory", 3), ("steel", 6))
 HEROES = {
     "warrior": Hero("WARRIOR", warrior, backdrops.ember_keep, "ember_stone", -2,
                     ((-15, 1, 22), (21, 4, 25)), "crimson", GOLD_LETTERS),
-    "archer": Hero("ARCHER", archer, backdrops.twilight_woods, "dusk_forest", -10,
-                   ((-23, 1, 22), (36, 4, 22)), "forest", GOLD_LETTERS),
+    "archer": Hero("ARCHER", archer, backdrops.twilight_woods, "dusk_sky", -12,
+                   ((-27, 1, 22), (30, 4, 22)), "forest", GOLD_LETTERS),
     "mage": Hero("MAGE", mage, backdrops.star_sanctum, "night_teal", -2,
                  ((0, 3, 44),), "violet", GOLD_LETTERS),
     "captain": Hero("CAPTAIN", captain, backdrops.dawn_camp, "dawn_stone", -9,

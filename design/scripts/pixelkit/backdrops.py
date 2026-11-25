@@ -220,7 +220,7 @@ def _scene(canvas, rect, sky, bands, halo_offset, clouds=()):
 
 
 def twilight_woods(canvas, rect):
-    """Archer: block trees against an indigo dusk with an amber horizon, and a mossy dais."""
+    """Archer: block trees against an indigo dusk with an amber horizon, and a slate dais."""
     x0, y0, x1, y1 = rect
     cx, horizon = _scene(canvas, rect, "dusk_sky", [(22, 0), (46, 1), (74, 2), (98, 3), (116, 4)], -8,
                          [(2, 20, [(0, 6, 24, 6), (6, 0, 12, 6)]), (104, 40, [(0, 6, 34, 6), (12, 0, 18, 6)])])
@@ -233,9 +233,10 @@ def twilight_woods(canvas, rect):
     for x, height, crown in ((2, 58, 30), (24, 18, 20), (112, 16, 22), (136, 38, 28)):
         near += _tree(x, height, crown)
     _silhouette(canvas, layer, near, col("dusk_forest", 0), col("dusk_forest", 2))
-    _ground(canvas, (x0, horizon, x1, y1), cx, "dusk_forest")
-    _dais(canvas, rect, cx, "dusk_forest")
-    _sparks(canvas, rect, 11, 20, hot=(("gold", 3), ("gold", 5)), faint=("dusk_sky", 5))
+    # slate stone, so the green and leather figure stands off the floor in both hue and value
+    _ground(canvas, (x0, horizon, x1, y1), cx, "dusk_sky")
+    _dais(canvas, rect, cx, "dusk_sky")
+    _sparks(canvas, rect, 5, 20, hot=(("gold", 3), ("gold", 5)), faint=("dusk_sky", 5))
 
 
 def star_sanctum(canvas, rect):

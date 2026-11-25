@@ -1,7 +1,7 @@
 """The Captain: a tall banner pole and a cape sweep. Open helm, ivory tabard, war horn held aloft."""
 import numpy as np
 
-from .figure import Figure, block_eye, grid_detail, pixel_blocks
+from .figure import Figure, facet_art, facet_detail, grid_detail, mirrored_x, pixel_blocks
 from .hullrig import Rig, box, euler, prism, slab
 
 HEAD_CENTRE = np.array((4.0, 112.0, 6.0))
@@ -16,6 +16,21 @@ STAR = ([(0, 13), (4, 0), (0, -13), (-4, 0)], [(11, 0), (0, 4), (-11, 0), (0, -4
 BEAMED_NOTES = pixel_blocks(["..11111", "..11111", "..1...1", "..1...1", "111.111", "111.111"], 3)
 CALL_LEGEND = {"1": ("gold", 4)}
 
+def _moustache():
+    """A dark handlebar with upturned tips and a mouth under it, on the lighter jaw beard."""
+    wing = [(0, 0), (-4, -2), (-8, -1), (-11, 1), (-13, -1), (-14, -4), (-17, -2), (-17, 2), (-13, 6), (-7, 6),
+            (-3, 4), (0, 4)]
+    shine = [(-1, 0), (-4, -1), (-8, 0), (-11, 2), (-7, 2), (-3, 1)]
+    return facet_art([
+        ([(-5, 6), (5, 6), (3, 9), (-3, 9)], ("skin", 0), None),
+        ([(-3, 8), (3, 8)], ("skin", 2), None),
+        (wing, ("leather", 1), ("leather", 0)), (mirrored_x(wing), ("leather", 1), ("leather", 0)),
+        (shine, ("leather", 2), None), (mirrored_x(shine), ("leather", 2), None),
+        ([(-15, -3), (-15, 1)], ("leather", 2), None), ([(15, -3), (15, 1)], ("leather", 2), None),
+        ([(0, 0), (0, 4)], ("leather", 0), None),
+    ])
+
+
 def build(facing=1):
     rig = Rig(yaw=24.0, pitch=10.0, scale=0.815)
     _cape(rig)
@@ -25,22 +40,28 @@ def build(facing=1):
     _banner(rig)
     _arms(rig)
     _horn(rig)
-    details = []
-    for x, mirrored in ((-9.5, False), (7.5, True)):
-        anchor = HEAD_CENTRE + HEAD_TURN @ np.array((x, 1.0, 18.0))
-        eye = block_eye("w", "i", "g", mirrored)
-        details.append(grid_detail(["s" * len(eye[0])] * 2 + eye, EYES, anchor))
-        brow = pixel_blocks(["..bbb", "bbb.."], 2)
-        brow_anchor = HEAD_CENTRE + HEAD_TURN @ np.array((x, 7.0, 18.0))
-        details.append(grid_detail([r[::-1] for r in brow] if mirrored else brow, BROWS, brow_anchor))
+    details = [facet_detail(HEAD_CENTRE + HEAD_TURN @ np.array((0.5, -8.0, 21.0)), _moustache())]
+    for x, mirrored in ((-8.5, False), (7.5, True)):
+        # lid and brow make one heavy stroke with bare skin all round, so no frame boxes the eyes in
+        eye = [row[::-1] for row in EYE] if mirrored else EYE
+        anchor = HEAD_CENTRE + HEAD_TURN @ np.array((x, 2.5, 18.0))
+        details.append(grid_detail(eye, EYES, anchor))
     details.append(grid_detail(BEAMED_NOTES, CALL_LEGEND, (64, 147, 22), flip=False))
     return Figure(rig, lean=-2.0, facing=facing, blocky=("flag", "plume", "capehem"),
                   rim={"gold": ("gold", 5), "navy": ("navy", 4), "leather": ("gold", 2)},
                   no_rim=("pole", "flag", "horn", "finial", "plume"), details=details)
 
 
-EYES = {"w": ("ivory", 4), "i": ("navy", 3), "g": ("navy", 4), "s": ("skin", 1)}
-BROWS = {"b": ("leather", 1)}
+# one eye with its brow, drawn for the viewer's left: the brow lifts outward, the iris sits by the nose
+EYE = ["bbbb.....",
+       "bbbbbbbb.",
+       "....bbbbb",
+       ".........",
+       "..bbbbbbb",
+       "..wwwwiii",
+       "..wwwwiii",
+       "...wwwiii"]
+EYES = {"w": ("ivory", 4), "i": ("navy", 3), "b": ("leather", 1)}
 
 
 def _cape(rig):
@@ -107,13 +128,11 @@ def _head(rig):
         rig.add(points + np.array(local, float), material, base, group, HEAD_CENTRE, HEAD_TURN, **kw)
 
     put(box(32, 31, 28, 1.5), "skin", 3, "face", (0, 0, 3))
-    # short square beard and moustache, mouth open in a shout
-    put(box(34, 8, 9, 1.5), "leather", 3, "beard", (0, -14, 15))
+    # short square beard along the jaw; the moustache and mouth are hand-shaped on top
+    put(box(34, 10, 9, 1.5), "leather", 4, "beard", (0, -14, 15))
     for side in (-1, 1):
-        put(box(5, 15, 8, 1), "leather", 3, "beard", (side * 14.5, -7, 15))
-    put(box(21, 4, 4, 1), "leather", 2, "beard", (0, -7, 18))
-    put(box(11, 4, 3, 0.5), "skin", 0, "mouth", (0, -10.5, 19.5), lo=0, hi=0)
-    put(box(6, 7, 6, 1.5), "skin", 3, "nose", (0.5, -3, 18))
+        put(box(5, 8, 8, 1), "leather", 4, "beard", (side * 14.5, -12.5, 15))
+    put(box(6, 7, 6, 1.5), "skin", 3, "nose", (0.5, -2.5, 18))
     # open helm: a gold cap with a raised front, cheek guards set back so the whole face shows
     put(box(40, 11, 37, 2), "gold", 2, "helm", (0, 17, 0))
     put(slab((36, 33), (26, 24), 7, 1.5), "gold", 3, "helm", (0, 26, -1))

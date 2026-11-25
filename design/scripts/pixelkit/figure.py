@@ -5,7 +5,7 @@ mirrored *before* it is lit, so the light still comes from the top left (no imag
 """
 import numpy as np
 
-from .draw import shift
+from .draw import Canvas, dilate, poly_mask, shift
 from .hullrig import rot
 from .palette import col
 
@@ -86,6 +86,58 @@ def grid_detail(rows, legend, anchor, offset=None, leaned=True, flip=True):
                 stamped = [row[::-1] for row in rows]
         canvas.grid(stamped, legend, (x + dx, y + dy))
     return draw
+
+
+def facet_art(shapes, ring=None, face_ring=None, face_line=0):
+    """Hand-shaped flat facets as a detail layer, for hair that boxes cannot draw.
+
+    `shapes` are painted in order as (points, (ramp, step), edge); points are art px around the
+    anchor, and `edge` is (ramp, step) for a 1 px rim inside the shape, or None. A shape with two
+    points is a 1 px strand line. `ring` outlines the whole layer; above `face_line` it uses `face_ring`.
+    """
+    width, height, ax, ay = 64, 64, 32, 16
+
+    def draw(canvas, at, flipped):
+        layer = Canvas(width, height)
+        for points, colour, edge in shapes:
+            moved = [(ax + x, ay + y) for x, y in points]
+            if len(moved) == 2:
+                (x0, y0), (x1, y1) = moved
+                steps = max(abs(x1 - x0), abs(y1 - y0), 1)
+                for i in range(steps + 1):
+                    layer.dot(round(x0 + (x1 - x0) * i / steps), round(y0 + (y1 - y0) * i / steps), col(*colour))
+                continue
+            mask = poly_mask(moved, layer.size)
+            layer.mask(mask, col(*colour))
+            if edge:
+                inner = mask.copy()
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    inner &= shift(mask, dx, dy)
+                layer.mask(mask & ~inner, col(*edge))
+        layer.despeckle(1)
+        if ring:
+            solid = layer.px[..., 3] > 0
+            outline = dilate(solid) & ~solid
+            layer.mask(outline, col(*ring))
+            if face_ring:
+                above = outline.copy()
+                above[ay + face_line:] = False
+                layer.mask(above, col(*face_ring))
+        pixels = layer.px[:, ::-1] if flipped else layer.px
+        for y, x in zip(*np.nonzero(pixels[..., 3])):
+            canvas.dot(at[0] - ax + x, at[1] - ay + y, pixels[y, x])
+    return draw
+
+
+def facet_detail(anchor, art, leaned=True):
+    """Stamps `facet_art` at a figure-space anchor; it mirrors with the pose."""
+    def draw(figure, canvas, origin):
+        art(canvas, figure.screen(anchor, origin, leaned), figure.facing < 0)
+    return draw
+
+
+def mirrored_x(points):
+    return [(-x, y) for x, y in points]
 
 
 def pixel_blocks(rows, cell):

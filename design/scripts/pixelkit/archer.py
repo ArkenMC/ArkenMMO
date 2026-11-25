@@ -4,17 +4,21 @@ import numpy as np
 from .figure import Figure, block_eye, grid_detail
 from .hullrig import Rig, box, euler, prism, slab
 
-HEAD_CENTRE = np.array((5.0, 114.0, 4.0))
+HEAD_CENTRE = np.array((-6.0, 116.0, 4.0))
 HEAD_TURN = euler(yaw=14, pitch=2, roll=-2)
-DRAW_HAND = (-17.0, 87.0, 24.0)
-BOW_HAND = (52.0, 89.0, 14.0)
+# full draw: the anchor hand sits just beside the chin and the bow far out, so that the whole string
+# lies in open space between the body and the bow
+DRAW_HAND = (20.0, 94.0, 24.0)
+NOCK = (25.0, 96.0, 27.0)
+BOW_HAND = (61.0, 91.0, 16.0)
+ARROW_TIP = np.array((90.0, 112.2, 21.0))
 # bow limbs from the grip outward: (x, y, z, thickness)
-BOW_UPPER = [(53, 89, 13, 9), (55, 111, 11, 8), (47, 134, 7, 7), (35, 151, 3, 6), (36, 163, 2, 4)]
-BOW_LOWER = [(53, 89, 13, 9), (55, 67, 14, 8), (47, 44, 15, 7), (35, 27, 16, 6), (37, 15, 16, 4)]
+BOW_UPPER = [(61, 102, 14, 9), (63, 122, 12, 8), (57, 142, 9, 7), (45, 157, 6, 6), (47, 168, 5, 4)]
+BOW_LOWER = [(61, 102, 14, 9), (63, 82, 15, 8), (60, 60, 16, 7), (51, 42, 17, 6), (54, 29, 17, 4)]
 
 
 def build(facing=1):
-    rig = Rig(yaw=24.0, pitch=10.0, scale=0.87)
+    rig = Rig(yaw=24.0, pitch=10.0, scale=0.83)
     _cloak(rig)
     _quiver(rig)
     _legs(rig)
@@ -22,7 +26,8 @@ def build(facing=1):
     _head(rig)
     _arms(rig)
     _bow_and_arrow(rig)
-    details = []
+    details = [grid_detail(BOW_FINGERS, HAND_LEGEND, BOW_HAND),
+               grid_detail(DRAW_FINGERS, HAND_LEGEND, DRAW_HAND)]
     for x, mirrored in ((-6.5, False), (9.0, True)):
         anchor = HEAD_CENTRE + HEAD_TURN @ np.array((x, 0.5, 18.5))
         details.append(grid_detail(block_eye("w", "i", "p", mirrored), EYES, anchor))
@@ -36,6 +41,31 @@ def build(facing=1):
                   no_rim=("bow", "arrow", "string", "vane", "nockvane", "cloak"), details=details)
 
 
+# the bow hand, hand-placed: three fingers wrapped round the grip, thumb behind
+BOW_FINGERS = [
+    ".kkkkkkkkk..",
+    "kHHHHHHhhk..",
+    "kHhhhhhhhkk.",
+    "kkkkkkkkhHhk",
+    "kHHHHHHkhhhk",
+    "kHhhhhhkhhdk",
+    "kkkkkkkkhhdk",
+    "kHHHHHHkhddk",
+    "kHhhhhhkddk.",
+    ".kkkkkkkkk..",
+]
+# the draw hand: three fingers hooked over the string
+DRAW_FINGERS = [
+    "kkkkkkk.....",
+    "kHHHHHhkkk..",
+    "kkkkkkkhhhk.",
+    "kHHHHHhkhhk.",
+    "kkkkkkkhhdk.",
+    "kHHHHHhkhdk.",
+    "kkkkkkkhddk.",
+    ".....kkkkk..",
+]
+HAND_LEGEND = {"k": ("skin", 0), "H": ("skin", 4), "h": ("skin", 3), "d": ("skin", 2)}
 EYES = {"w": ("ivory", 4), "i": ("forest", 4), "p": ("forest", 1)}
 BROWS = {"b": ("leather", 0)}
 
@@ -75,7 +105,7 @@ def _quiver(rig):
     along = (mouth - foot) / np.linalg.norm(mouth - foot)
     rig.bone(mouth - along * 3, mouth + along * 2, (21, 21), (21, 21), "leather", 4, "quiverband", 1.5)
     # three separate arrows, fanned so that sky shows between their feathers
-    for index, end in enumerate(((-45.0, 134.0, -6.0), (-60.0, 125.0, -6.0), (-65.0, 108.0, -6.0))):
+    for index, end in enumerate(((-43.0, 134.0, -6.0), (-56.0, 125.0, -6.0), (-60.0, 108.0, -6.0))):
         end = np.array(end)
         direction = (end - mouth) / np.linalg.norm(end - mouth)
         side = np.array((direction[1], -direction[0], 0.0)) / np.linalg.norm(direction[:2])
@@ -140,18 +170,18 @@ def _head(rig):
 
 
 def _arms(rig):
-    # bow arm: stretched out straight toward the centre
-    shoulder, elbow, hand = (17, 93, 1), (34, 90, 8), BOW_HAND
-    rig.bone(shoulder, elbow, (16, 17), (13, 14), "forest", 3, "bowarm_up", 1.5)
-    rig.bone(elbow, hand, (14, 15), (12, 13), "leather", 3, "bowarm_fore", 1.5)
-    rig.add(box(13, 13, 13, 1.5), "skin", 3, "bowfist", BOW_HAND)
-    # draw arm: the elbow high and far back, the hand anchored under the jaw
-    shoulder, elbow = (-18, 93, 2), (-54, 90, 10)
-    rig.bone(shoulder, elbow, (16, 17), (14, 15), "forest", 3, "drawarm_up", 1.5)
-    rig.bone(elbow, (-23, 87, 23), (15, 16), (12, 13), "leather", 3, "drawarm_fore", 1.5)
-    rig.bone((-49, 89, 13), (-39, 88, 17), (18, 19), (17, 18), "leather", 2, "bracer", 1.5)
-    rig.add(box(12, 12, 12, 1.5), "skin", 3, "drawfist", DRAW_HAND)
-    for side, at in ((-1, (-20, 96, 2)), (1, (20, 96, 2))):
+    # bow arm: from the far shoulder out to the grip, running just under the arrow so both stay readable
+    shoulder, elbow = (15, 86, -4), (40, 79, 5)
+    rig.bone(shoulder, elbow, (15, 16), (12, 13), "forest", 3, "bowarm_up", 1.5)
+    rig.bone(elbow, (55, 89, 13), (12, 13), (9, 10), "leather", 4, "bowarm_fore", 1.5)
+    rig.add(box(12, 12, 12, 1.5), "skin", 3, "bowfist", BOW_HAND)
+    # draw arm: a clear bend, the elbow out behind and a little low, the forearm rising to the chin
+    shoulder, elbow = (-21, 91, 2), (-47, 79, 14)
+    rig.bone(shoulder, elbow, (16, 17), (14, 15), "forest", 2, "drawarm_up", 1.5)
+    rig.bone(elbow, (13, 93, 25), (14, 15), (11, 12), "forest", 3, "drawarm_fore", 1.5)
+    rig.bone((-15, 86.5, 21), (8, 92, 24.5), (15, 16), (13, 14), "leather", 3, "bracer", 1.5)
+    rig.add(box(13, 12, 12, 1.5), "skin", 4, "drawfist", DRAW_HAND)
+    for side, at in ((-1, (-21, 96, 2)), (1, (19, 94, 0))):
         rig.add(slab((19, 22), (14, 17), 10, 2), "leather", 3, f"shoulder{side}", at, euler(roll=-side * 14))
 
 
@@ -160,18 +190,19 @@ def _bow_and_arrow(rig):
         for index, (a, b) in enumerate(zip(limb, limb[1:])):
             ramp, step = ("gold", 3) if index == 3 else ("leather", 3)
             rig.bone(a[:3], b[:3], (a[3], a[3]), (b[3], b[3]), ramp, step, "bow", 1)
-    rig.add(box(12, 20, 12, 1.5), "forest", 2, "bowgrip", (53, 89, 13))
-    # the string runs behind the head, so it never crosses the face
-    nock = (DRAW_HAND[0] - 2, DRAW_HAND[1], 8)
-    rig.bone(BOW_UPPER[-1][:3], nock, (2.2, 2.2), (2.2, 2.2), "ivory", 1, "string", 0.4, lo=1)
-    # the lower half runs in front of the body, so the pair reads as one drawn string
-    low = (DRAW_HAND[0] + 1, DRAW_HAND[1] - 4, 30)
-    rig.bone(BOW_LOWER[-1][:3], low, (2.2, 2.2), (2.2, 2.2), "ivory", 1, "string", 0.4, lo=1)
-    rig.bone((-24, 87, 27), (66, 89, 23), (4, 4), (4, 4), "leather", 4, "arrow", 1)
-    head = [(60, 97), (80, 89), (60, 81), (66, 89)]
-    rig.add(prism([head[0], head[1], head[3]], 21, 25), "steel", 5, "arrowhead")
-    rig.add(prism([head[3], head[1], head[2]], 21, 25), "steel", 3, "arrowhead")
-    # the nock end sticks out behind the draw hand
+    rig.add(box(11, 21, 11, 1.5), "forest", 2, "bowgrip", (61, 91, 14))
+    # one taut string: limb tip to the nock to the other limb tip, never behind or across the figure
+    for limb in (BOW_UPPER, BOW_LOWER):
+        rig.bone(limb[-1][:3], NOCK, (2.4, 2.4), (2.4, 2.4), "ivory", 2, "string", 0.4, lo=2)
+    start = np.array(NOCK, float)
+    along = (ARROW_TIP - start) / np.linalg.norm(ARROW_TIP - start)
+    across = np.array((-along[1], along[0], 0.0)) / np.linalg.norm(along[:2])
+    rig.bone(start, ARROW_TIP - along * 13, (4, 4), (4, 4), "leather", 4, "arrow", 1)
+    base, notch = ARROW_TIP - along * 16, ARROW_TIP - along * 11
+    for sign, step in ((1, 5), (-1, 3)):
+        blade = [base + across * sign * 8, ARROW_TIP, notch]
+        rig.solid([p + (0, 0, z) for p in blade for z in (-2, 2)], "steel", step, "arrowhead")
+    # the fletching shows just behind the draw hand
     for sign, step in ((1, 3), (-1, 2)):
-        vane = [(-24, 87), (-31, 87), (-37, 87 + sign * 6), (-30, 87 + sign * 6)]
-        rig.add(prism(vane, 28, 30), "parchment", step, "nockvane")
+        vane = [(15, 94.5), (9, 94.5), (3, 94.5 + sign * 7), (10, 94.5 + sign * 7)]
+        rig.add(prism(vane, 29, 31), "parchment", step, "nockvane")
