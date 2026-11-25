@@ -1,0 +1,5 @@
+name: ArkenMMO
+version: '${version}'
+main: dev.casperrs.arkenMMO.ArkenMMO
+api-version: '26.3'
+description: Classes, levelling, rebirths and related MMO features.

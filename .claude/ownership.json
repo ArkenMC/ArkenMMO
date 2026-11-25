@@ -1,0 +1,144 @@
+{
+  "_comment": [
+    "Who may edit what. Human-controlled: only the user changes this file (the orchestrator only when the user asks).",
+    "Read by the mc-plugin-team plugin's ownership hook (PreToolUse, Edit|Write|NotebookEdit) and tools/ownership/check.py (mise run ownership-check).",
+    "Format: orchestrator = main session (no agent_type); agents = keyed by agent_type; each has the git name/email it commits with and 'paths'.",
+    "Globs on repo-relative paths: ** = any depth (also none), * = within one segment, leading ! excludes a path an earlier glob allowed (last match wins).",
+    "human_controlled wins over every list: agents are denied, the orchestrator gets 'ask'. A path may have several owners. Full rules: docstring of tools/ownership/ownership_lib.py (same file as the plugin's hooks/ownership_lib.py).",
+    "Each agent also owns its own persistent memory folder .claude/agent-memory/mc-plugin-team-<agent>/ (plugin agents run as mc-plugin-team:<agent>; memory: project)."
+  ],
+  "orchestrator": {
+    "name": "Rickroll Rick",
+    "email": "rick@team.invalid",
+    "paths": [
+      "CLAUDE.md",
+      "docs/briefs/**",
+      "docs/design.md",
+      ".github/**"
+    ]
+  },
+  "agents": {
+    "resource-pack-researcher": {
+      "name": "Citation Cindy",
+      "email": "cindy@team.invalid",
+      "paths": [
+        "docs/research/**",
+        ".claude/agent-memory/mc-plugin-team-resource-pack-researcher/**"
+      ]
+    },
+    "plugin-coder": {
+      "name": "Works4Me Wesly",
+      "email": "wesly@team.invalid",
+      "paths": [
+        "src/main/**",
+        "!src/main/java/**/vfx/**",
+        "!src/main/resources/sounds.yml",
+        "!src/main/resources/effects.yml",
+        "!src/main/resources/balance/**",
+        "pom.xml",
+        "tools/**",
+        "!tools/balance/**",
+        "!tools/**/test_*.py",
+        "mise.toml",
+        ".gitignore",
+        ".gitattributes",
+        ".mailmap",
+        "design/requirements.txt",
+        "docs/paper-*.md",
+        "docs/toolchain.md",
+        "docs/minimessage.md",
+        "docs/integrations.md",
+        ".claude/agent-memory/mc-plugin-team-plugin-coder/**"
+      ]
+    },
+    "plugin-tester": {
+      "name": "Gandalf",
+      "email": "gandalf@team.invalid",
+      "paths": [
+        "src/test/**",
+        "tools/**/test_*.py",
+        "docs/reviews/**",
+        "docs/architecture.md",
+        ".claude/agent-memory/mc-plugin-team-plugin-tester/**"
+      ]
+    },
+    "model-designer": {
+      "name": "Pixel Pat",
+      "email": "pat@team.invalid",
+      "paths": [
+        "resourcepack/**",
+        "!resourcepack/assets/*/sounds/**",
+        "!resourcepack/assets/*/sounds.json",
+        "!resourcepack/assets/*/lang/**",
+        "!resourcepack/assets/minecraft/particles/**",
+        "!resourcepack/assets/minecraft/textures/particle/**",
+        "itemsadder/**",
+        "modelengine/**",
+        "design/scripts/**",
+        "design/*.md",
+        "!design/sound-*",
+        "!design/vfx-*",
+        "!design/sounds.md",
+        "!design/effects.md",
+        "!design/CREDITS.md",
+        ".claude/agent-memory/mc-plugin-team-model-designer/**"
+      ]
+    },
+    "sound-designer": {
+      "name": "Bassboost Bruno",
+      "email": "bruno@team.invalid",
+      "paths": [
+        "resourcepack/assets/*/sounds/**",
+        "resourcepack/assets/*/sounds.json",
+        "resourcepack/assets/*/lang/**",
+        "src/main/resources/sounds.yml",
+        "design/sound-*",
+        "design/sound-*/**",
+        "design/sounds.md",
+        "design/CREDITS.md",
+        ".claude/agent-memory/mc-plugin-team-sound-designer/**"
+      ]
+    },
+    "vfx-designer": {
+      "name": "Flare Larry",
+      "email": "larry@team.invalid",
+      "paths": [
+        "src/main/java/**/vfx/**",
+        "src/test/java/**/vfx/**",
+        "src/main/resources/effects.yml",
+        "resourcepack/assets/minecraft/particles/**",
+        "resourcepack/assets/minecraft/textures/particle/**",
+        "design/vfx-*",
+        "design/vfx-*/**",
+        "design/effects.md",
+        ".claude/agent-memory/mc-plugin-team-vfx-designer/**"
+      ]
+    },
+    "balance-designer": {
+      "name": "Stonks Stan",
+      "email": "stan@team.invalid",
+      "paths": [
+        "src/main/resources/balance/**",
+        "tools/balance/**",
+        "!tools/**/test_*.py",
+        "docs/balance/**",
+        ".claude/agent-memory/mc-plugin-team-balance-designer/**"
+      ]
+    },
+    "repo-watcher": {
+      "name": "Gossip Gus",
+      "email": "gus@team.invalid",
+      "paths": [
+        ".claude/agent-memory/mc-plugin-team-repo-watcher/**"
+      ]
+    }
+  },
+  "human_controlled": [
+    ".claude/agents/**",
+    ".claude/skills/**",
+    "docs/workflow.md",
+    ".claude/ownership.*",
+    ".claude/hooks/**",
+    ".claude/settings.json"
+  ]
+}
