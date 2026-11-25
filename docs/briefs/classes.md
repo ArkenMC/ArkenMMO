@@ -30,7 +30,7 @@ After the tutorial (another plugin runs our command), I see two large pixel-art 
 - [ ] The class is saved and survives rejoin and restart.
 - [ ] No click or drag can move, take or insert items while a menu is open.
 - [ ] The plugin sends the resource pack (required) using URL, SHA-1 and UUID from the first section of `config.yml`, with an on/off switch; incomplete settings log a warning and send nothing. A menu requested while the pack is still loading opens once it has loaded.
-- [ ] All player-facing text is MiniMessage from config.
+- [ ] All player-facing text is MiniMessage from config. Exception: text painted into the art (headers, class names, "THIS CHOICE IS FINAL", "CONFIRM", "BACK"). Item tooltips still carry the final-choice wording and button names from config.
 
 ## Out of scope
 Skill trees, skills, levelling, rebirths, class switching, custom sounds, effects, ItemsAdder integration.
@@ -68,13 +68,13 @@ Art sources live in `design/scripts/` (helpers and hand-edited grids in subfolde
 | Agent | Task | Needs (gate) | Branch |
 |---|---|---|---|
 | model-designer | A1: pipeline, preview compositor, page frame, Warrior panel. A2: everything else | brief; A2 needs the user's approval of A1 | `classes/model-designer` |
-| plugin-coder | commands, menus, storage, pack sending; no tests | art approved and merged | `classes/plugin-coder` |
+| plugin-coder | commands, menus, storage, pack sending; no tests | contract (slots and glyphs are fixed) | `classes/plugin-coder` |
 
 ## Status
 | Agent | Status | Branch | Verdict | Notes |
 |---|---|---|---|---|
-| model-designer | A1 running | `classes/model-designer` | | |
-| plugin-coder | planned | | | waits for the art |
+| model-designer | A1 approved; A2 done, final tweaks | `classes/model-designer` | | Warrior, Archer, Mage beard, Captain moustache |
+| plugin-coder | running | `classes/plugin-coder` | | in parallel with the art tweaks (contract is fixed) |
 
 ## Merge order
 1. model-designer
