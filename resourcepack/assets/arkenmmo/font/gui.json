@@ -1,0 +1,45 @@
+{
+  "providers": [
+    {
+      "type": "space",
+      "advances": {
+        "\uf801": -1,
+        "\uf802": -2,
+        "\uf803": -4,
+        "\uf804": -8,
+        "\uf805": -16,
+        "\uf806": -32,
+        "\uf807": -64,
+        "\uf808": -128,
+        "\uf809": -256,
+        "\uf821": 1,
+        "\uf822": 2,
+        "\uf823": 4,
+        "\uf824": 8,
+        "\uf825": 16,
+        "\uf826": 32,
+        "\uf827": 64,
+        "\uf828": 128,
+        "\uf829": 256
+      }
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/class_select_1_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue001\ue002"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/class_select_1_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue003\ue004"
+      ]
+    }
+  ]
+}
