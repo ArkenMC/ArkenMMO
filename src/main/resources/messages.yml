@@ -1,0 +1,69 @@
+# All text players see, in MiniMessage format. Changes need a server restart.
+# Missing keys fall back to the built-in text.
+# The headings, class names and button labels painted into the menu art are part of the resource pack
+# and don't change with this file.
+
+resource-pack:
+  prompt: "<yellow>ArkenMMO needs its resource pack to show its menus."
+  failed: "<red>The resource pack didn't load, so the menu can't open. Type /class to try again."
+
+class:
+  waiting-for-pack: "<gray>The class selection opens once the resource pack has loaded."
+  chosen: "<green>You chose your class: <class>"
+  current: "<gray>Your class is <class>"
+
+command:
+  players-only: "<red>Only players can choose a class. Use /class select <name>."
+  select:
+    # <player>; has-class also has <class>
+    requested: "<gray>Class selection requested for <white><player></white>."
+    has-class: "<red><player> already has a class: <class>"
+  reset:
+    # <player>; done also has <class>
+    done: "<green><player> no longer has a class (was <class><green>)."
+    no-class: "<red><player> has no class."
+
+classes:
+  warrior:
+    name: "<#e8b33c>Warrior"
+    description:
+      - "<gray>A heavily armoured fighter"
+      - "<gray>who meets foes head on."
+  archer:
+    name: "<#6abf4b>Archer"
+    description:
+      - "<gray>A keen-eyed hunter who"
+      - "<gray>strikes from a distance."
+  mage:
+    name: "<#5aa9e6>Mage"
+    description:
+      - "<gray>A student of the arcane"
+      - "<gray>who commands the elements."
+  captain:
+    name: "<#d9534f>Captain"
+    description:
+      - "<gray>A battlefield leader who"
+      - "<gray>rallies and protects allies."
+
+menu:
+  next-page: "<yellow>Next page"
+  previous-page: "<yellow>Previous page"
+  back: "<yellow>Back"
+  # Shown under every class description
+  panel-footer:
+    - ""
+    - "<red>Your choice is final."
+    - "<yellow>Click to choose"
+  confirm:
+    # <class>
+    name: "<green>Confirm: <class>"
+    lore:
+      - "<red>This choice is final."
+  # Characters from the resource pack font that draw each menu's background. Only change them with the pack.
+  titles:
+    class-select-1: "<!shadow><white><font:arkenmmo:gui></font></white>"
+    class-select-2: "<!shadow><white><font:arkenmmo:gui></font></white>"
+    confirm-warrior: "<!shadow><white><font:arkenmmo:gui></font></white>"
+    confirm-archer: "<!shadow><white><font:arkenmmo:gui></font></white>"
+    confirm-mage: "<!shadow><white><font:arkenmmo:gui></font></white>"
+    confirm-captain: "<!shadow><white><font:arkenmmo:gui></font></white>"

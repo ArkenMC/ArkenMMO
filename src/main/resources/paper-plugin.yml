@@ -3,3 +3,10 @@ version: '${version}'
 main: dev.casperrs.arkenMMO.ArkenMMO
 api-version: '26.3'
 description: Classes, levelling, rebirths and related MMO features.
+permissions:
+  arkenmmo.class.select:
+    description: Open the class selection for a player (/class select)
+    default: op
+  arkenmmo.class.reset:
+    description: Remove a player's class (/class reset)
+    default: op

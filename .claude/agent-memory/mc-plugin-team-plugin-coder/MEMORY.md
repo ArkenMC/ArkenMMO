@@ -1,0 +1,1 @@
+- [Build and API facts](build-and-api.md) — sandbox mise workaround, verified 26.3 pack/command/item APIs
