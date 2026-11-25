@@ -1,60 +1,70 @@
-"""Builds the class selection pages: font tiles, font/gui.json, pack.mcmeta and the title strings."""
-from pixelkit import backdrops, chrome, layout, pack, warrior
+"""Builds every menu background: two class pages and four confirm screens.
+
+Writes the font tiles, font/gui.json, pack.mcmeta and the title strings.
+"""
+from pixelkit import chrome, heroes, layout, pack
 from pixelkit.draw import Canvas
 
-PAGE_1_GLYPHS = [chr(c) for c in range(0xE001, 0xE005)]
+
+def glyphs(first):
+    return [chr(c) for c in range(first, first + 4)]
+
+
+# page -> (left class, right class, glyphs)
+PAGES = {
+    "class_select_1": ("warrior", "archer", glyphs(0xE001)),
+    "class_select_2": ("mage", "captain", glyphs(0xE005)),
+}
+CONFIRMS = {
+    "confirm_warrior": ("warrior", glyphs(0xE101)),
+    "confirm_archer": ("archer", glyphs(0xE105)),
+    "confirm_mage": ("mage", glyphs(0xE109)),
+    "confirm_captain": ("captain", glyphs(0xE10D)),
+}
 # resource pack format 97.1 is Java Edition 26.3 (minecraft.wiki/w/Pack_format)
 PACK_MCMETA = {"pack": {"description": "ArkenMMO", "min_format": [97, 1], "max_format": 97}}
 
 
-def check_inside(figure, interior):
-    """Fail the build if a pose change would clip the figure against its panel."""
-    left, top, right, bottom = figure.image().getbbox()
-    margins = (left - interior[0], top - interior[1], interior[2] - right, interior[3] - bottom)
-    print(f"figure margins inside the panel (left, top, right, bottom): {margins}")
-    if min(margins) < 0:
-        raise ValueError("figure does not fit its panel")
-
-
-def warrior_panel(canvas, panel):
-    interior = chrome.panel_frame(canvas, panel)
-    backdrops.ember_keep(canvas, interior)
-    centre = (interior[0] + interior[2]) // 2
-    feet = interior[3] - 10
-    backdrops.contact_shadow(canvas, centre - 17, feet + 1, 22)
-    backdrops.contact_shadow(canvas, centre + 19, feet + 4, 25)
-    figure = warrior.paint(warrior.figure(), canvas.size, (centre - 2, feet - 1))
-    canvas.paste(figure, clip=interior)
-    check_inside(figure, interior)
-    chrome.panel_corners(canvas, panel)
-    chrome.name_plate(canvas, panel, "WARRIOR", "crimson", (("gold", 5), ("gold", 4), ("steel", 6)))
-
-
-def archer_placeholder(canvas, panel):
-    interior = chrome.panel_frame(canvas, panel)
-    backdrops.dormant(canvas, interior)
-    chrome.panel_corners(canvas, panel)
-    chrome.name_plate(canvas, panel, "ARCHER", "dusk_forest",
-                      (("iron", 5), ("iron", 5), ("iron", 5)), trim="iron", trim_step=1)
-
-
-def page(index, left, right):
+def background(body):
+    """The shell and inventory area every screen shares, around whatever `body` paints."""
     canvas = Canvas(*layout.CANVAS)
     chrome.shell(canvas)
-    chrome.header(canvas)
-    chrome.divider(canvas, index)
-    left(canvas, layout.LEFT_PANEL)
-    right(canvas, layout.RIGHT_PANEL)
+    body(canvas)
     chrome.inventory(canvas)
     return canvas
 
 
+def page(index, left, right):
+    def body(canvas):
+        chrome.header(canvas)
+        chrome.divider(canvas, index)
+        # the two heroes face each other across the divider
+        heroes.paint_panel(canvas, layout.LEFT_PANEL, left, facing=1)
+        heroes.paint_panel(canvas, layout.RIGHT_PANEL, right, facing=-1)
+    return background(body)
+
+
+def confirm(class_id):
+    def body(canvas):
+        chrome.header(canvas, "CONFIRM CHOICE")
+        chrome.confirm_column(canvas, heroes.HEROES[class_id].plate)
+        # facing right, toward the buttons: the figure is lit in 3D, not flipped
+        heroes.paint_panel(canvas, layout.LEFT_PANEL, class_id, facing=1)
+    return background(body)
+
+
 def main():
-    bitmaps = pack.save_background(page(0, warrior_panel, archer_placeholder), "class_select_1", PAGE_1_GLYPHS)
+    bitmaps, titles = [], {}
+    for index, (name, (left, right, chars)) in enumerate(PAGES.items()):
+        bitmaps += pack.save_background(page(index, left, right), name, chars)
+        titles[name] = pack.title(chars)
+    for name, (class_id, chars) in CONFIRMS.items():
+        bitmaps += pack.save_background(confirm(class_id), name, chars)
+        titles[name] = pack.title(chars)
     pack.write_font(bitmaps)
     pack.write_json(layout.PACK / "pack.mcmeta", PACK_MCMETA)
-    pack.write_json(layout.TITLES, {"class_select_1": pack.title(PAGE_1_GLYPHS)})
-    print("class_select_1 written")
+    pack.write_json(layout.TITLES, titles)
+    print(f"{len(titles)} backgrounds written")
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import numpy as np
 from scipy.spatial import ConvexHull
 
-from .draw import Canvas, dilate, shift
+from .draw import Canvas, dilate
 from .palette import col
 
 
@@ -62,11 +62,19 @@ class Part:
 
 class Rig:
     def __init__(self, yaw=28.0, pitch=10.0, light=(-0.46, 0.66, 0.60), scale=1.0):
-        self.scale = scale
+        self.scale, self.yaw, self.pitch = scale, yaw, pitch
         self.view = rot("x", pitch) @ rot("y", yaw)
         light = np.array(light, float)
         self.light = light / np.linalg.norm(light)
         self.parts = []
+
+    def mirror_view(self):
+        """Turn the camera to the other side; the light stays where it is."""
+        self.view = rot("x", self.pitch) @ rot("y", -self.yaw)
+
+    def solid(self, points, material, base, group, lo=1, hi=99):
+        """A hull from points already in figure space."""
+        self.parts.append(Part(np.array(points, float), material, base, group, lo, hi))
 
     def add(self, points, material, base, group, at=(0, 0, 0), turn=None, lo=1, hi=99):
         """`turn` rotates the points about their own origin before they move to `at`."""
@@ -98,8 +106,11 @@ class Rig:
                 return delta
         return -2
 
-    def render(self, size, origin):
-        """Rasterise into per-pixel buffers: depth, part index, face index and ramp step."""
+    def render(self, size, origin, keep=None):
+        """Rasterise into per-pixel buffers: depth, part index, face index and ramp step.
+
+        `keep(group)` limits the pass to some parts; face indices stay unique across passes.
+        """
         w, h = size
         depth = np.full((h, w), -1e9)
         part_id = np.full((h, w), -1)
@@ -107,6 +118,9 @@ class Rig:
         level = np.zeros((h, w), int)
         faces = 0
         for index, part in enumerate(self.parts):
+            if keep is not None and not keep(part.group):
+                faces += 64  # skip this part's face numbers
+                continue
             pts = part.points @ self.view.T * self.scale
             screen = np.column_stack((origin[0] + pts[:, 0], origin[1] - pts[:, 1]))
             hull = ConvexHull(pts)
@@ -144,14 +158,54 @@ class Rig:
                     level[y0:y1, x0:x1][win] = step
         return Buffers(self.parts, depth, part_id, face_id, level)
 
+    def render_blocky(self, size, origin, blocky, cell=4):
+        """Like `render`, but the groups accepted by `blocky` are snapped to a screen-aligned grid of
+        `cell` px blocks, which gives them the stair-stepped edge of a held block-game item."""
+        base = self.render(size, origin, keep=lambda g: not blocky(g))
+        items = self.render(size, origin, keep=blocky)
+        items.snap(cell, origin)
+        base.overlay(items)
+        return base
+
 
 class Buffers:
     def __init__(self, parts, depth, part_id, face_id, level):
         self.parts, self.depth, self.part_id, self.face_id, self.level = parts, depth, part_id, face_id, level
-        self.mask = part_id >= 0
-        names = sorted({p.group for p in parts})
-        lookup = np.array([names.index(p.group) for p in parts] + [-1])
-        self.group = lookup[part_id]
+        self._index()
+
+    def _index(self):
+        self.mask = self.part_id >= 0
+        names = sorted({p.group for p in self.parts})
+        lookup = np.array([names.index(p.group) for p in self.parts] + [-1])
+        self.group = lookup[self.part_id]
+
+    def _layers(self):
+        return self.depth, self.part_id, self.face_id, self.level
+
+    def snap(self, cell, origin):
+        """A block at least half covered is filled with its most common face; the others are cleared."""
+        h, w = self.mask.shape
+        ox, oy = int(origin[0]) % cell, int(origin[1]) % cell
+        for y0 in range(oy, h - cell + 1, cell):
+            for x0 in range(ox, w - cell + 1, cell):
+                block = (slice(y0, y0 + cell), slice(x0, x0 + cell))
+                faces = self.face_id[block]
+                filled = faces[faces >= 0]
+                if filled.size * 2 < cell * cell:
+                    self.depth[block], self.part_id[block], self.face_id[block] = -1e9, -1, -1
+                    continue
+                main = np.bincount(filled).argmax()
+                y, x = np.argwhere(faces == main)[0]
+                for layer in self._layers():
+                    layer[block] = layer[y0 + y, x0 + x]
+        self._index()
+
+    def overlay(self, other):
+        """Merge another pass by depth."""
+        win = (other.part_id >= 0) & (other.depth > self.depth)
+        for mine, theirs in zip(self._layers(), other._layers()):
+            mine[win] = theirs[win]
+        self._index()
 
     def _occluded(self, dx, dy, threshold):
         """Pixels whose neighbour at offset (-dx, -dy) is a different, clearly nearer group."""

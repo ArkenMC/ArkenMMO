@@ -168,6 +168,70 @@ SAMPLE_ITEMS = {(0, 3): "sword", (1, 3): "bread", (2, 3): "apple", (3, 3): "coal
                 (0, 0): "log", (4, 1): "coal", (5, 1): "gem", (7, 2): "bread", (8, 0): "apple"}
 
 
+def nine_slice(sprite, scaling, width, height):
+    """Stretch or tile a GUI sprite the way its .mcmeta describes."""
+    b = scaling["border"]
+    stretch = scaling.get("stretch_inner", False)
+    out = Image.new("RGBA", (width, height))
+    xs = [(0, b, 0, b), (b, sprite.width - b, b, width - b), (sprite.width - b, sprite.width, width - b, width)]
+    ys = [(0, b, 0, b), (b, sprite.height - b, b, height - b),
+          (sprite.height - b, sprite.height, height - b, height)]
+    for sy0, sy1, dy0, dy1 in ys:
+        for sx0, sx1, dx0, dx1 in xs:
+            piece = sprite.crop((sx0, sy0, sx1, sy1))
+            if stretch:
+                out.paste(piece.resize((dx1 - dx0, dy1 - dy0), NEAREST), (dx0, dy0))
+                continue
+            for y in range(dy0, dy1, piece.height):
+                for x in range(dx0, dx1, piece.width):
+                    out.paste(piece.crop((0, 0, min(piece.width, dx1 - x), min(piece.height, dy1 - y))), (x, y))
+    return out
+
+
+def tooltip(style, text_width, text_height):
+    """A tooltip box around a mock text block: vanilla draws the sprites 12 GUI px outside the text."""
+    folder = layout.ASSETS / "textures" / "gui" / "sprites" / "tooltip"
+    width, height = text_width + 24, text_height + 24
+    box = Image.new("RGBA", (width, height))
+    for part in ("background", "frame"):
+        path = folder / f"{style}_{part}.png"
+        meta = json.loads(path.with_name(path.name + ".mcmeta").read_text(encoding="utf-8"))
+        box.alpha_composite(nine_slice(Image.open(path).convert("RGBA"), meta["gui"]["scaling"], width, height))
+    draw = ImageDraw.Draw(box)
+    # bars stand in for the item name and lore
+    for row, (length, colour) in enumerate(((0.55, (255, 220, 110)), (1.0, (180, 180, 190)),
+                                            (0.85, (180, 180, 190)), (0.4, (180, 180, 190)))):
+        y = 12 + row * 10 + (2 if row else 0)
+        draw.rectangle((12, y + 1, 12 + int(text_width * length) - 1, y + 5), fill=colour + (255,))
+    return box
+
+
+def sprite_views(save):
+    """Tooltip styles over a menu, plus checks on the invisible highlight and the blank item."""
+    styles = ["warrior", "archer", "mage", "captain"]
+    sheet = _world((4 * 150 * 3, 76 * 3), 3)
+    for index, style in enumerate(styles):
+        box = tooltip(style, 108, 46)
+        sheet.alpha_composite(box.resize((box.width * 3, box.height * 3), NEAREST), (index * 150 * 3 + 27, 9))
+    save(sheet, "tooltips_scale3.png")
+    menu = compose(title_strings()["class_select_1"], 3, screen=(1280, 720))
+    box = tooltip("warrior", 108, 46)
+    menu.alpha_composite(box.resize((box.width * 3, box.height * 3), NEAREST), (560, 120))
+    save(menu, "tooltip_in_menu_scale3.png")
+
+    container = layout.PACK / "assets" / "minecraft" / "textures" / "gui" / "sprites" / "container"
+    for name in ("slot_highlight_back", "slot_highlight_front"):
+        sprite = Image.open(container / f"{name}.png").convert("RGBA")
+        if sprite.getchannel("A").getextrema() != (0, 0) or not (container / f"{name}.png.mcmeta").is_file():
+            raise ValueError(f"{name} must be fully transparent and have its .mcmeta")
+    blank = json.loads((layout.ASSETS / "items" / "gui" / "blank.json").read_text(encoding="utf-8"))
+    if blank["model"]["type"] != "minecraft:empty":
+        raise ValueError("arkenmmo:gui/blank must use minecraft:empty")
+    icon = Image.open(layout.PACK / "pack.png").convert("RGBA")
+    save(icon.resize((icon.width * 4, icon.height * 4), NEAREST), "pack_icon_x4.png")
+    print("highlight sprites are fully transparent; blank item is minecraft:empty")
+
+
 def compose(title, scale, screen=None, leak=False, items=True, slots=False):
     view = Screen(scale, screen)
     _vanilla_panel(view, LEAK if leak else VANILLA_GREY)
@@ -181,15 +245,31 @@ def compose(title, scale, screen=None, leak=False, items=True, slots=False):
             x0, y0, _, _ = player_cell(column, row)
             view.stamp(_sample_item(kind), x0 + 1, y0 + 1, 16, 16)
     if slots:
-        _slot_lines(view)
+        _slot_lines(view, slots)
     return view.image
 
 
-def _slot_lines(view):
-    """1 px outlines of every slot, with the three click regions coloured."""
+CYAN, GREEN, YELLOW, ORANGE, IDLE = (80, 220, 255), (120, 255, 120), (255, 230, 60), (255, 140, 60), (110, 110, 110)
+
+
+def _page_region(column, row):
+    """Left panel, right panel and the page button."""
+    return CYAN if column < 4 else GREEN if column > 4 else YELLOW if row >= 4 else IDLE
+
+
+def _confirm_region(column, row):
+    """Only Confirm (columns 5-8, rows 1-2) and Back (rows 3-4) are clickable."""
+    if column < 5 or row in (0, 5):
+        return IDLE
+    return GREEN if row <= 2 else ORANGE
+
+
+def _slot_lines(view, kind):
+    """1 px outlines of every slot, coloured by click region; `kind` is "page" or "confirm"."""
     draw = ImageDraw.Draw(view.image)
-    cells = [(cell(c, r), (80, 220, 255) if c < 4 else (120, 255, 120) if c > 4 else
-              (255, 230, 60) if r >= 4 else (150, 150, 150)) for r in range(6) for c in range(9)]
+    region = _confirm_region if kind == "confirm" else _page_region
+    # idle cells first, so the shared edges show the clickable colour
+    cells = sorted(((cell(c, r), region(c, r)) for r in range(6) for c in range(9)), key=lambda item: item[1] != IDLE)
     cells += [(player_cell(c, r), (255, 255, 255)) for r in range(4) for c in range(9)]
     for (x0, y0, x1, y1), colour in cells:
         (ax, ay), (bx, by) = view.px(x0, y0), view.px(x1, y1)

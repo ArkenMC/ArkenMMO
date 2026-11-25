@@ -40,6 +40,96 @@
       "chars": [
         "\ue003\ue004"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/class_select_2_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue005\ue006"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/class_select_2_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue007\ue008"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_warrior_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue101\ue102"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_warrior_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue103\ue104"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_archer_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue105\ue106"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_archer_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue107\ue108"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_mage_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue109\ue10a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_mage_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue10b\ue10c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_captain_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue10d\ue10e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/confirm_captain_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue10f\ue110"
+      ]
     }
   ]
 }
