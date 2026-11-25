@@ -1,0 +1,117 @@
+[tools]
+java = "temurin-25"
+maven = "3.9"
+python = "3.12"
+
+[env]
+# Project-local venv for the asset scripts; mise creates and activates it automatically
+_.python.venv = { path = ".venv", create = true }
+
+[tasks.build]
+description = "Compile, test and package the plugin jar"
+run = "mvn -B package"
+
+[tasks.test]
+description = "Run unit tests"
+run = "mvn -B test"
+
+[tasks.check]
+description = "Full clean build"
+run = "mvn -B clean verify"
+
+[tasks.check-quiet]
+description = "Full clean build like check, but prints only the result and failures (for agents; saves tokens)"
+quiet = true
+# Extra Maven flags go through MAVEN_ARGS (read by Maven 3.9 itself), e.g. MAVEN_ARGS="-Dtest=FooTest".
+# The log lives outside target/ because clean deletes target/.
+run = """
+#!/usr/bin/env bash
+log="$PWD/.check.log"
+mvn -B clean verify > "$log" 2>&1
+code=$?
+grep -E '^\\[(INFO|WARNING|ERROR)\\] Tests run: ' "$log" | grep -v 'Time elapsed' | tail -n 1
+grep -E '^\\[(INFO|ERROR)\\] BUILD (SUCCESS|FAILURE)' "$log" | tail -n 1
+if [ "$code" -ne 0 ]; then
+  grep -E '^\\[ERROR\\] ' "$log" | grep -vE '^\\[ERROR\\] *$|^\\[ERROR\\] \\[Help|Re-run Maven|full stack trace|re-run Maven|For more information' | head -n 40
+fi
+echo "Full log: $log"
+exit $code
+"""
+
+[tasks.assets-deps]
+description = "Install the Python packages for the asset scripts into .venv"
+sources = ["design/requirements.txt"]
+outputs = [".venv/.assets-deps"]
+run = "pip install -q --disable-pip-version-check -r design/requirements.txt && touch .venv/.assets-deps"
+
+[tasks.assets]
+description = "Run every asset generator script in design/scripts/"
+depends = ["assets-deps"]
+run = """
+for script in design/scripts/*.py; do
+  [ -e "$script" ] || { echo "No scripts in design/scripts/"; break; }
+  echo "Running $script"
+  python "$script" || exit 1
+done
+"""
+
+[tasks.validate-assets]
+description = "Check asset JSON/YAML, model/texture/sound references, sounds.yml and effects.yml"
+depends = ["assets-deps"]
+run = "python tools/validate_assets.py"
+
+[tasks.sounds]
+description = "Regenerate every sound from design/sound-scripts/"
+depends = ["assets-deps"]
+run = """
+for script in design/sound-scripts/*.py; do
+  [ -e "$script" ] || { echo "No scripts in design/sound-scripts/"; break; }
+  echo "Running $script"
+  python "$script" || exit 1
+done
+"""
+
+[tasks.sound-previews]
+description = "Render waveform + spectrogram PNGs for every .ogg to design/sound-previews/"
+depends = ["assets-deps"]
+run = "python design/sound-tools/render_previews.py"
+
+[tasks.sound-check]
+description = "Measure every .ogg; fail on stereo positional sounds, clipping, leading silence, abrupt endings or bad format"
+depends = ["assets-deps"]
+run = "python tools/sound_check.py"
+
+[tasks.vfx-previews]
+description = "Export effect point data from the Java shape code, then plot it to design/vfx-previews/"
+depends = ["assets-deps"]
+run = """
+mvn -B test -Dtest='*PreviewExport' -Dsurefire.failIfNoSpecifiedTests=false || exit 1
+for script in design/vfx-scripts/*.py; do
+  [ -e "$script" ] || { echo "No scripts in design/vfx-scripts/"; break; }
+  echo "Running $script"
+  python "$script" || exit 1
+done
+"""
+
+[tasks.pack]
+description = "Zip resourcepack/ to target/resourcepack.zip and print its SHA-1"
+run = "python tools/pack.py"
+
+[tasks.review]
+description = "Build design/review/index.html (local asset review page: textures, sounds, effects)"
+depends = ["sound-previews"]
+run = "python tools/review.py"
+
+
+[tasks.team]
+description = "Show commits per team member (agent identities)"
+run = "git shortlog -sn --all"
+
+[tasks.ownership-check]
+description = "Check every commit on <branch> against .claude/ownership.json: mise run ownership-check <branch> [--base <feature-branch>]"
+run = "python tools/ownership/check.py"
+
+[tasks.tools-test]
+description = "Run the Python tool tests (tools/**/test_*.py); passes when there are none yet"
+depends = ["assets-deps"]
+run = "python -m unittest discover -s tools -p 'test_*.py' || { rc=$?; [ $rc -eq 5 ] && echo 'No tool tests found' && exit 0; exit $rc; }"

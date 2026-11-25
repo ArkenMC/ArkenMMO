@@ -1,0 +1,12 @@
+{
+  "enabledPlugins": {
+    "mc-plugin-team@mc-plugin-team": true
+  },
+  "permissions": {
+    "deny": [
+      "Agent(mc-plugin-team:plugin-tester)",
+      "Agent(mc-plugin-team:balance-designer)",
+      "Agent(mc-plugin-team:repo-watcher)"
+    ]
+  }
+}

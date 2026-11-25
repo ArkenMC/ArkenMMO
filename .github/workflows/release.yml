@@ -35,7 +35,7 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           gh release delete latest --cleanup-tag --yes || true
-          gh release create latest target/ArkenCore-*.jar \
+          gh release create latest target/ArkenMMO-*.jar \
             --target "$SHA" \
             --title "Latest build (${SHA::7})" \
             --notes "Automatic build of main at $SHA"
