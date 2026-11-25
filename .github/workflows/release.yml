@@ -1,0 +1,41 @@
+name: Release
+
+# Every push to main builds the jar and replaces the rolling "latest" release
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5
+        with:
+          cache: true
+
+      - name: Build and test
+        run: mise run build
+
+      - name: Publish latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        run: |
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest target/ArkenCore-*.jar \
+            --target "$SHA" \
+            --title "Latest build (${SHA::7})" \
+            --notes "Automatic build of main at $SHA"
