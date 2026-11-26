@@ -337,8 +337,8 @@ skills:
         name: "<#e8b33c>Cleave"
         description:
           - "<gray>Sweep your weapon, hitting all"
-          - "<gray>enemies in a <white><range></white>-block cone for"
-          - "<gray><white><damage>%</white> power."
+          - "<gray>enemies in a <white><range></white>-block, <white><angle>-degree</white>"
+          - "<gray>cone for <white><damage>%</white> power."
       shield_bash:
         name: "<#e8b33c>Shield Bash"
         description:
@@ -590,7 +590,8 @@ skills:
         description:
           - "<gray>Deal <white><damage>%</white> power within <white><radius></white> blocks"
           - "<gray>and root enemies for <white><duration>s</white>. Players"
-          - "<gray>and bosses are slowed."
+          - "<gray>and bosses are slowed <white><player_slow>%</white>"
+          - "<gray>instead."
       shatter:
         name: "<#5aa9e6>Shatter"
         description:
@@ -713,10 +714,11 @@ skills:
       sworn_bond:
         name: "<#d9534f>Sworn Bond"
         description:
-          - "<gray>Bond the ally you aim at, else"
-          - "<gray>your herald or yourself, for <white><duration>s</white>."
-          - "<gray>They get a <white><shield>%</white> power shield for"
-          - "<gray><white><shield_duration>s</white> and <white><bonus>%</white> more damage. If not"
+          - "<gray>Bond the ally you aim at within"
+          - "<gray><white><range></white> blocks, else your herald or"
+          - "<gray>yourself, for <white><duration>s</white>. They get"
+          - "<gray>a <white><shield>%</white> power shield for <white><shield_duration>s</white>"
+          - "<gray>and <white><bonus>%</white> more damage. If not"
           - "<gray>you, you gain <white><self_bonus>%</white> more."
       war_ballad:
         name: "<#d9534f>War Ballad"
@@ -746,7 +748,8 @@ skills:
       coda:
         name: "<#d9534f>Coda"
         description:
-          - "<gray>Spend all Verses. Per Verse, deal"
+          - "<gray>Needs <white><verses></white> Verse. Spend all"
+          - "<gray>Verses. Per Verse, deal"
           - "<gray><white><damage>%</white> power to enemies and heal"
           - "<gray>allies <white><heal>%</white> power within <white><radius></white> blocks."
 

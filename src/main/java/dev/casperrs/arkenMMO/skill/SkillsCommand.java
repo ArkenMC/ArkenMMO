@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 /** {@code /skills} */
 public final class SkillsCommand {
 
+    static final String PERMISSION = "arkenmmo.skills";
+
     private final SkillMenus menus;
     private final Messages messages;
 
@@ -20,6 +22,7 @@ public final class SkillsCommand {
 
     public LiteralCommandNode<CommandSourceStack> node() {
         return Commands.literal("skills")
+                .requires(source -> source.getSender().hasPermission(PERMISSION))
                 .executes(context -> {
                     if (context.getSource().getExecutor() instanceof Player player) {
                         menus.request(player);
