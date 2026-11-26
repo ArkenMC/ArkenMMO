@@ -20,3 +20,5 @@ metadata:
 - `pack.write_font` / `write_titles` merge, because several generators share `gui.json` and `titles.json`.
 - (2026-11-26) `rm -rf` of a preview folder was denied by permissions; leave old previews, don't work around it.
 - Before changing approved art, save its pixels to the scratchpad and compare afterwards.
+- (2026-11-26) No mise locally: make a venv in the scratchpad with `pillow==13.0.0 numpy==2.5.4 scipy==1.18.1 pyyaml`, then run `design/scripts/<x>.py`, `tools/validate_assets.py`, `tools/pack.py` from the worktree root. `curl` needs `--ssl-no-revoke` on this Windows machine. Compare regenerated PNGs by pixels: bytes differ across Python/Pillow builds.
+- (2026-11-26, InventivetalentDev/minecraft-assets@26.2) Vanilla `inventory.png`: 46 cells, all 18x18 (55 grey top-left, 139 floor, white bottom-right); result slot (153,27) is a plain cell; model box outer (25,7)-(75,78); panel corners clear 3 px. Spec and generator: `design/gui-inventory.md`, `design/scripts/gui_inventory.py`.
