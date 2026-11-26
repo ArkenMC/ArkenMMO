@@ -1,0 +1,2 @@
+- [Audio tooling](tooling.md): mise in sandbox, synth.py helpers, javap check of vanilla sound keys, worktree command limits
+- [ItemsAdder sounds](sources.md): what the wiki says about sounds.json, what is unverified, URLs

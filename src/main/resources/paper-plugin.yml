@@ -4,6 +4,9 @@ main: dev.casperrs.arkenMMO.ArkenMMO
 api-version: '26.2'
 description: Classes, levelling, rebirths and related MMO features.
 permissions:
+  arkenmmo.skills:
+    description: Open your own skill tree and loadout (/skills)
+    default: true
   arkenmmo.class.select:
     description: Open the class selection for a player (/class select)
     default: op

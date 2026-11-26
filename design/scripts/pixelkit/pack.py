@@ -54,6 +54,26 @@ def write_json(path, data):
     path.write_text(json.dumps(data, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
 
 
+def _read_json(path, empty):
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else empty
+
+
 def write_font(bitmaps):
+    """Adds or replaces bitmap providers. Several generators share the font, so providers from the
+    others stay as long as their texture exists. Sorted by character, so run order does not matter."""
+    path = layout.ASSETS / "font" / "gui.json"
+    textures = layout.ASSETS / "textures"
+    merged = {p["file"]: p for p in _read_json(path, {"providers": []})["providers"]
+              if p["type"] == "bitmap" and (textures / p["file"].split(":")[1]).is_file()}
+    merged.update({p["file"]: p for p in bitmaps})
+    ordered = sorted(merged.values(), key=lambda p: p["chars"])
+    chars = [c for p in ordered for row in p["chars"] for c in row]
+    if len(chars) != len(set(chars)) or set(chars) & set(SHIFTS.values()):
+        raise ValueError("two font providers use the same character")
     advances = {char: pixels for pixels, char in sorted(SHIFTS.items(), key=lambda item: item[1])}
-    write_json(layout.ASSETS / "font" / "gui.json", {"providers": [{"type": "space", "advances": advances}, *bitmaps]})
+    write_json(path, {"providers": [{"type": "space", "advances": advances}, *ordered]})
+
+
+def write_titles(titles):
+    merged = {**_read_json(layout.TITLES, {}), **titles}
+    write_json(layout.TITLES, dict(sorted(merged.items())))

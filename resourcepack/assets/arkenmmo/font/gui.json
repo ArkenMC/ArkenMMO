@@ -130,6 +130,1158 @@
       "chars": [
         "\ue10f\ue110"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue201\ue202"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue203\ue204"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue205\ue206"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue207\ue208"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue209\ue20a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue20b\ue20c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue20d\ue20e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue20f\ue210"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue211\ue212"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue213\ue214"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue215\ue216"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue217\ue218"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue221\ue222"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue223\ue224"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue225\ue226"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue227\ue228"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue229\ue22a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue22b\ue22c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue22d\ue22e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue22f\ue230"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue231\ue232"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue233\ue234"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue235\ue236"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue237\ue238"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue241\ue242"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue243\ue244"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue245\ue246"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue247\ue248"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue249\ue24a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue24b\ue24c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue24d\ue24e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue24f\ue250"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue251\ue252"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue253\ue254"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue255\ue256"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue257\ue258"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue261\ue262"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue263\ue264"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue265\ue266"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue267\ue268"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue269\ue26a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue26b\ue26c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue26d\ue26e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue26f\ue270"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_a_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue271\ue272"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_a_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue273\ue274"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue275\ue276"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue277\ue278"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_warrior_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue281\ue282"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_warrior_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue283\ue284"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_archer_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue285\ue286"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_archer_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue287\ue288"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_mage_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue289\ue28a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_mage_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue28b\ue28c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_captain_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue28d\ue28e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/loadout_captain_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue28f\ue290"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue301\ue302"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue303\ue304"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue305\ue306"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue307\ue308"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue309\ue30a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_guardian_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue30b\ue30c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue30d\ue30e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue30f\ue310"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue311\ue312"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue313\ue314"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue315\ue316"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_berserker_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue317\ue318"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue319\ue31a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue31b\ue31c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue31d\ue31e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue31f\ue320"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue321\ue322"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_warrior_duelist_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue323\ue324"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue325\ue326"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue327\ue328"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue329\ue32a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue32b\ue32c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue32d\ue32e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_marksman_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue32f\ue330"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue331\ue332"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue333\ue334"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue335\ue336"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue337\ue338"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue339\ue33a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_skirmisher_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue33b\ue33c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue33d\ue33e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue33f\ue340"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue341\ue342"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue343\ue344"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue345\ue346"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_archer_hunter_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue347\ue348"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue349\ue34a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue34b\ue34c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue34d\ue34e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue34f\ue350"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue351\ue352"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_pyromancer_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue353\ue354"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue355\ue356"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue357\ue358"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue359\ue35a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue35b\ue35c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue35d\ue35e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_frostweaver_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue35f\ue360"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue361\ue362"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue363\ue364"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue365\ue366"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue367\ue368"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue369\ue36a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_mage_lifebinder_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue36b\ue36c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue36d\ue36e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue36f\ue370"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue371\ue372"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue373\ue374"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue375\ue376"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_vanguard_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue377\ue378"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue379\ue37a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue37b\ue37c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue37d\ue37e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue37f\ue380"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue381\ue382"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_standard_bearer_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue383\ue384"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_left_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue385\ue386"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_left_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue387\ue388"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_right_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue389\ue38a"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_right_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue38b\ue38c"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_both_top.png",
+      "ascent": 13,
+      "height": 111,
+      "chars": [
+        "\ue38d\ue38e"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "arkenmmo:font/gui/tree_captain_warchanter_b_both_bottom.png",
+      "ascent": -98,
+      "height": 111,
+      "chars": [
+        "\ue38f\ue390"
+      ]
     }
   ]
 }

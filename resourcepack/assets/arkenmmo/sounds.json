@@ -1,0 +1,38 @@
+{
+  "ui.combo_click_left": {
+    "subtitle": "subtitles.arkenmmo.ui.combo_click_left",
+    "sounds": ["arkenmmo:ui/combo_click_left_1", "arkenmmo:ui/combo_click_left_2", "arkenmmo:ui/combo_click_left_3"]
+  },
+  "ui.combo_click_right": {
+    "subtitle": "subtitles.arkenmmo.ui.combo_click_right",
+    "sounds": ["arkenmmo:ui/combo_click_right_1", "arkenmmo:ui/combo_click_right_2", "arkenmmo:ui/combo_click_right_3"]
+  },
+  "ui.cast_fail": {
+    "subtitle": "subtitles.arkenmmo.ui.cast_fail",
+    "sounds": ["arkenmmo:ui/cast_fail"]
+  },
+  "skill.warrior.cleave": {
+    "subtitle": "subtitles.arkenmmo.skill.warrior.cleave",
+    "sounds": ["arkenmmo:skill/warrior/cleave_1", "arkenmmo:skill/warrior/cleave_2", "arkenmmo:skill/warrior/cleave_3"]
+  },
+  "skill.warrior.leaping_strike": {
+    "subtitle": "subtitles.arkenmmo.skill.warrior.leaping_strike",
+    "sounds": ["arkenmmo:skill/warrior/leaping_strike_1", "arkenmmo:skill/warrior/leaping_strike_2"]
+  },
+  "skill.warrior.leaping_strike_impact": {
+    "subtitle": "subtitles.arkenmmo.skill.warrior.leaping_strike_impact",
+    "sounds": ["arkenmmo:skill/warrior/leaping_strike_impact_1", "arkenmmo:skill/warrior/leaping_strike_impact_2"]
+  },
+  "skill.warrior.whirlwind": {
+    "subtitle": "subtitles.arkenmmo.skill.warrior.whirlwind",
+    "sounds": ["arkenmmo:skill/warrior/whirlwind_1", "arkenmmo:skill/warrior/whirlwind_2", "arkenmmo:skill/warrior/whirlwind_3"]
+  },
+  "skill.warrior.execute": {
+    "subtitle": "subtitles.arkenmmo.skill.warrior.execute",
+    "sounds": ["arkenmmo:skill/warrior/execute_1", "arkenmmo:skill/warrior/execute_2"]
+  },
+  "skill.warrior.execute_low": {
+    "subtitle": "subtitles.arkenmmo.skill.warrior.execute_low",
+    "sounds": ["arkenmmo:skill/warrior/execute_low_1", "arkenmmo:skill/warrior/execute_low_2"]
+  }
+}
