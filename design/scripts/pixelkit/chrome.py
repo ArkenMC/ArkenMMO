@@ -7,6 +7,11 @@ from .layout import art, cell, player_cell
 from .palette import col
 
 DARK = col("iron", 0)
+# the shell's bevelled rim, outside in: (top/left, bottom/right) per ring
+RIM = [(DARK, DARK), (DARK, DARK),
+       (col("iron", 5), col("iron", 1)), (col("iron", 4), col("iron", 1)),
+       (col("iron", 3), col("iron", 2)), (col("iron", 3), col("iron", 2)),
+       (DARK, col("iron", 4))]
 
 
 def _diamond(cx, cy, rx, ry):
@@ -44,17 +49,12 @@ def corner_bracket(canvas, x, y, dx, dy, length=14):
     canvas.rect((rivet[0], rivet[1], rivet[0] + 1, rivet[1] + 1), col("gold", 5))
 
 
-def shell(canvas):
-    """Opaque iron body covering the whole vanilla panel, with its bevelled outer rim."""
-    width, height = layout.CANVAS
-    bottom = layout.VANILLA_H * layout.DENSITY
+def shell(canvas, size=None):
+    """Opaque iron body covering the whole vanilla panel (`size` in art px, default the menu's), with its bevelled outer rim."""
+    width, bottom = size or (layout.CANVAS[0], layout.VANILLA_H * layout.DENSITY)
     body = (0, 0, width, bottom)
     canvas.rect(body, col("iron", 2))
-    rim = [(DARK, DARK), (DARK, DARK),
-           (col("iron", 5), col("iron", 1)), (col("iron", 4), col("iron", 1)),
-           (col("iron", 3), col("iron", 2)), (col("iron", 3), col("iron", 2)),
-           (DARK, col("iron", 4))]
-    frame(canvas, body, rim)
+    frame(canvas, body, RIM)
     # one GUI pixel off each corner, which the vanilla texture also leaves clear
     for x in (0, width - 2):
         for y in (0, bottom - 2):
@@ -287,6 +287,15 @@ def confirm_column(canvas, ramp):
     gem(canvas, middle, centre_y, 10, ramp)
 
 
+def slot_cell(canvas, rect, outer=None):
+    """One recessed iron cell on an art-px rect; `outer` swaps the first ring for a (top/left, bottom/right) pair."""
+    x0, y0, x1, y1 = rect
+    frame(canvas, rect, [
+        outer or (col("iron", 2), col("iron", 2)),
+        (DARK, col("iron", 4)), (col("iron", 1), col("iron", 3))])
+    canvas.rect((x0 + 3, y0 + 3, x1 - 3, y1 - 3), col("iron", 3))
+
+
 def inventory(canvas):
     """Calm recessed cells under the player's own items, and a light plate behind the vanilla label."""
     top = layout.GRID[3]
@@ -307,10 +316,6 @@ def inventory(canvas):
 
     for row in range(4):
         for column in range(9):
-            x0, y0, x1, y1 = art(player_cell(column, row))
-            frame(canvas, (x0, y0, x1, y1), [
-                (col("iron", 2), col("iron", 2)),
-                (DARK, col("iron", 4)), (col("iron", 1), col("iron", 3))])
-            canvas.rect((x0 + 3, y0 + 3, x1 - 3, y1 - 3), col("iron", 3))
+            slot_cell(canvas, art(player_cell(column, row)))
     for x, dx in ((4, 1), (width - 4, -1)):
         corner_bracket(canvas, x, layout.VANILLA_H * layout.DENSITY - 4, dx, -1, 9)
