@@ -1,0 +1,97 @@
+# Effect presets, played by ID. Full notes: design/effects.md.
+# Effects left out of this file use the built-in version.
+#
+# limits:
+#   max-particles-per-effect  particles one play may spawn; larger presets are thinned evenly at load
+#   max-active-effects        animated effects running at once; beyond it an effect appears all at once
+#
+# <effect id>:
+#   layers: a list of layers. A layer with a bad value or an unknown key is logged and skipped.
+#
+# Every layer:
+#   type            particle (the only type)
+#   particle        a Particle name, lower case
+#   shape           arc | line
+#   points          particles on the shape, 1-500 (default 1; one point sits in the middle)
+#   delay-ticks     ticks before the layer starts, 0-100 (default 0)
+#   duration-ticks  ticks over which the points appear in order, 1-100 (default 1 = all at once)
+#   motion          none | outward | up | spin (default none). outward: away from the centre of an arc,
+#                   spin: the way an arc is drawn. On a line, outward and spin follow the line.
+#   lift            upward part added to the direction of a moving particle, -4 to 4 (default 0)
+#   speed           particle speed, 0-4 (default 0 = still; motion needs speed above 0)
+#   jitter          random position shift in blocks, 0-2 (default 0)
+#
+# Positions are in blocks from the effect's location, turned by its yaw.
+# arc:   radius (default 1), end-radius (default radius), y (default 0), end-y (default y),
+#        start-angle (degrees, 0 = forward, positive = right; default 0),
+#        sweep (degrees, negative = leftwards; default 360 = ring)
+# line:  from: [right, up, forward], to: [right, up, forward]
+#
+# Particle data (only for particles that need it):
+#   dust                   color: "#rrggbb", size 0.1-4 (default 1)
+#   dust_color_transition  color, to-color, size
+#   block, dust_pillar     block: a block such as minecraft:stone, or "ground" for the block
+#                          under the effect (coarse dirt when there is none)
+
+limits:
+  max-particles-per-effect: 200
+  max-active-effects: 64
+
+# One diagonal slash, right to left, over the 120 degree, 3.5 block cone.
+skill_warrior_cleave:
+  layers:
+    # Blade edge at the real reach
+    - { type: particle, particle: dust, color: "#e8433a", size: 0.9, shape: arc, radius: 3.5, start-angle: 60, sweep: -120, y: 1.4, end-y: 0.8, points: 36, duration-ticks: 3 }
+    # Darker trail inside it
+    - { type: particle, particle: dust, color: "#8a2430", size: 0.8, shape: arc, radius: 3.05, start-angle: 54, sweep: -108, y: 1.37, end-y: 0.83, points: 22, delay-ticks: 1, duration-ticks: 3 }
+    - { type: particle, particle: sweep_attack, shape: arc, radius: 2.3, start-angle: 38, sweep: -76, y: 1.2, end-y: 0.9, points: 3, duration-ticks: 3 }
+    - { type: particle, particle: crit, shape: arc, radius: 3.2, start-angle: 54, sweep: -108, y: 1.35, end-y: 0.85, points: 8, duration-ticks: 3, motion: spin, speed: 0.35 }
+
+# Take-off: a small tight ring and a short upward whoosh.
+skill_warrior_leaping_strike:
+  layers:
+    - { type: particle, particle: dust, color: "#bd3a32", size: 0.9, shape: arc, radius: 0.8, y: 0.15, points: 18 }
+    - { type: particle, particle: poof, shape: arc, radius: 0.5, y: 0.15, points: 10, motion: outward, lift: 0.15, speed: 0.12 }
+    - { type: particle, particle: block, block: ground, shape: arc, radius: 0.6, y: 0.1, points: 10, jitter: 0.12 }
+    # Two crimson streaks twisting upwards
+    - { type: particle, particle: dust, color: "#e8433a", size: 0.7, shape: arc, radius: 0.55, end-radius: 0.2, start-angle: 90, sweep: 160, y: 0.3, end-y: 1.9, points: 9, duration-ticks: 4 }
+    - { type: particle, particle: dust, color: "#e8433a", size: 0.7, shape: arc, radius: 0.55, end-radius: 0.2, start-angle: 270, sweep: 160, y: 0.3, end-y: 1.9, points: 9, duration-ticks: 4 }
+
+# Landing: a shockwave that stops at the 3 block damage radius, with ground debris.
+skill_warrior_leaping_strike_impact:
+  layers:
+    - { type: particle, particle: dust, color: "#8a2430", size: 0.9, shape: arc, radius: 1.2, y: 0.15, points: 14 }
+    - { type: particle, particle: dust, color: "#bd3a32", size: 1.0, shape: arc, radius: 2.1, y: 0.15, points: 24, delay-ticks: 1 }
+    - { type: particle, particle: dust, color: "#e8433a", size: 1.2, shape: arc, radius: 3.0, y: 0.15, points: 48, delay-ticks: 2 }
+    - { type: particle, particle: block, block: ground, shape: arc, radius: 1.0, y: 0.15, points: 20, jitter: 0.25 }
+    - { type: particle, particle: block, block: ground, shape: arc, radius: 2.2, y: 0.15, points: 24, delay-ticks: 1, jitter: 0.25 }
+    - { type: particle, particle: dust_plume, shape: arc, radius: 0.7, y: 0.1, points: 12, motion: outward, lift: 1.2, speed: 0.12 }
+    - { type: particle, particle: poof, shape: arc, radius: 1.2, y: 0.2, points: 12, motion: outward, lift: 0.1, speed: 0.22 }
+
+# One pulse (played three times, 0.5 s apart): two blades half a turn apart trace the 4 block ring.
+skill_warrior_whirlwind:
+  layers:
+    - { type: particle, particle: dust, color: "#e8433a", size: 0.9, shape: arc, radius: 4.0, start-angle: 0, sweep: 165, y: 1.0, points: 30, duration-ticks: 5 }
+    - { type: particle, particle: dust, color: "#e8433a", size: 0.9, shape: arc, radius: 4.0, start-angle: 180, sweep: 165, y: 1.0, points: 30, duration-ticks: 5 }
+    - { type: particle, particle: sweep_attack, shape: arc, radius: 2.4, start-angle: 45, sweep: 360, y: 1.0, points: 4, duration-ticks: 5 }
+    # Rising wind
+    - { type: particle, particle: poof, shape: arc, radius: 1.6, end-radius: 1.1, start-angle: 90, sweep: 480, y: 0.1, end-y: 1.8, points: 12, duration-ticks: 6, motion: spin, lift: 0.5, speed: 0.12 }
+
+# A single heavy downward cut across the target, drawn on the side facing the caster.
+skill_warrior_execute:
+  layers:
+    - { type: particle, particle: dust, color: "#e8433a", size: 1.1, shape: line, from: [0.9, 2.3, -0.55], to: [-0.8, 0.5, -0.55], points: 22, duration-ticks: 2 }
+    - { type: particle, particle: dust, color: "#8a2430", size: 0.9, shape: line, from: [0.8, 2.45, -0.5], to: [-0.9, 0.65, -0.5], points: 14, delay-ticks: 1, duration-ticks: 2 }
+    - { type: particle, particle: sweep_attack, shape: line, from: [0.0, 1.3, -0.55], to: [0.0, 1.3, -0.55] }
+    - { type: particle, particle: crit, shape: arc, radius: 0.2, y: 1.2, points: 10, delay-ticks: 2, motion: outward, lift: 0.4, speed: 0.4 }
+
+# Below 30% health: a larger crossed cut, red shards and a ring at the target's feet.
+skill_warrior_execute_low:
+  layers:
+    - { type: particle, particle: dust_color_transition, color: "#ff5a3c", to-color: "#561826", size: 1.4, shape: line, from: [1.3, 2.8, -0.6], to: [-1.2, 0.3, -0.6], points: 30, duration-ticks: 2 }
+    - { type: particle, particle: dust_color_transition, color: "#ff5a3c", to-color: "#561826", size: 1.4, shape: line, from: [-1.3, 2.8, -0.65], to: [1.2, 0.3, -0.65], points: 30, delay-ticks: 3, duration-ticks: 2 }
+    - { type: particle, particle: sweep_attack, shape: line, from: [0.0, 1.4, -0.65], to: [0.0, 1.4, -0.65] }
+    - { type: particle, particle: sweep_attack, shape: line, from: [0.0, 1.4, -0.7], to: [0.0, 1.4, -0.7], delay-ticks: 3 }
+    - { type: particle, particle: block, block: "minecraft:redstone_block", shape: arc, radius: 0.35, y: 1.3, points: 24, delay-ticks: 4, jitter: 0.3 }
+    - { type: particle, particle: crit, shape: arc, radius: 0.2, y: 1.4, points: 18, delay-ticks: 4, motion: outward, lift: 0.5, speed: 0.6 }
+    - { type: particle, particle: dust, color: "#8a2430", size: 1.2, shape: arc, radius: 1.3, y: 0.15, points: 24, delay-ticks: 4 }
