@@ -1,5 +1,7 @@
 # Project guide for Claude
 
+@AGENTS.md
+
 **ArkenMMO**: Classes, levelling, rebirths and related MMO features.
 
 A **Paper Minecraft plugin**, built with **Maven** (Paper API only, no NMS). The target version is the `paper-api` version `pom.xml` declares (Paper 26.x).

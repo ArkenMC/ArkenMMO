@@ -16,7 +16,11 @@
       "docs/design.md",
       ".github/**",
       "mise.toml",
-      "docs/toolchain.md"
+      "docs/toolchain.md",
+      "AGENTS.md",
+      ".claude/agent-memory/shared/**",
+      ".claude/agent-memory/*/MEMORY.md",
+      "design/gui-style-guide.md"
     ]
   },
   "agents": {
@@ -72,7 +76,8 @@
         "!design/sounds.md",
         "!design/effects.md",
         "!design/CREDITS.md",
-        ".claude/agent-memory/mc-plugin-team-model-designer/**"
+        ".claude/agent-memory/mc-plugin-team-model-designer/**",
+        ".claude/agent-memory/model-designer/**"
       ]
     },
     "sound-designer": {
@@ -87,7 +92,8 @@
         "design/sound-*/**",
         "design/sounds.md",
         "design/CREDITS.md",
-        ".claude/agent-memory/mc-plugin-team-sound-designer/**"
+        ".claude/agent-memory/mc-plugin-team-sound-designer/**",
+        ".claude/agent-memory/sound-designer/**"
       ]
     },
     "vfx-designer": {
@@ -102,7 +108,8 @@
         "design/vfx-*",
         "design/vfx-*/**",
         "design/effects.md",
-        ".claude/agent-memory/mc-plugin-team-vfx-designer/**"
+        ".claude/agent-memory/mc-plugin-team-vfx-designer/**",
+        ".claude/agent-memory/vfx-designer/**"
       ]
     }
   },
