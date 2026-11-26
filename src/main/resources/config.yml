@@ -1,5 +1,6 @@
 # The resource pack with the menu art. Players are required to accept it.
 # Changes need a server restart.
+# With ItemsAdder, keep this off: ItemsAdder sends the pack (the itemsadder-arkenmmo.zip content folder).
 resource-pack:
   # false: nothing is sent; menus still open, but without their art.
   enabled: false

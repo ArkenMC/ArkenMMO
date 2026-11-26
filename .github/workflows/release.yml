@@ -47,12 +47,13 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           mise run pack
+          mise run itemsadder
           sha1=$(sha1sum target/resourcepack.zip | cut -d' ' -f1)
           tag="pack-${sha1::7}"
           url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$tag/resourcepack.zip"
-          notes=$(printf 'config.yml, under resource-pack:\n\n    url: "%s"\n    sha1: "%s"\n' "$url" "$sha1")
+          notes=$(printf 'ItemsAdder: unzip itemsadder-arkenmmo.zip into plugins/ItemsAdder/contents/ and run /iazip (keep resource-pack.enabled false).\n\nWithout ItemsAdder, config.yml under resource-pack:\n\n    url: "%s"\n    sha1: "%s"\n' "$url" "$sha1")
           if ! gh release view "$tag" > /dev/null 2>&1; then
-            gh release create "$tag" target/resourcepack.zip \
+            gh release create "$tag" target/resourcepack.zip target/itemsadder-arkenmmo.zip \
               --target "$SHA" \
               --title "Resource pack ${sha1::7}" \
               --notes "$notes" \
