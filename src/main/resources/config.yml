@@ -1,15 +1,3 @@
-# The resource pack with the menu art. Players are required to accept it.
-# Changes need a server restart.
-# With ItemsAdder, keep this off: ItemsAdder sends the pack (the itemsadder-arkenmmo.zip content folder).
-resource-pack:
-  # false: nothing is sent; menus still open, but without their art.
-  enabled: false
-  # Direct download link (http or https) to the pack zip. Use a new file name for every new build.
-  url: ""
-  # SHA-1 of that zip, 40 hex characters ("mise run pack" prints it).
-  sha1: ""
-  # UUID that identifies this pack on the client. Keep it the same across builds.
-  id: "6f1c2a8e-4b7d-4c19-9a53-2e8d0b5f7c41"
 # Temporary, until levelling exists: every player has this level and this many skill points.
 # A saved skill tree that no longer fits these values is emptied the next time it's opened.
 skills:

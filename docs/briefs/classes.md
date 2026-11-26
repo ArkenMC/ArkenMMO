@@ -29,7 +29,7 @@ After the tutorial (another plugin runs our command), I see two large pixel-art 
 - [ ] Clicking a class opens a confirm screen saying the choice is final, with Confirm and Back. Closing any screen chooses nothing.
 - [ ] The class is saved and survives rejoin and restart.
 - [ ] No click or drag can move, take or insert items while a menu is open.
-- [ ] The plugin sends the resource pack (required) using URL, SHA-1 and UUID from the first section of `config.yml`, with an on/off switch; incomplete settings log a warning and send nothing. A menu requested while the pack is still loading opens once it has loaded.
+- [x] ~~The plugin sends the resource pack (required) using URL, SHA-1 and UUID from `config.yml`.~~ Dropped 2026-11-26 (user): ItemsAdder sends the pack before join and kicks players without it, so the plugin has no pack code or `config.yml`.
 - [ ] All player-facing text is MiniMessage from config. Exception: text painted into the art (headers, class names, "THIS CHOICE IS FINAL", "CONFIRM", "BACK"). Item tooltips still carry the final-choice wording and button names from config.
 
 ## Out of scope
@@ -68,7 +68,7 @@ Art sources live in `design/scripts/` (helpers and hand-edited grids in subfolde
 | Agent | Task | Needs (gate) | Branch |
 |---|---|---|---|
 | model-designer | A1: pipeline, preview compositor, page frame, Warrior panel. A2: everything else | brief; A2 needs the user's approval of A1 | `classes/model-designer` |
-| plugin-coder | commands, menus, storage, pack sending; no tests | contract (slots and glyphs are fixed) | `classes/plugin-coder` |
+| plugin-coder | commands, menus, storage; no tests (pack sending dropped 2026-11-26) | contract (slots and glyphs are fixed) | `classes/plugin-coder` |
 
 ## Status
 | Agent | Status | Branch | Verdict | Notes |
@@ -82,4 +82,4 @@ Art sources live in `design/scripts/` (helpers and hand-edited grids in subfolde
 
 ## Needs human review
 - [ ] In-game: background alignment, player-inventory cells and "Inventory" plate, art at the used GUI scale, tooltips, hidden highlight.
-- [ ] In-game: commands, paging, confirm, persistence, pack download.
+- [ ] In-game: commands, paging, confirm, persistence, pack download through ItemsAdder.

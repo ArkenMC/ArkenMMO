@@ -45,7 +45,7 @@ jobs:
           gh release create latest target/ArkenMMO-*.jar target/resourcepack.zip target/itemsadder-arkenmmo.zip \
             --target "$SHA" \
             --title "Latest build (${SHA::7})" \
-            --notes "$(printf 'Automatic build of main at %s\n\n- ArkenMMO jar: the plugin\n- itemsadder-arkenmmo.zip: unzip into plugins/ItemsAdder/contents/, then /iazip\n- resourcepack.zip: the plain pack, only without ItemsAdder' "$SHA")"
+            --notes "$(printf 'Automatic build of main at %s\n\n- ArkenMMO jar: the plugin\n- itemsadder-arkenmmo.zip: unzip into plugins/ItemsAdder/contents/, then /iazip\n- resourcepack.zip: the plain pack, only for a server without ItemsAdder (server.properties)' "$SHA")"
 
       # One release per pack version, never replaced, so a URL and SHA-1 in a server's config stay valid
       - name: Publish resource pack release
@@ -56,7 +56,7 @@ jobs:
           sha1=$(sha1sum target/resourcepack.zip | cut -d' ' -f1)
           tag="pack-${sha1::7}"
           url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$tag/resourcepack.zip"
-          notes=$(printf 'ItemsAdder: unzip itemsadder-arkenmmo.zip into plugins/ItemsAdder/contents/ and run /iazip (keep resource-pack.enabled false).\n\nWithout ItemsAdder, config.yml under resource-pack:\n\n    url: "%s"\n    sha1: "%s"\n' "$url" "$sha1")
+          notes=$(printf 'ItemsAdder: unzip itemsadder-arkenmmo.zip into plugins/ItemsAdder/contents/ and run /iazip.\n\nWithout ItemsAdder, server.properties:\n\n    resource-pack=%s\n    resource-pack-sha1=%s\n    require-resource-pack=true\n' "$url" "$sha1")
           if ! gh release view "$tag" > /dev/null 2>&1; then
             gh release create "$tag" target/resourcepack.zip target/itemsadder-arkenmmo.zip \
               --target "$SHA" \

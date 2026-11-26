@@ -34,7 +34,7 @@ All project knowledge lives in this repository as Markdown. Don't rely on memory
 
 ## Resource pack
 - Plain vanilla resource pack in `resourcepack/`, for the Paper version in `pom.xml` (26.2 now). It stays the only source of the art.
-- The server delivers it through **ItemsAdder 4.0.18**: `mise run itemsadder` builds `target/itemsadder-arkenmmo.zip`, a content folder `arkenmmo/` with `resourcepack/assets/` copied from `resourcepack/` and the item configs from `itemsadder/contents/arkenmmo/configs/`. Unzip it into `plugins/ItemsAdder/contents/` and run `/iazip`; the plugin's own `resource-pack.enabled` stays false. Never copy art into `itemsadder/` by hand.
+- The server delivers it through **ItemsAdder 4.0.18**: `mise run itemsadder` builds `target/itemsadder-arkenmmo.zip`, a content folder `arkenmmo/` with `resourcepack/assets/` copied from `resourcepack/` and the item configs from `itemsadder/contents/arkenmmo/configs/`. Unzip it into `plugins/ItemsAdder/contents/` and run `/iazip`. ItemsAdder applies it before join and kicks players who decline or fail it, so the plugin never sends or waits for a pack itself. Never copy art into `itemsadder/` by hand.
 - `pack.mcmeta`: `min_format [88, 0]`, `max_format 88` (26.2 = 88.0). Check it again for any other version.
 - Our namespace is `arkenmmo`. `assets/minecraft/` is only for deliberate vanilla overrides; now it holds the transparent slot highlight, which hides the highlight in **every** inventory.
 
@@ -49,7 +49,7 @@ All project knowledge lives in this repository as Markdown. Don't rely on memory
 - GUI textures are **generated** by `design/scripts/` (`pixelkit/` is the art library). Change the scripts and run `mise run assets`; don't hand-edit the PNGs.
 - Menu slots in the code must match the painted art. Some text is painted into the art, so editing config text doesn't change it.
 - Check: `mise run validate-assets` and `mise run sound-check`. Build the zips: `mise run pack` (`target/resourcepack.zip` and its SHA-1) and `mise run itemsadder`.
-- A push to `main` publishes both zips as a `pack-<sha>` GitHub release (`.github/workflows/release.yml`). The server sets `url` and `sha1` under `resource-pack:` in `config.yml`.
+- A push to `main` publishes both zips as a `pack-<sha>` GitHub release (`.github/workflows/release.yml`). The `latest` release carries the jar and both zips too.
 - Custom sounds are in `sounds/` and `sounds.json`; the plugin's event map is `sounds.yml` (spec `design/sounds.md`). Particle effects use vanilla particles, defined in `effects.yml` (spec `design/effects.md`). There are no 3D models yet.
 
 ## Code
@@ -60,7 +60,6 @@ Paper API only (no NMS), Java 25, package root `dev.casperrs.arkenMMO` in `src/m
 | Package | Responsibility |
 |---|---|
 | `text` | `Messages`: player-facing MiniMessage from `messages.yml` |
-| `pack` | `ResourcePackSettings`, `ResourcePackService` |
 | `menu` | `Menu` and `MenuListener`: generic locked menus that know nothing about features |
 | `playerclass` | `PlayerClass`, `ClassStorage`, `ClassSelection`, `ClassMenus`, `ClassCommand` |
 | `skill` | `/skills`: tree rules, saved skills and the tree and loadout menus; numbers in `skill-values.yml` |
@@ -77,13 +76,13 @@ Paper API only (no NMS), Java 25, package root `dev.casperrs.arkenMMO` in `src/m
 - Build with `mise run build`, test with `mise run test`. Never run plain `mvn`.
 
 ## Useful skills
-Apart from `resourcepack-designer` (in `.claude/skills/`), skills are installed per person and aren't part of this repository. Use one when it's available. If it isn't, say so and give the user the link; don't search the computer for it or install it yourself. A skill never overrides these rules or the project's style guides.
+Apart from `resourcepack-designer`, `grilling` and `grill-me` (in `.claude/skills/`), skills are installed per person and aren't part of this repository. Use one when it's available. If it isn't, say so and give the user the link; don't search the computer for it or install it yourself. A skill never overrides these rules or the project's style guides.
 
 | Skill | Use it for | Source |
 |---|---|---|
 | `impeccable` | design critique: hierarchy, layout, colour, UX copy. It's made for web and app interfaces, so `design/gui-style-guide.md` wins for in-game art | https://github.com/pbakaus/impeccable |
 | `security-audit` | security questions and reviews: commands, permissions, stored player data, pack delivery, CI. Full audit only when the user asks | https://github.com/cloudflare/security-audit-skill |
-| `grilling` | stress-testing a plan or design before building it | https://github.com/mattpocock/skills |
+| `grilling` | stress-testing a plan or design before building it; **use it whenever you're unsure** (see `CLAUDE.md`). In the repo; `/grill-me` starts it | https://github.com/mattpocock/skills |
 | `playwright-cli` | checking web pages in a real browser | https://github.com/microsoft/playwright-cli |
 
 The designer agents can't load skills themselves: the main session runs the skill and passes them the findings.

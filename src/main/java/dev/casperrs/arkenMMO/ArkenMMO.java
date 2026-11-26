@@ -18,8 +18,6 @@ import dev.casperrs.arkenMMO.warrior.Execute;
 import dev.casperrs.arkenMMO.warrior.LeapingStrike;
 import dev.casperrs.arkenMMO.warrior.Whirlwind;
 import dev.casperrs.arkenMMO.menu.MenuListener;
-import dev.casperrs.arkenMMO.pack.ResourcePackService;
-import dev.casperrs.arkenMMO.pack.ResourcePackSettings;
 import dev.casperrs.arkenMMO.playerclass.ClassCommand;
 import dev.casperrs.arkenMMO.playerclass.ClassSelection;
 import dev.casperrs.arkenMMO.playerclass.ClassStorage;
@@ -46,17 +44,13 @@ public final class ArkenMMO extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         Messages messages = Messages.load(this);
-        ResourcePackService resourcePack = new ResourcePackService(
-                messages, ResourcePackSettings.read(getConfig(), getLogger()).orElse(null));
         ClassStorage classes = new ClassStorage(this);
-        ClassSelection selection = new ClassSelection(classes, resourcePack, messages);
+        ClassSelection selection = new ClassSelection(classes, messages);
         SkillBook skills = new SkillBook(new SkillStorage(this), SkillSettings.read(getConfig()), messages);
         SkillValues skillValues = SkillValues.load(this);
-        SkillMenus skillMenus = new SkillMenus(skills, skillValues, classes, resourcePack, messages);
+        SkillMenus skillMenus = new SkillMenus(skills, skillValues, classes, messages);
 
-        PluginManager plugins = getServer().getPluginManager();
-        plugins.registerEvents(resourcePack, this);
-        plugins.registerEvents(new MenuListener(this), this);
+        getServer().getPluginManager().registerEvents(new MenuListener(this), this);
         startCasting(classes, skills, skillValues, messages);
 
         ClassCommand classCommand = new ClassCommand(selection, messages);

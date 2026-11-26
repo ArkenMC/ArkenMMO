@@ -3,12 +3,7 @@
 # The headings, class names and button labels painted into the menu art are part of the resource pack
 # and don't change with this file.
 
-resource-pack:
-  prompt: "<yellow>ArkenMMO needs its resource pack to show its menus."
-  failed: "<red>The resource pack didn't load, so the menu can't open. Use the command again to retry."
-
 class:
-  waiting-for-pack: "<gray>The class selection opens once the resource pack has loaded."
   chosen: "<green>You chose your class: <class>"
   current: "<gray>Your class is <class>"
 
@@ -100,7 +95,6 @@ skills:
   chat:
     players-only: "<red>Only players have a skill tree."
     no-class: "<gray>Choose a class first with <white>/class</white>."
-    waiting-for-pack: "<gray>Your skill tree opens once the resource pack has loaded."
     class-changed: "<red>Your class changed, so the skill menu closed."
     tree-invalid: "<yellow>Your skill tree no longer fits the rules, so it was emptied. Your points are free again."
 
