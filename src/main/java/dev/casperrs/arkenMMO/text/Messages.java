@@ -43,18 +43,28 @@ public final class Messages {
     }
 
     public Component get(String key, TagResolver... resolvers) {
-        return parse(Objects.requireNonNullElse(yaml.getString(key), key), resolvers);
+        return parse(raw(key), resolvers);
     }
 
     public List<Component> getList(String key, TagResolver... resolvers) {
-        return yaml.getStringList(key).stream().map(line -> parse(line, resolvers)).toList();
+        return rawList(key).stream().map(line -> parse(line, resolvers)).toList();
+    }
+
+    /** The unparsed text, for templates that need more than placeholders; the key if there is none. */
+    public String raw(String key) {
+        return Objects.requireNonNullElse(yaml.getString(key), key);
+    }
+
+    public List<String> rawList(String key) {
+        return yaml.getStringList(key);
     }
 
     public void send(Audience audience, String key, TagResolver... resolvers) {
         audience.sendMessage(get(key, resolvers));
     }
 
-    private static Component parse(String text, TagResolver... resolvers) {
+    /** Parses MiniMessage that comes from the messages file; never pass player input. */
+    public Component parse(String text, TagResolver... resolvers) {
         return MINI_MESSAGE.deserialize(text, resolvers);
     }
 }
