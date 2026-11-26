@@ -5,11 +5,31 @@
 **Pipeline:** plain vanilla resource pack, Paper 26.3, namespace `arkenmmo`. `pack.mcmeta` is unchanged (`min_format [97, 1]`, `max_format 97`).
 **Sounds, effects:** none made here. The Warrior starter sword is not part of this task.
 
+## Archetypes
+The three paths of a class are its **archetypes**. Players see the display names below; each tree page paints the name in capitals in the large lettering (the same size on all pages). Internal IDs, item keys and title keys keep the old IDs (in the brief they are called branches).
+
+| Class | ID | Display name | Painted title |
+|---|---|---|---|
+| warrior | `guardian` | Warrior's Courage | WARRIOR'S COURAGE |
+| warrior | `berserker` | Warrior's Rage | WARRIOR'S RAGE |
+| warrior | `duelist` | Warrior's Honour | WARRIOR'S HONOUR |
+| archer | `marksman` | Archer's Focus | ARCHER'S FOCUS |
+| archer | `skirmisher` | Archer's Swiftness | ARCHER'S SWIFTNESS |
+| archer | `hunter` | Archer's Instinct | ARCHER'S INSTINCT |
+| mage | `pyromancer` | Mage's Flame | MAGE'S FLAME |
+| mage | `frostweaver` | Mage's Frost | MAGE'S FROST |
+| mage | `lifebinder` | Mage's Grace | MAGE'S GRACE |
+| captain | `vanguard` | Captain's Command | CAPTAIN'S COMMAND |
+| captain | `standard_bearer` | Captain's Banner | CAPTAIN'S BANNER |
+| captain | `warchanter` | Captain's Song | CAPTAIN'S SONG |
+
+Hover text: `design/gui-skill-tooltips.md`.
+
 ## Files
 | File | What |
 |---|---|
 | `design/scripts/gui_skill_tree.py` | writes everything below into the pack (`mise run assets`) |
-| `design/scripts/pixelkit/treetheme.py` | classes, branches, skills, combos, class colours |
+| `design/scripts/pixelkit/treetheme.py` | classes, archetypes and their names, skills, combos, class colours |
 | `design/scripts/pixelkit/iconkit.py`, `treeicons.py`, `icons_*.py` | 24x24 master masks: 76 skills and 12 tab sigils |
 | `design/scripts/pixelkit/treenodes.py` | node states, lit connectors, reset |
 | `design/scripts/pixelkit/treerelief.py`, `treeslab.py`, `treestone.py`, `treebars.py` | backdrops, grooves, seals, header, footer, off-page paths, loadout, slot maps |
@@ -39,7 +59,7 @@ Set `item_model` to `arkenmmo:` plus the key.
 
 `<skill>` is the contract ID without the class prefix.
 
-| Class | Node | `<skill>` | Stone | States |
+| Class | Archetype ID and node | `<skill>` | Stone | States |
 |---|---|---|---|---|
 | warrior | core | `cleave` | square with two bars | `owned`, `confirm` |
 | warrior | guardian n1 | `shield_bash` | square (active) | all four |
@@ -119,7 +139,7 @@ Set `item_model` to `arkenmmo:` plus the key.
 | captain | warchanter n6 | `coda` | square (active) | all four |
 
 ### Titles and glyphs
-MiniMessage: `<!shadow><white><font:arkenmmo:gui>TITLE</font></white>`, 54 slots. The last column is the `titles.json` text (a double-quoted YAML string decodes it). Branch order is the footer tab order.
+MiniMessage: `<!shadow><white><font:arkenmmo:gui>TITLE</font></white>`, 54 slots. The last column is the `titles.json` text (a double-quoted YAML string decodes it). Archetype order is the footer tab order. `<branch>` in a key is the archetype ID.
 
 | Title key | Glyphs (TL TR BL BR, hex) | Title string |
 |---|---|---|
@@ -222,7 +242,7 @@ Slot 0 is the free core skill: always `owned`, upper view only.
 
 Put an edge's pieces in only when both its ends are owned; otherwise leave those slots empty. The node rules are unchanged: n5 is the either-side middle passive.
 
-Footer: 45 back, 46-48 branch tabs, **49 reset**, 50 scroll up, 51 scroll down, 52 loadout, 53 info. All but 49 are painted. The unusable scroll arrow (up on the upper view, down on the lower) is dark and should do nothing.
+Footer: 45 back, 46-48 archetype tabs, **49 reset**, 50 scroll up, 51 scroll down, 52 loadout, 53 info. All but 49 are painted. The unusable scroll arrow (up on the upper view, down on the lower) is dark and should do nothing.
 
 ### Loadout menu slot map
 | What | Slots |
@@ -230,7 +250,7 @@ Footer: 45 back, 46-48 branch tabs, **49 reset**, 50 scroll up, 51 scroll down, 
 | Combo seats 1-4, labels painted above | 10, 12, 14, 16 |
 | Painted labels, Warrior, Mage, Captain | R-L-R, R-R-R, R-L-L, R-R-L |
 | Painted labels, Archer (mirrored) | L-R-L, L-L-L, L-R-R, L-L-R |
-| Pool: the 9 branch actives, tab order, each n1, n4, n6 | 27-35 |
+| Pool: the 9 archetype actives, tab order, each n1, n4, n6 | 27-35 |
 | Core active | 40 |
 | Back, info | 45, 53 (the rest of row 5 is plain; no reset here) |
 

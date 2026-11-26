@@ -46,6 +46,13 @@ def _steps(ramp, *steps):
 GOLD_MARK = _steps("gold", 2, 4, 5)
 # the Captain glows gold, so "click again" turns ivory there to stay distinct from owned
 IVORY_MARK = _steps("ivory", 1, 3, 4)
+# player-facing archetype names, painted as page titles; the keys are the branch ids, which stay
+ARCHETYPE_NAMES = {
+    "guardian": "Warrior's Courage", "berserker": "Warrior's Rage", "duelist": "Warrior's Honour",
+    "marksman": "Archer's Focus", "skirmisher": "Archer's Swiftness", "hunter": "Archer's Instinct",
+    "pyromancer": "Mage's Flame", "frostweaver": "Mage's Frost", "lifebinder": "Mage's Grace",
+    "vanguard": "Captain's Command", "standard_bearer": "Captain's Banner", "warchanter": "Captain's Song",
+}
 COMBOS = ("RLR", "RRR", "RLL", "RRL")
 MIRRORED_COMBOS = ("LRL", "LLL", "LRR", "LLR")
 

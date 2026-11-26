@@ -8,6 +8,7 @@ from .palette import col
 from .treeicons import ICONS
 from .treenodes import channel, shape
 from .treeslab import SLAB, carvings, cracks, item_origin, line, pits, place, slab, slot_art, sunk
+from .treetheme import ARCHETYPE_NAMES
 
 # slot -> (kind, node id) and slot -> connector shape, per view
 VIEWS = {
@@ -256,10 +257,6 @@ def _finish(canvas):
     return canvas.image()
 
 
-def title_text(branch):
-    return branch.replace("_", " ").upper()
-
-
 def page(theme, branch, view_name):
     """One background master; `view_name` is "a" or a key of LOWER_VARIANTS."""
     lower = view_name in LOWER_VARIANTS
@@ -275,7 +272,7 @@ def page(theme, branch, view_name):
     for slot in view["sealed_nodes"]:
         sealed(canvas, theme, slot, grand=slot == 40)
     treebars.footer(canvas, theme, branch, "b" if lower else "a")
-    treebars.header(canvas, theme, title_text(branch))
+    treebars.header(canvas, theme, ARCHETYPE_NAMES[branch].upper())
     if lower:
         treebars.paths_up(canvas, theme, LOWER_VARIANTS[view_name])
     else:

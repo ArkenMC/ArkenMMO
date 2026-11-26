@@ -11,6 +11,8 @@ FOOTER = (8, 214, layout.CANVAS[0] - 8, 250)
 BUTTON_TOP = 6
 # the two columns whose paths cross the view edge: n2-n4 and n4-n7 on one side, n3-n6 and n6-n8
 EDGE_COLUMNS = (2, 6)
+# first art row below the title lettering
+TITLE_BOTTOM = 25
 
 
 def header(canvas, theme, title):
@@ -155,7 +157,10 @@ def _mouth(canvas, theme, cx, top, bottom, tip, base, lit):
     head = poly_mask([(cx, tip), (cx + 11, base), (cx - 11, base)], canvas.size)
     both = groove | head
     # break the frame or ledge open around the path
-    canvas.mask(dilate(dilate(both)) & ~both, col("iron", 0))
+    outline = dilate(dilate(both)) & ~both
+    # on the lower view the head sits under the title: the outline must not nick the letters
+    outline[:TITLE_BOTTOM] = False
+    canvas.mask(outline, col("iron", 0))
     canvas.mask((shift(both, 0, 1) | shift(both, 1, 1)) & ~dilate(both), theme.s(4))
     if lit:
         layer = Canvas(*canvas.size)

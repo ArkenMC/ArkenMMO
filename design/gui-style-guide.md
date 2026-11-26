@@ -97,6 +97,7 @@ Spec: `design/gui-skill-tree.md`. References: `design/skill-tree-visual-research
 - **Lit paths** stay one ramp step quieter than owned stones.
 - **Shapes:** actives square, passives octagon, sealed stones rough plugs with blank iron bands.
 - **Off-page paths:** a groove that leaves the view breaks the frame and ends in a head shaped like that direction's scroll arrow.
+- **Archetype names:** the three paths of a class are archetypes. Each tree page paints the full display name in capitals (`ARCHETYPE_NAMES`) in the large lettering, the same size everywhere.
 - **Footer:** every clickable thing looks like a button (the slot highlight is invisible); the open tab stands taller with a class bar.
 - **One layout for every class:** only stone ramp, glow ramp, gem and carving change (`pixelkit/treetheme.py`).
 - The palette stays frozen; the skill menus needed no additions.

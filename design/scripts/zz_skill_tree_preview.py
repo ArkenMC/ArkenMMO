@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw
 
 from pixelkit import layout, preview, treestone
 from pixelkit.palette import PALETTE
-from pixelkit.treetheme import STATES, THEMES
+from pixelkit.treetheme import ARCHETYPE_NAMES, STATES, THEMES
 
 NEAREST = Image.Resampling.NEAREST
 OUT = layout.ROOT / "target" / "previews" / "skills"
@@ -218,12 +218,36 @@ def path_previews():
         OUT / "reset_confirm_gui3.png")
 
 
+def title_previews():
+    """All 12 archetype titles: whole upper pages at GUI scale 2, and the header of both views, where
+    the lower view's incoming paths run close under the lettering."""
+    pages, headers = [], []
+    for theme in THEMES.values():
+        row = []
+        for branch in theme.branches:
+            states, edges, reset_state = UPPER["all_states"]
+            upper = menu(f"tree_{theme.class_id}_{branch}_a",
+                         tree_items(theme, branch, "a", states, edges, reset_state), 2)
+            lower = menu(f"tree_{theme.class_id}_{branch}_b_both",
+                         tree_items(theme, branch, "b", *LOWER["b_both"]), 2)
+            row.append(upper)
+            # the top 40 GUI px of the menu, inside the compositor's 12 px margin
+            band = (24, 24, 24 + layout.PANEL_W * 2, 24 + 40 * 2)
+            headers.append(side_by_side([upper.crop(band), lower.crop(band)]))
+        pages.append(side_by_side(row))
+    stack(pages).save(OUT / "titles_all_12_gui2.png")
+    half = len(headers) // 2
+    side_by_side([stack(headers[:half]), stack(headers[half:])]).save(OUT / "titles_headers_both_views_gui2.png")
+    print("titles: " + ", ".join(ARCHETYPE_NAMES.values()))
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     check_pack()
     for theme in THEMES.values():
         class_previews(theme)
     path_previews()
+    title_previews()
     print(f"skill menu previews in {OUT}")
 
 
