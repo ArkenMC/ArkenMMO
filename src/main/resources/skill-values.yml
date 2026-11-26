@@ -1,6 +1,16 @@
-# The numbers shown in skill descriptions (/skills). They are untested draft values, and the skills have
-# no effects yet. Each key fills the placeholder of the same name in the skill's description in
-# messages.yml. mana and cooldown (seconds) are only for actives. Changes need a server restart.
+# Skill numbers: casting uses them and the hover text in /skills shows them. They are untested draft values.
+# So far only warrior cleave, leaping_strike, whirlwind and execute can be cast. Each key of a skill fills
+# the placeholder of the same name in the skill's description in messages.yml. mana and cooldown (seconds)
+# are only for actives. Distances are in blocks, durations in seconds. Changes need a server restart.
+
+# A skill's "damage: 130" means 130% of power, in health points (2 = 1 heart).
+# power = base + per_level * (class level - 1)
+power: {base: 6, per_level: 0.5}
+# regen and calm_regen are mana per second; calm_regen starts calm_after seconds after the player last
+# dealt or took damage from a creature. Recasting a spell within repeat_window seconds costs repeat_step
+# percent of its base cost more for each repeat in a row, up to repeat_max percent.
+mana: {max: 100, regen: 4, calm_regen: 8, calm_after: 5, repeat_window: 4, repeat_step: 25, repeat_max: 100}
+
 warrior:
   cleave: {mana: 20, cooldown: 4, range: 3.5, damage: 130, angle: 120}
   shield_bash: {mana: 20, cooldown: 8, range: 3.5, damage: 110, duration: 1}
@@ -14,7 +24,7 @@ warrior:
   fury: {speed: 4, duration: 4, stacks: 5}
   whirlwind: {mana: 35, cooldown: 10, duration: 1.5, count: 3, damage: 60, radius: 4}
   relentless: {amount: 10}
-  execute: {mana: 30, cooldown: 9, damage: 180, finisher: 300, threshold: 30}
+  execute: {mana: 30, cooldown: 9, damage: 180, finisher: 300, threshold: 30, range: 3.5}
   lunge: {mana: 20, cooldown: 6, range: 5, damage: 130}
   footwork: {speed: 8, haste: 8}
   focus: {bonus: 12, radius: 5}

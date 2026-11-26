@@ -27,3 +27,6 @@ Verified 2026-11-26 (skill menu audit, target now 26.2).
 - The menu classes run headless: set `Bukkit.server` by reflection to a proxy with `createInventory`, proxy `Player`/PDC/`Plugin`, and put a stand-in `menu.MenuIcons` (extends `ItemStack()`) first on the classpath.
 - `validate-assets` in the sandbox: pip cannot read its CA bundle; run `python3 tools/validate_assets.py` with the system Python.
 - ItemsAdder wiki merge page names only `assets/`; keeping `items/`, fonts and tooltip sprites through `/iazip` is unverified (wiki.itemsadder.com/adding-content/merge-resourcepacks, volatile). `/iazip --uncompressed --apply-to none` gives an inspectable output (its FAQ, from a search summary).
+
+- 2026-11-26: AGENTS.md forbids browsing build caches such as `~/.m2`; check APIs on jd.papermc.io instead. The isolation guard also refuses shell loops with variables near paths containing "git"; use one plain command.
+- Skills feature: unit tests for combo input are approved (docs/briefs/skills.md).

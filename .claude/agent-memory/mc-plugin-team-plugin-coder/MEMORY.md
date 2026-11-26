@@ -1,1 +1,3 @@
 - [Build and API facts](build-and-api.md) — sandbox mise workaround, verified 26.3 pack/command/item APIs
+- [Click events](click-events.md) — which 26.2/26.3 events a left/right click raises, and what is unverified
+- [Casting API](casting-api.md) — 26.2 combat/sound API that compiles clean, and what needs a client
