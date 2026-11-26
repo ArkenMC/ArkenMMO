@@ -37,3 +37,13 @@
 - 2026-11-26: Lit connectors at crimson 3-4 competed with owned stones; one step down fixed the hierarchy.
 - 2026-11-26: An available rune in steel 4 was as bright as an owned one in greyscale; steel 3 restored owned above available.
 - 2026-11-26: Passes for the A1 skill tree: about 6 silhouette rounds and 5 page and state rounds.
+- 2026-11-26 (A2): A small shape kit (polygons, arcs, strokes, `apart` for a 1 px gap) drew 69 sigils; most read on the first silhouette sheet. Organic shapes (tornado, footprints) still needed hand grids.
+- 2026-11-26 (A2): Familiar objects win: footprints for footwork stayed the hardest; a mountain beat a standing stone (read as a bell) and a banded cuirass beat scale plates.
+- 2026-11-26 (A2): A spear point with a wide base reads as flying backward; a lance needs a spindle shape. A cross-bar under two leaves read as the female symbol; a spearhead over a chevron read as an anchor.
+- 2026-11-26 (A2): Whirlwind finally read as a tornado as one solid funnel with thin slanted cuts and a curling tail; separate rims read as bowls or a wifi sign.
+- 2026-11-26 (A2): Fury as a flame with angry eyes and Relentless as a skull feeding a crystal say what the skill does; repeated strokes did not.
+- 2026-11-26 (A2): Locked at slate (`iron` 4) with the left and top edge left dark reads at 720p and stays weaker than the ringed available stone.
+- 2026-11-26 (A2): Gold glow collides with gold "click again" brackets; the Captain uses ivory brackets and core bars.
+- 2026-11-26 (A2): A banner relief with its emblem painted dark read as a flat square; leaving the emblem as uncut stone made it a banner.
+- 2026-11-26 (A2): No slot exists outside rows 0-5, so off-page paths go into the title art; lit lower views need their own backgrounds.
+- 2026-11-26 (A2): Comparing new renders with saved A1 pixels showed at once that the theme refactor had changed the approved core bars.
