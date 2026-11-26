@@ -9,10 +9,11 @@ Paper 26.2, Java 25, Paper API only. Package root: `dev.casperrs.arkenMMO`. `Ark
 | `menu` | Generic locked chest menus: `Menu` (buttons, plain items, in-place changes, an action for all other clicks), `MenuListener` (cancels all clicks and drags, runs actions on the next tick) and `MenuIcons` (the items shown). Never knows about features |
 | `playerclass` | `PlayerClass` (IDs), `ClassStorage` (player persistent data), `ClassSelection` (rules), `ClassMenus` (layout and items), `ClassCommand` |
 | `skill` | `/skills`. Rules without Bukkit types: `SkillCatalog`, `ClassTree`, `Skill`, `SkillNode`, `TreeRules` (unit tested), `Loadout`, `ClassSkills`. Data: `SkillStorage` (player persistent data), `SkillBook` (all changes), `SkillSettings` (test level and points), `SkillValues` (`skill-values.yml`). Menus: `SkillMenus`, `TreeScreen`, `LoadoutScreen`, `TreeView` (slot maps), `SkillItems`, `SkillSession` (one opening), `SkillContext`; `SkillsCommand`. Depends on `playerclass`, never the reverse |
-| `casting` | Input: `CastingListener` (events to clicks), `ComboInput` (per-player combos, delayed left clicks, debug log), `ComboTracker` (rules, no Bukkit types, unit tested), `UsableTargets`, `StandInWeapons` (temporary). Casting: `SkillCaster` (loadout slot to skill, checks, cost, cooldown), `Casters`, `CasterState`, `ManaRules`, `CombatListener`, `CastingHud` (action bar). What skills implement and use: `SkillAction`, `SkillFeedback` (sound and effect), `SkillEffects`. Depends on `skill`, `playerclass`, `sound` and `text` |
+| `casting` | Input: `CastingListener` (events to clicks), `ComboInput` (per-player combos, delayed left clicks, debug log), `ComboTracker` (rules, no Bukkit types, unit tested), `UsableTargets`, `StandInWeapons` (temporary). Casting: `SkillCaster` (loadout slot to skill, checks, cost, cooldown), `Casters`, `CasterState`, `ManaRules`, `CombatListener`, `CastingHud` (action bar). What skills implement and use: `SkillAction`, `SkillFeedback` (sound and effect). Depends on `skill`, `playerclass`, `sound`, `vfx` and `text` |
 | `combat` | Used by skills, knows no feature: `SkillTargets` (PvE filter, cone, radius, aim), `SkillDamage`, `OngoingAction`, `OngoingActions` (one shared task), `OngoingListener` (cleanup and fall protection) |
 | `warrior` | One `SkillAction` per castable Warrior skill. Depends on `casting`, `combat` and `skill`; only `ArkenMMO` knows it |
 | `sound` | `SoundService`: loads `sounds.yml` (optional) and is the only code that plays sounds |
+| `vfx` | `Effects` (`play(id, location, viewer)`, reload, shutdown; one shared task while something animates), `EffectPresets`, `LayerParser`, `LayerSettings` (`effects.yml`), `ParticleLayer`, `Shapes`, `Playback`. Knows no feature; owned by the vfx-designer (`design/effects.md`) |
 
 ## Notes
 - Everything runs on the main thread; there is no I/O beyond reading config files at startup. The server saves player persistent data with the player.
@@ -34,7 +35,8 @@ Paper 26.2, Java 25, Paper API only. Package root: `dev.casperrs.arkenMMO`. `Ark
 - `SkillAction#prepare` changes nothing; cost and cooldown are only taken when it returns something to run.
 - Anything that outlives the cast is an `OngoingAction`, so quit, death, world change and disable end it.
 - All skill damage goes through `SkillDamage`; all targets through `SkillTargets`.
-- A skill's sound event and effect have the same ID. `SkillEffects` is empty until the `vfx` package exists.
+- A skill's sound event and effect have the same ID, played together by `SkillFeedback`. Effects play only through `Effects.play`. `ArkenMMO` shuts `Effects` down after ending ongoing actions; there is no reload command yet.
+- A sound's `fallback` only replaces a blank or invalid `key`: ItemsAdder sends the pack, and the server can't know whether a client has a custom sound.
 - Mana, cooldowns and repeat costs are kept in memory until restart. Power and mana numbers are the `power` and `mana` sections of `skill-values.yml`.
 
 ## Standards
