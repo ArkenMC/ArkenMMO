@@ -63,7 +63,7 @@ def main():
         titles[name] = pack.title(chars)
     pack.write_font(bitmaps)
     pack.write_json(layout.PACK / "pack.mcmeta", PACK_MCMETA)
-    pack.write_json(layout.TITLES, titles)
+    pack.write_titles(titles)
     print(f"{len(titles)} backgrounds written")
 
 

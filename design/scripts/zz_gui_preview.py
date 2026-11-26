@@ -63,7 +63,9 @@ def report_colours(name, image):
 
 
 def screens(save):
-    for name, title in preview.title_strings().items():
+    # skill menus have their own previews (zz_skill_tree_preview.py)
+    class_menus = {k: v for k, v in preview.title_strings().items() if k.startswith(("class_select", "confirm"))}
+    for name, title in class_menus.items():
         art = master(name)
         report_colours(name, art)
         save(scaled(art, 3), f"{name}_art_x3.png")

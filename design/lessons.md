@@ -28,3 +28,25 @@
 - 2026-11-25: Layered polygon locks (`facet_art`) beat stacked boxes for beards. A separate darker handlebar on a lighter jaw beard finally read as a moustache.
 - 2026-11-25: Eyes read as spectacles when brow, lid, nose and sideburns frame them on all sides. Keep bare skin beside and between them and stop sideburns below the moustache.
 - 2026-11-25: A random backdrop spark beside a hand looked like a stray pixel; change the seed when one lands next to a focal point.
+- 2026-11-26: Viewing references changed the design: museum picture stones show a bare cut almost vanishing and a pigment-filled one reading from across the room. That became locked against owned.
+- 2026-11-26: Checking icons as black silhouettes first was cheap. A headsman's blade over a block read as a bird, a fish, then a jug; a large bearded axe with deep hollows and no block finally read as an axe.
+- 2026-11-26: Concentric downward arcs read as a wifi symbol. Funnel rims that sag in the middle read better, but Whirlwind is still the weakest sigil.
+- 2026-11-26: Crossed axes at 24 px read as flails; a horned skull is a far clearer tab sigil. Fangs joined to a gum bar read as a funnel until the bar became an arch.
+- 2026-11-26: An active tab raised into the row above looked like a stem hanging from the node over it. Keep tabs inside their slot.
+- 2026-11-26: A bright core with a round seal and one strap made sealed stones look like toy balls. One askew band and cracks read as sealed.
+- 2026-11-26: Lit connectors at crimson 3-4 competed with owned stones; one step down fixed the hierarchy.
+- 2026-11-26: An available rune in steel 4 was as bright as an owned one in greyscale; steel 3 restored owned above available.
+- 2026-11-26: Passes for the A1 skill tree: about 6 silhouette rounds and 5 page and state rounds.
+- 2026-11-26 (A2): A small shape kit (polygons, arcs, strokes, `apart` for a 1 px gap) drew 69 sigils; most read on the first silhouette sheet. Organic shapes (tornado, footprints) still needed hand grids.
+- 2026-11-26 (A2): Familiar objects win: footprints for footwork stayed the hardest; a mountain beat a standing stone (read as a bell) and a banded cuirass beat scale plates.
+- 2026-11-26 (A2): A spear point with a wide base reads as flying backward; a lance needs a spindle shape. A cross-bar under two leaves read as the female symbol; a spearhead over a chevron read as an anchor.
+- 2026-11-26 (A2): Whirlwind finally read as a tornado as one solid funnel with thin slanted cuts and a curling tail; separate rims read as bowls or a wifi sign.
+- 2026-11-26 (A2): Fury as a flame with angry eyes and Relentless as a skull feeding a crystal say what the skill does; repeated strokes did not.
+- 2026-11-26 (A2): Locked at slate (`iron` 4) with the left and top edge left dark reads at 720p and stays weaker than the ringed available stone.
+- 2026-11-26 (A2): Gold glow collides with gold "click again" brackets; the Captain uses ivory brackets and core bars.
+- 2026-11-26 (A2): A banner relief with its emblem painted dark read as a flat square; leaving the emblem as uncut stone made it a banner.
+- 2026-11-26 (A2): No slot exists outside rows 0-5, so off-page paths go into the title art; lit lower views need their own backgrounds.
+- 2026-11-26 (A2): Comparing new renders with saved A1 pixels showed at once that the theme refactor had changed the approved core bars.
+- 2026-11-26 (A2): All 12 archetype names fit the large title lettering (widest about 232 of 268 art px). Check long titles against anything painted just below them: the incoming path outline nicked their bottom row.
+- 2026-11-26 (A2): Vanilla `dark_gray` all but disappears on the class tooltip backgrounds; a warm mid grey reads.
+- 2026-11-26 (A2): Writing hover text as one source with `{name:sample}` values gave placeholder templates, filled previews and the spec together, with line limits enforced by the renderer. Compare every description with the draft row: first versions dropped ranges and side effects.
