@@ -97,6 +97,10 @@ done
 description = "Zip resourcepack/ to target/resourcepack.zip and print its SHA-1"
 run = "python tools/pack.py"
 
+[tasks.itemsadder]
+description = "Zip the pack as an ItemsAdder content folder to target/itemsadder-arkenmmo.zip"
+run = "python tools/itemsadder.py"
+
 [tasks.review]
 description = "Build design/review/index.html (local asset review page: textures, sounds, effects)"
 depends = ["sound-previews"]

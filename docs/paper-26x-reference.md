@@ -1,6 +1,6 @@
 # Paper 26.x plugin development reference
 
-Reference for all agents working on a plugin that targets **Paper 26.x** (latest stable: **26.3**, as of Oct 2026).
+Reference for all agents working on a plugin that targets **Paper 26.x** (latest stable: **26.3**, as of Oct 2026). **This project targets 26.2** (user decision 2026-11-26, so ItemsAdder and ModelEngine can be used); read "26.3" in the rules below as the target version in `pom.xml`.
 For 1.21.x projects (`1.21.x-R0.1-SNAPSHOT` in pom.xml), use `docs/paper-121x-reference.md` instead.
 If anything here conflicts with the official docs, the official docs win: https://docs.papermc.io/paper/dev/
 
@@ -73,7 +73,7 @@ Last checked: 2026-10-18
 ### paper-plugin.yml (this repo; same field in plugin.yml)
 
 ```yaml
-api-version: '26.3'
+api-version: '26.2'
 ```
 
 Don't parse the Minecraft version assuming it starts with `1.` — versions are now `<year>.<drop>[.<patch>]`, e.g. `26.3`, `26.1.2`.

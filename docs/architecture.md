@@ -1,6 +1,6 @@
 # Architecture
 
-Paper 26.3, Java 25, Paper API only. Package root: `dev.casperrs.arkenMMO`. `ArkenMMO` wires everything: services, listeners and commands are registered only there.
+Paper 26.2, Java 25, Paper API only. Package root: `dev.casperrs.arkenMMO`. `ArkenMMO` wires everything: services, listeners and commands are registered only there.
 
 | Package | Responsibility |
 |---|---|

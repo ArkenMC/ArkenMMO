@@ -15,7 +15,7 @@ After the tutorial (another plugin runs our command), I see two large pixel-art 
 - Characters are chunky, blocky, Minecraft-like heroes (big heads, large weapons), facing slightly toward the centre, one colour identity each, name plate below. Style reference described by the user: faceted blocky class figurines with strong silhouettes (a warrior/paladin in gold plate with a big sword, a mage holding a staff and a flame, a green-hooded hunter), name banner at each base.
 - Art is generated with Python (Pillow). **The Warrior panel and page frame are approved by the user first** (as many rounds as needed; this overrides the one-attempt rule). Only then the other three classes.
 - No inventory hover highlight. This is global: both highlight sprites are transparent, so it disappears in every inventory.
-- Plain vanilla resource pack. The server has ItemsAdder 4.0.18, which doesn't support 26.3.
+- Plain vanilla resource pack. The server has ItemsAdder 4.0.18, which doesn't support 26.3; on 2026-11-26 the user moved the target to Paper 26.2, where ItemsAdder 4.0.18 runs fine on the server.
 - The class choice is final. Switching comes later: keep the code single-responsibility so it is easy to add (progress will be stored per class ID).
 - **No unit, integration or e2e tests, none at all.**
 - Code: mind async (only thread-safe work off the main thread), efficient, reusable methods; overloading and overriding where they remove real duplication; no speculative abstractions.
