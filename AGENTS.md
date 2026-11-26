@@ -50,7 +50,7 @@ All project knowledge lives in this repository as Markdown. Don't rely on memory
 - Menu slots in the code must match the painted art. Some text is painted into the art, so editing config text doesn't change it.
 - Check: `mise run validate-assets` and `mise run sound-check`. Build the zips: `mise run pack` (`target/resourcepack.zip` and its SHA-1) and `mise run itemsadder`.
 - A push to `main` publishes both zips as a `pack-<sha>` GitHub release (`.github/workflows/release.yml`). The server sets `url` and `sha1` under `resource-pack:` in `config.yml`.
-- There are no custom sounds, particles, `sounds.yml`, `effects.yml` or 3D models yet.
+- Custom sounds are in `sounds/` and `sounds.json`; the plugin's event map is `sounds.yml` (spec `design/sounds.md`). Particle effects use vanilla particles, defined in `effects.yml` (spec `design/effects.md`). There are no 3D models yet.
 
 ## Code
 **Follow the current structure.** Fit new code into it and match the surrounding style. Don't restructure, rename or add patterns unless the user asks. `docs/architecture.md` is the full reference; if it disagrees with the code, say so.
@@ -64,6 +64,7 @@ Paper API only (no NMS), Java 25, package root `dev.casperrs.arkenMMO` in `src/m
 | `menu` | `Menu` and `MenuListener`: generic locked menus that know nothing about features |
 | `playerclass` | `PlayerClass`, `ClassStorage`, `ClassSelection`, `ClassMenus`, `ClassCommand` |
 | `skill` | `/skills`: tree rules, saved skills and the tree and loadout menus; numbers in `skill-values.yml` |
+| `vfx` | `Effects.play(id, location, viewer)` with presets from `effects.yml`; the only way to spawn effects |
 
 - Package by feature, one responsibility per class; classes under about 500 lines, methods under about 60. No wildcard imports or package cycles.
 - Write efficient, reusable methods; use overloads or overrides where they remove real duplication. No speculative abstractions.
