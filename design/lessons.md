@@ -28,3 +28,6 @@
 - 2026-11-25: Layered polygon locks (`facet_art`) beat stacked boxes for beards. A separate darker handlebar on a lighter jaw beard finally read as a moustache.
 - 2026-11-25: Eyes read as spectacles when brow, lid, nose and sideburns frame them on all sides. Keep bare skin beside and between them and stop sideburns below the moustache.
 - 2026-11-25: A random backdrop spark beside a hand looked like a stray pixel; change the seed when one lands next to a focal point.
+- 2026-11-26: Emerald item (16x16): a smooth left-to-right gradient made the gem read as a blob. Hard-edged facet blocks (light crown, a two-tone pavilion with a mid ridge) made it read as a cut gem at hotbar scale 2 and 3. A 10x14 px gem with a 1 px glint and a dark outline is enough.
+- 2026-11-26: A new item reuses `gui_items.save_sprite` and the tooltip geometry constants; tooltip corner studs are just a 2x2 block, so a gem accent needs no extra size.
+- 2026-11-26: Re-running `gui_class_select.py` and `gui_items.py` with a fresh venv (numpy 2.5.5, not the pinned 2.5.4) changed the committed GUI PNG bytes and pack.png. Restore them with `git checkout` after a local run unless the art was meant to change; use the pinned versions.

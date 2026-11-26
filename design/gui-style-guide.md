@@ -34,6 +34,7 @@ Chunky, faceted blocky heroes, like painted miniatures: flat planes with 3-4 ton
 | `steel` | `#12101c` `#232436` `#3b4058` `#5c6580` `#8a94a8` `#bcc4cf` `#eef0ec` | armour, blades, arrow |
 | `leather` | `#26141a` `#45251f` `#6b3d27` `#94603a` `#bd8a55` | belts, boots, wood, beards |
 | `gold` | `#3d2415` `#6e4318` `#a8721f` `#dca636` `#f6d86b` `#fff3b8` | trim, frames, lettering, Captain armour |
+| `emerald` | `#06261a` `#0b4a2c` `#12803f` `#1fb857` `#4fe07e` `#a8f5b8` `#f2fff4` | emerald item and its tooltip only (`design/item-emerald.md`) |
 | `parchment` | `#8c6a4a` `#b99768` `#dcc291` `#efdcb0` | note plates, feathers |
 | `ember_sky` / `ember_stone` | `#141019` `#1d1828` `#292138` `#3d2840` `#572e3e` `#763a3a` / `#18131d` `#251d29` `#342833` `#47363e` `#5d474a` | Warrior backdrop |
 | `dusk_sky` / `dusk_forest` | `#0f1220` `#171d32` `#212b45` `#323c55` `#4c4a56` `#6d5a4c` / `#0e1517` `#131f20` `#1a2a29` `#233733` `#2f473d` | Archer backdrop |
@@ -81,7 +82,7 @@ Layers, all darker and quieter than the figure: a vertical sky with 8 px dithere
 - Plate: the bottom slot row, a notched banner with a gold trim line and a field in the class ramp. Letters are gold 5/4; the Captain uses ivory.
 
 ## Tooltips
-1x art, 100x100, nine-slice with vanilla's 26.3 `.mcmeta` values. Background pixels 8..91 with clipped corners, alpha 240, in the class's darkest colour (navy for the Captain). A 1 px frame at inset 9 in the class ramp, stepping darker downward (gold for the Captain), with a square 2x2 gold stud on each corner.
+1x art, 100x100, nine-slice with vanilla's 26.3 `.mcmeta` values. Background pixels 8..91 with clipped corners, alpha 240, in the class's darkest colour (navy for the Captain). A 1 px frame at inset 9 in the class ramp, stepping darker downward (gold for the Captain), with a square 2x2 gold stud on each corner. Item tooltips follow the same geometry in their own ramp: the emerald style (`arkenmmo:emerald`) uses a near-black emerald background, an emerald 4→2 frame and a 2x2 emerald gem on each corner instead of the gold stud.
 
 ## Checks every round
 `mise run assets`, then look in `target/previews/gui/`: each panel at x8, the contact sheet, the silhouettes (including Warrior against Captain), greyscale, every screen at GUI scales 2, 3 and 4, the slot views, tooltips and the printed colour counts. Work through section 6.6 of the research note, and judge at screen size, not only zoomed in.
