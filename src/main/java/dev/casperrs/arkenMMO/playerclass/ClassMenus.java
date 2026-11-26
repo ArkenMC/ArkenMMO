@@ -1,9 +1,8 @@
 package dev.casperrs.arkenMMO.playerclass;
 
 import dev.casperrs.arkenMMO.menu.Menu;
+import dev.casperrs.arkenMMO.menu.MenuIcons;
 import dev.casperrs.arkenMMO.text.Messages;
-import io.papermc.paper.datacomponent.DataComponentTypes;
-import io.papermc.paper.datacomponent.item.ItemLore;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -13,9 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -107,18 +104,6 @@ final class ClassMenus {
     }
 
     private static ItemStack icon(Component name, List<Component> lore, @Nullable Key tooltipStyle) {
-        ItemStack icon = ItemStack.of(Material.PAPER);
-        icon.setData(DataComponentTypes.ITEM_MODEL, BLANK_MODEL);
-        icon.setData(DataComponentTypes.ITEM_NAME, name);
-        if (!lore.isEmpty()) {
-            // The client shows lore in italics unless told otherwise
-            icon.setData(DataComponentTypes.LORE, ItemLore.lore(lore.stream()
-                    .map(line -> line.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE))
-                    .toList()));
-        }
-        if (tooltipStyle != null) {
-            icon.setData(DataComponentTypes.TOOLTIP_STYLE, tooltipStyle);
-        }
-        return icon;
+        return MenuIcons.of(BLANK_MODEL, name, lore, tooltipStyle);
     }
 }

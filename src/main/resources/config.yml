@@ -10,3 +10,9 @@ resource-pack:
   sha1: ""
   # UUID that identifies this pack on the client. Keep it the same across builds.
   id: "6f1c2a8e-4b7d-4c19-9a53-2e8d0b5f7c41"
+# Temporary, until levelling exists: every player has this level and this many skill points.
+# A saved skill tree that no longer fits these values is emptied the next time it's opened.
+skills:
+  # 1 to 30; some skills need level 8
+  test-level: 30
+  test-points: 18
