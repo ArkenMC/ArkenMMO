@@ -1,0 +1,86 @@
+# Game event -> sound. Retune here; the plugin plays sounds only through these names.
+#
+# key:       the sound played. arkenmmo: keys come from the resource pack (sent by ItemsAdder);
+#            any minecraft: key works too.
+# fallback:  vanilla minecraft: sound, used only when 'key' is blank or not a valid sound key.
+#            The server cannot tell whether a client has a custom sound, and the game plays
+#            nothing for a key the pack lacks (there is no automatic fallback). If the custom
+#            sounds are silent in game, copy each fallback into its 'key'.
+# volume:    above 0, at most 1.0.
+# pitch-min, pitch-max: each play picks a random pitch in this range (0.5 to 2.0).
+# source:    volume slider: master, music, records, weather, blocks, hostile, neutral, players,
+#            ambient, voice or ui.
+#
+# Volume and pitch are tuned for the custom sounds; the fallback uses the same values.
+
+combo_click_left:
+  key: "arkenmmo:ui.combo_click_left"
+  fallback: "minecraft:block.note_block.hat"
+  volume: 0.35
+  pitch-min: 0.99
+  pitch-max: 1.01
+  source: ui
+
+combo_click_right:
+  key: "arkenmmo:ui.combo_click_right"
+  fallback: "minecraft:block.note_block.snare"
+  volume: 0.35
+  pitch-min: 0.99
+  pitch-max: 1.01
+  source: ui
+
+cast_fail:
+  key: "arkenmmo:ui.cast_fail"
+  fallback: "minecraft:block.note_block.bass"
+  volume: 0.5
+  pitch-min: 0.98
+  pitch-max: 1.02
+  source: ui
+
+skill_warrior_cleave:
+  key: "arkenmmo:skill.warrior.cleave"
+  fallback: "minecraft:entity.player.attack.sweep"
+  volume: 0.8
+  pitch-min: 0.96
+  pitch-max: 1.04
+  source: players
+
+skill_warrior_leaping_strike:
+  key: "arkenmmo:skill.warrior.leaping_strike"
+  fallback: "minecraft:entity.breeze.jump"
+  volume: 0.75
+  pitch-min: 0.96
+  pitch-max: 1.04
+  source: players
+
+skill_warrior_leaping_strike_impact:
+  key: "arkenmmo:skill.warrior.leaping_strike_impact"
+  fallback: "minecraft:item.mace.smash_ground"
+  volume: 0.85
+  pitch-min: 0.96
+  pitch-max: 1.04
+  source: players
+
+skill_warrior_whirlwind:
+  key: "arkenmmo:skill.warrior.whirlwind"
+  fallback: "minecraft:entity.player.attack.sweep"
+  volume: 0.7
+  pitch-min: 0.99
+  pitch-max: 1.01
+  source: players
+
+skill_warrior_execute:
+  key: "arkenmmo:skill.warrior.execute"
+  fallback: "minecraft:entity.player.attack.crit"
+  volume: 0.85
+  pitch-min: 0.97
+  pitch-max: 1.03
+  source: players
+
+skill_warrior_execute_low:
+  key: "arkenmmo:skill.warrior.execute_low"
+  fallback: "minecraft:item.mace.smash_ground_heavy"
+  volume: 0.95
+  pitch-min: 0.97
+  pitch-max: 1.02
+  source: players
