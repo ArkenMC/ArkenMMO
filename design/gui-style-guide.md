@@ -86,10 +86,15 @@ Layers, all darker and quieter than the figure: a vertical sky with 8 px dithere
 ## Checks every round
 `mise run assets`, then look in `target/previews/gui/`: each panel at x8, the contact sheet, the silhouettes (including Warrior against Captain), greyscale, every screen at GUI scales 2, 3 and 4, the slot views, tooltips and the printed colour counts. Work through section 6.6 of the research note, and judge at screen size, not only zoomed in.
 
-## Skill tree (next GUI, not started)
-The user's vision, from 2026-11-25:
-- A designed foreground the player sees, with open gaps that fill with glowing panes once a skill is selected and its requirements are met.
-- The same art style as the class menu (this guide): subtly Minecraft-like.
-- Art quality is the top priority. Show previews for approval.
-- Pack technique: `docs/research/custom-gui-and-pixel-art.md`.
-- The skills themselves are still a draft that isn't approved (`docs/research/mmo-classes-levelling.md`).
+## Skill tree (A1 preview, awaiting approval)
+Spec: `design/gui-skill-tree.md`. References: `design/skill-tree-visual-research.md`. These become rules once the user approves.
+- **Mood:** dark, ancient, mysterious. One dim class carving behind the tree; no sky, no figures, no bright props.
+- **Slab:** three close tones (`ember_stone` sinking into `iron`), sparse pit clusters, a few hand-routed cracks. Weathering stays clear of grooves and seats.
+- **Sunken cut:** shadow inside the top and left wall, light on the lip below and right. Raised things (clamps, buttons) are lit the other way.
+- **Faint carvings:** unpainted, about one ramp step from the slab, partly worn away; no ring or button shapes, no real runic letters.
+- **One mask per icon** (24x24 in the 32x32 stone), bold, strokes 3 px or more. All states come from that mask.
+- **State by value and shape:** locked dull cut; available thin steel ring; confirm gold brackets; owned crimson glow plus rivets. Class colour only on owned things (and quiet traces in frame and backdrop).
+- **Lit paths** stay one ramp step quieter than owned stones.
+- **Shapes:** actives square, passives octagon, sealed stones rough plugs with blank iron bands.
+- **Footer:** every clickable thing looks like a button (the slot highlight is invisible); the open tab stands tall with a class bar and never reaches into row 5.
+- The palette stays frozen; the tree needed no additions.

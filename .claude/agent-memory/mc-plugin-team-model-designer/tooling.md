@@ -13,3 +13,6 @@ metadata:
 - (2026-11-25) User style decision: subtle "minecraft ish" touches on the faceted style, not a player-model redesign.
 - The worktree guard also rejects commands containing github URLs after `cd`; run `curl` with `--output-dir` as its own command.
 - GUI art: `design/scripts/pixelkit/` (layout, palette, hullrig renderer, figure steps, one module per hero, heroes registry, chrome, backdrops, pack, preview); rules in `design/gui-style-guide.md`; previews in `target/previews/gui/`.
+- (2026-11-26) Without leaving the sandbox: run the scripts behind `assets`, `validate-assets` (`tools/validate_assets.py`) and `sound-check` (`tools/sound_check.py`) from the worktree root with `../../../.venv/bin/python -B`.
+- (2026-11-26) The worktree guard rejects shell lines holding the repo's absolute path next to loops or variables; use relative paths or a script file. Give Python `< /dev/null` and `timeout`.
+- Skill tree art: `pixelkit/tree{icons,nodes,stone}.py`, previews from `zz_skill_tree_preview.py` in `target/previews/skills/`; spec `design/gui-skill-tree.md`.

@@ -1,1 +1,2 @@
 - [Tooling and pack facts](tooling.md) — pack format 97.1, mise/sandbox quirks, GUI pipeline location (art technique lessons: `design/lessons.md`)
+- [Visual sources](sources.md) — how to view reference images, working searches, dead ends

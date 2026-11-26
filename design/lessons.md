@@ -28,3 +28,12 @@
 - 2026-11-25: Layered polygon locks (`facet_art`) beat stacked boxes for beards. A separate darker handlebar on a lighter jaw beard finally read as a moustache.
 - 2026-11-25: Eyes read as spectacles when brow, lid, nose and sideburns frame them on all sides. Keep bare skin beside and between them and stop sideburns below the moustache.
 - 2026-11-25: A random backdrop spark beside a hand looked like a stray pixel; change the seed when one lands next to a focal point.
+- 2026-11-26: Viewing references changed the design: museum picture stones show a bare cut almost vanishing and a pigment-filled one reading from across the room. That became locked against owned.
+- 2026-11-26: Checking icons as black silhouettes first was cheap. A headsman's blade over a block read as a bird, a fish, then a jug; a large bearded axe with deep hollows and no block finally read as an axe.
+- 2026-11-26: Concentric downward arcs read as a wifi symbol. Funnel rims that sag in the middle read better, but Whirlwind is still the weakest sigil.
+- 2026-11-26: Crossed axes at 24 px read as flails; a horned skull is a far clearer tab sigil. Fangs joined to a gum bar read as a funnel until the bar became an arch.
+- 2026-11-26: An active tab raised into the row above looked like a stem hanging from the node over it. Keep tabs inside their slot.
+- 2026-11-26: A bright core with a round seal and one strap made sealed stones look like toy balls. One askew band and cracks read as sealed.
+- 2026-11-26: Lit connectors at crimson 3-4 competed with owned stones; one step down fixed the hierarchy.
+- 2026-11-26: An available rune in steel 4 was as bright as an owned one in greyscale; steel 3 restored owned above available.
+- 2026-11-26: Passes for the A1 skill tree: about 6 silhouette rounds and 5 page and state rounds.
