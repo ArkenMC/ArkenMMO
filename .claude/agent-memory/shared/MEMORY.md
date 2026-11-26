@@ -15,6 +15,7 @@ Facts and user decisions every agent needs. Rules: `AGENTS.md`. Add one dated li
 - 2026-11-26: In a fresh worktree `mise run assets-deps` can fail in the sandbox (pip can't read its certificate bundle). Report it; don't disable the sandbox on your own.
 
 ## User decisions
+- 2026-11-26: Player inventory and creative inventory are re-themed as vanilla overrides in the skill menus' chrome (iron, parchment, gold, no class colour); spec `design/gui-inventory.md`. The creative destroy slot stays **neutral** (dark iron with a steel X, no crimson).
 - 2026-11-26: All skills stage decisions, including rebirth ideas for later: [skills-decisions.md](skills-decisions.md).
 - 2026-11-26: The server runs Paper 26.2 with ItemsAdder 4.0.18, which works fine on it (user, from the live server). The plugin build and checks run in GitHub Actions; local sessions may lack mise.
 - 2026-11-26: The pack ships through ItemsAdder as content folder `arkenmmo` (`mise run itemsadder`, `tools/itemsadder.py`); `resourcepack/` stays the source. ItemsAdder item `arkenmmo:emerald` is in `itemsadder/contents/arkenmmo/configs/emerald.yml`.
