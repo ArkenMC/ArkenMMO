@@ -2,9 +2,9 @@
   "pack": {
     "description": "ArkenMMO",
     "min_format": [
-      97,
-      1
+      88,
+      0
     ],
-    "max_format": 97
+    "max_format": 88
   }
 }

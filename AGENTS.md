@@ -33,8 +33,8 @@ All project knowledge lives in this repository as Markdown. Don't rely on memory
 - This repository may be public: **never store secrets or personal information.**
 
 ## Resource pack
-- Plain vanilla resource pack in `resourcepack/`, for the Paper version in `pom.xml` (26.3 now). ItemsAdder isn't used: see `docs/briefs/classes.md`.
-- `pack.mcmeta`: `min_format [97, 1]`, `max_format 97` (26.3 = 97.1). Check it again for any other version.
+- Plain vanilla resource pack in `resourcepack/`, for the Paper version in `pom.xml` (26.2 now). ItemsAdder isn't used: see `docs/briefs/classes.md`.
+- `pack.mcmeta`: `min_format [88, 0]`, `max_format 88` (26.2 = 88.0). Check it again for any other version.
 - Our namespace is `arkenmmo`. `assets/minecraft/` is only for deliberate vanilla overrides; now it holds the transparent slot highlight, which hides the highlight in **every** inventory.
 
 | Path under `resourcepack/assets/arkenmmo/` | What |
