@@ -4,10 +4,10 @@ import numpy as np
 from .draw import Canvas, dilate, poly_mask, shift
 from .palette import col
 from .treeicons import ICONS
+from .treetheme import GOLD_MARK
 
 TILE = 32
 ICON_AT = 4
-STATES = ("locked", "available", "confirm", "owned")
 # lit pieces stop short of the tile edge so the painted clamp across the slot gap shows whole
 CLAMP_REACH = 2
 
@@ -27,11 +27,6 @@ def shape(kind, inset=0):
     """Actives (and the core) are near squares; passives are octagons."""
     cut = 9 if kind == "passive" else 3
     return _chamfered(inset, max(0, cut - inset // 2))
-
-
-def _lit_side(mask):
-    """Pixels of `mask` whose upper or left neighbour is outside it."""
-    return mask & (~shift(mask, 0, 1) | ~shift(mask, 1, 0))
 
 
 def _bevel(canvas, kind, inset, top, bottom):
@@ -67,8 +62,8 @@ def _wear(canvas, area, colour):
         canvas.mask(patch & area, colour)
 
 
-def _corner_brackets(canvas):
-    """Gold L-shaped marks, 2 px thick: the shape that says "click again"."""
+def _corner_brackets(canvas, marks):
+    """L-shaped marks, 2 px thick: the shape that says "click again"."""
     for fx in (False, True):
         for fy in (False, True):
             mark = np.zeros((TILE, TILE), bool)
@@ -76,24 +71,25 @@ def _corner_brackets(canvas):
             mark[0:10, 0:3] = True
             mark = mark[::-1 if fy else 1, ::-1 if fx else 1]
             canvas.mask(dilate(mark), col("iron", 0))
-            canvas.mask(mark, col("gold", 4))
-            canvas.mask(mark & ~shift(mark, 0, 1), col("gold", 5))
-            canvas.mask(mark & ~shift(mark, 0, -1), col("gold", 2))
+            low, mid, high = (col(*step) for step in marks)
+            canvas.mask(mark, mid)
+            canvas.mask(mark & ~shift(mark, 0, 1), high)
+            canvas.mask(mark & ~shift(mark, 0, -1), low)
 
 
-def _studs(canvas, kind):
-    """Four small ember rivets on the ring of an owned stone: a second, non-colour cue."""
+def _studs(canvas, kind, theme):
+    """Four small lit rivets on the ring of an owned stone: a second, non-colour cue."""
     if kind == "passive":
         spots = ((15, 1), (15, 29), (1, 15), (29, 15))
     else:
         spots = ((2, 2), (28, 2), (2, 28), (28, 28))
     for x, y in spots:
         canvas.rect((x - 1, y - 1, x + 3, y + 3), col("iron", 0))
-        canvas.rect((x, y, x + 2, y + 2), col("crimson", 4))
-        canvas.dot(x, y, col("crimson", 5))
+        canvas.rect((x, y, x + 2, y + 2), theme.g(4))
+        canvas.dot(x, y, theme.g(5))
 
 
-def node(name, kind, state):
+def node(theme, name, kind, state):
     """`kind` is "active", "passive" or "core"."""
     canvas = Canvas(TILE, TILE)
     outline = col("iron", 0)
@@ -101,48 +97,49 @@ def node(name, kind, state):
     mask = icon_mask(name)
     if state == "locked":
         plate = shape(kind, 2)
-        _bevel(canvas, kind, 1, col("ember_stone", 3), col("ember_stone", 0))
-        canvas.mask(plate, col("ember_stone", 1))
-        _wear(canvas, plate & ~dilate(mask), col("ember_stone", 0))
-        _carve(canvas, mask, col("iron", 0), col("iron", 0), col("ember_stone", 4), plate)
-        # a trace of grit along the floor keeps the dull rune readable
-        canvas.mask(mask & shift(mask, 0, 1) & shift(mask, 1, 0), col("steel", 2))
+        _bevel(canvas, kind, 1, theme.s(3), theme.s(0))
+        canvas.mask(plate, theme.s(1))
+        _wear(canvas, plate & ~dilate(mask), theme.s(0))
+        _carve(canvas, mask, col("iron", 0), col("iron", 0), theme.s(4), plate)
+        # a slate floor keeps the dull rune readable: no ring, and darker than an available rune
+        canvas.mask(mask & shift(mask, 0, 1) & shift(mask, 1, 0), col("iron", 4))
     elif state in ("available", "confirm"):
         _bevel(canvas, kind, 1, col("steel", 4), col("steel", 2))
         _bevel(canvas, kind, 2, col("steel", 3), col("steel", 2))
         canvas.mask(shape(kind, 3), outline)
         plate = shape(kind, 4)
-        canvas.mask(plate, col("ember_stone", 2))
-        _wear(canvas, plate & ~dilate(mask), col("ember_stone", 1))
+        canvas.mask(plate, theme.s(2))
+        _wear(canvas, plate & ~dilate(mask), theme.s(1))
         floor, wall = ((col("steel", 3), col("steel", 2)) if state == "available"
                        else (col("steel", 6), col("steel", 5)))
         canvas.mask(dilate(mask) & ~mask & shape(kind, 3), col("iron", 0))
-        _carve(canvas, mask, floor, wall, col("ember_stone", 4), plate)
+        _carve(canvas, mask, floor, wall, theme.s(4), plate)
         if state == "confirm":
-            _corner_brackets(canvas)
+            _corner_brackets(canvas, theme.mark)
     elif state == "owned":
-        _bevel(canvas, kind, 1, col("crimson", 3), col("crimson", 2))
-        _bevel(canvas, kind, 2, col("crimson", 2), col("crimson", 2))
-        _bevel(canvas, kind, 3, col("crimson", 1), col("crimson", 1))
+        _bevel(canvas, kind, 1, theme.g(3), theme.g(2))
+        _bevel(canvas, kind, 2, theme.g(2), theme.g(2))
+        _bevel(canvas, kind, 3, theme.g(1), theme.g(1))
         plate = shape(kind, 4)
-        canvas.mask(plate, col("crimson", 0))
+        canvas.mask(plate, theme.g(0))
         # still glow: one solid step around the cut, then a checker fringe
         near = dilate(mask)
         far = dilate(dilate(near))
         ys, xs = np.mgrid[0:TILE, 0:TILE]
-        canvas.mask(far & plate & ((xs + ys) % 2 == 0), col("crimson", 1))
-        canvas.mask(near & shape(kind, 3), col("crimson", 1))
-        canvas.mask(mask, col("crimson", 4))
+        canvas.mask(far & plate & ((xs + ys) % 2 == 0), theme.g(1))
+        canvas.mask(near & shape(kind, 3), theme.g(1))
+        canvas.mask(mask, theme.g(4))
         heart = mask & shift(mask, 0, 1) & shift(mask, 0, -1) & shift(mask, 1, 0) & shift(mask, -1, 0)
-        canvas.mask(heart, col("crimson", 5))
-        canvas.mask(mask & ~shift(mask, 0, 1), col("crimson", 3))
-        _studs(canvas, kind)
+        canvas.mask(heart, theme.g(5))
+        canvas.mask(mask & ~shift(mask, 0, 1), theme.g(3))
+        _studs(canvas, kind, theme)
     else:
         raise ValueError(state)
     if kind == "core":
         for x, y in ((14, 1), (14, 29)):
-            canvas.rect((x, y, x + 4, y + 2), col("gold", 3))
-            canvas.rect((x, y, x + 4, y + 1), col("gold", 4))
+            ramp, step = theme.mark[1]
+            canvas.rect((x, y, x + 4, y + 2), col(ramp, step - 1))
+            canvas.rect((x, y, x + 4, y + 1), col(ramp, step))
     return canvas.image()
 
 
@@ -170,29 +167,33 @@ def channel(kind, x0=0, x1=TILE):
     raise ValueError(kind)
 
 
-def _depth(mask):
+def depth(mask):
     """How many px each pixel is from the groove wall, ignoring the open tile edges."""
     padded = np.pad(mask, 4, mode="edge")
-    depth = np.zeros(padded.shape, int)
+    levels = np.zeros(padded.shape, int)
     inner = padded.copy()
     for _ in range(4):
-        depth += inner
+        levels += inner
         inner = inner & shift(inner, 0, 1) & shift(inner, 0, -1) & shift(inner, 1, 0) & shift(inner, -1, 0)
-    return depth[4:-4, 4:-4]
+    return levels[4:-4, 4:-4]
 
 
-def link(kind):
+def paint_glow(canvas, theme, mask, depth):
+    """Still light lying in a cut, one step quieter than an owned stone. Also used by the lit
+    mouths on the lower view."""
+    canvas.mask(mask & (depth == 1), theme.g(0))
+    canvas.mask(mask & (depth == 2), theme.g(1))
+    canvas.mask(mask & (depth >= 3), theme.g(2))
+    ys, xs = np.mgrid[0:canvas.size[1], 0:canvas.size[0]]
+    # uneven pools of brighter pigment in the floor of the cut
+    pools = ((xs + ys) % 16) < 7
+    canvas.mask(mask & (depth >= 4) & pools, theme.g(3))
+
+
+def link(theme, kind):
     canvas = Canvas(TILE, TILE)
     mask = channel(kind)
-    depth = _depth(mask)
-    # one step quieter than an owned stone: light lying in the cut, not a neon bar
-    canvas.mask(mask & (depth == 1), col("crimson", 0))
-    canvas.mask(mask & (depth == 2), col("crimson", 1))
-    canvas.mask(mask & (depth >= 3), col("crimson", 2))
-    ys, xs = np.mgrid[0:TILE, 0:TILE]
-    # still, uneven pools of brighter pigment in the floor of the cut
-    pools = ((xs + ys) % 16) < 7
-    canvas.mask(mask & (depth >= 4) & pools, col("crimson", 3))
+    paint_glow(canvas, theme, mask, depth(mask))
     ends = {"h": "we", "v": "ns", "corner_es": "es", "corner_sw": "sw"}[kind]
     if "w" in ends:
         canvas.px[:, :CLAMP_REACH] = 0
@@ -248,5 +249,5 @@ def reset(state):
         canvas.mask(arrow & ~shift(arrow, 0, 1), col(*top))
         canvas.mask(arrow & ~shift(arrow, 0, -1), col("steel", 3) if state == "ready" else col("gold", 2))
     if state == "confirm":
-        _corner_brackets(canvas)
+        _corner_brackets(canvas, GOLD_MARK)
     return canvas.image()
