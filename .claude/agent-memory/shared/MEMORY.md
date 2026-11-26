@@ -7,7 +7,13 @@ Facts and user decisions every agent needs. Rules: `AGENTS.md`. Add one dated li
 - 2026-11-26: Resource pack format for 26.2 is 88.0; patches have no own row (https://minecraft.wiki/w/Pack_format). Latest stable API then: `paper-api 26.2.build.135-stable` (repo.papermc.io maven-metadata).
 - 2026-11-26: No 26.3 changelog entry touches item model definitions, tooltip sprites, nine-slice .mcmeta, bitmap fonts or slot highlights (minecraft.wiki Java_Edition_26.3, last ~30% not read); our pack needs no art change for 26.2.
 
+- 2026-11-26: ArkenCore (private repo; don't copy its code here) offers no public Java API for parties. Other plugins read them through PlaceholderAPI: `%arken_party_has_<name>%` says whether that player is in the viewer's party (ArkenCore `docs/party.md`, read with the user's OK).
+- 2026-11-26: MythicMobs 5.14.0 and PlaceholderAPI 2.12.3 list 26.3 support (listings only, untested). Coordinates, plugin.yml setup, GUI approach and caveats: `docs/research/skills-integrations.md`, `skill-tree-gui.md`, `skill-tree-art.md`, `casting-input-sources.md`.
+- 2026-11-26: Tested in game by the user: `/papi parse <viewer> %arken_party_has_<name>%` returned `false` before the other player was in the viewer's party and `true` after they joined.
+- 2026-11-26: User reports it runs and works fine on their 26.2 server (said after the question about ArkenCore's 26.3 setting).
+
 ## User decisions
+- 2026-11-26: All skills stage decisions, including rebirth ideas for later: [skills-decisions.md](skills-decisions.md).
 - 2026-11-26: The server runs Paper 26.2 with ItemsAdder 4.0.18, which works fine on it (user, from the live server). The plugin build and checks run in GitHub Actions; local sessions may lack mise.
 - 2026-11-26: The pack ships through ItemsAdder as content folder `arkenmmo` (`mise run itemsadder`, `tools/itemsadder.py`); `resourcepack/` stays the source. ItemsAdder item `arkenmmo:emerald` is in `itemsadder/contents/arkenmmo/configs/emerald.yml`.
 - 2026-11-26: **Target is Paper 26.2**, not 26.3, so ItemsAdder can be used. Pack format 88.0. Notes written before this date that say 26.3 are about the old target.

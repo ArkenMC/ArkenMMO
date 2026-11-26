@@ -5,7 +5,7 @@
 
 resource-pack:
   prompt: "<yellow>ArkenMMO needs its resource pack to show its menus."
-  failed: "<red>The resource pack didn't load, so the menu can't open. Type /class to try again."
+  failed: "<red>The resource pack didn't load, so the menu can't open. Use the command again to retry."
 
 class:
   waiting-for-pack: "<gray>The class selection opens once the resource pack has loaded."
@@ -67,3 +67,755 @@ menu:
     confirm-archer: "<!shadow><white><font:arkenmmo:gui></font></white>"
     confirm-mage: "<!shadow><white><font:arkenmmo:gui></font></white>"
     confirm-captain: "<!shadow><white><font:arkenmmo:gui></font></white>"
+# The skill tree and loadout menus (/skills). Numbers in skill descriptions are placeholders filled from
+# skill-values.yml. The name painted at the top of each page is part of the resource pack and doesn't
+# change with this file.
+skills:
+  chat:
+    players-only: "<red>Only players have a skill tree."
+    no-class: "<gray>Choose a class first with <white>/class</white>."
+    waiting-for-pack: "<gray>Your skill tree opens once the resource pack has loaded."
+    class-changed: "<red>Your class changed, so the skill menu closed."
+    tree-invalid: "<yellow>Your skill tree no longer fits the rules, so it was emptied. Your points are free again."
+
+  # <colour> in the lines below: each class's name colour
+  colours:
+    warrior: "<#e8b33c>"
+    archer: "<#6abf4b>"
+    mage: "<#5aa9e6>"
+    captain: "<#d9534f>"
+
+  hover:
+    # A skill's hover: its name, "archetype" or "core", its description, "mana" (actives) and "cost"
+    # (unbought stones in the tree), "combo" (filled loadout slots), then one block from "status".
+    lines:
+      # <archetype> and <type>
+      archetype: "<#dcc291><archetype> <#8f8a80>- <gray><type>"
+      # <class>
+      core: "<#dcc291><class> core skill <#8f8a80>- <gray>Active"
+      # <mana> and <cooldown>
+      mana: "<#7fc8e8>Mana <white><mana></white>  <#7fc8e8>Cooldown <white><cooldown>s"
+      # <cost>
+      cost: "<gray>Point cost: <white><cost>"
+      # <combo>
+      combo: "<gray>Combo: <white><combo>"
+    type:
+      active: "Active"
+      passive: "Passive"
+    status:
+      # Followed by one block from "requirements" for each unmet requirement
+      locked:
+        - "<red>Locked"
+      available:
+        - "<yellow>Click to unlock"
+      confirm:
+        - "<gold>Click again to unlock"
+      owned:
+        - "<green>Unlocked"
+      undoable:
+        - "<green>Unlocked just now"
+        - "<yellow>Click to undo"
+      # <cost>
+      undo-confirm:
+        - "<gold>Click again to undo"
+        - "<gray>Points returned: <white><cost>"
+      # <blocking>
+      undo-refused:
+        - "<green>Unlocked just now"
+        - "<red>Undo <white><blocking></white> first"
+      core:
+        - "<green>Always yours, free"
+    requirements:
+      # <required>
+      one-skill:
+        - "<red>Needs <white><required>"
+      # <required_a> and <required_b>
+      either-skill:
+        - "<red>Needs one of:"
+        - " <white><required_a>"
+        - " <white><required_b>"
+      # <level>
+      level:
+        - "<red>Needs class level <white><level>"
+      # <free>
+      points:
+        - "<red>Not enough points <gray>(<free> free)"
+    # The blocks used in the loadout menu
+    loadout:
+      seat:
+        - "<yellow>Click to clear"
+      # <picked>
+      seat-picked:
+        - "<yellow>Click to place <white><picked>"
+      pool-free:
+        - "<yellow>Click to pick"
+      # <combo>
+      pool-assigned:
+        - "<green>On combo <white><combo>"
+        - "<yellow>Click to pick"
+      pool-picked:
+        - "<gold>Picked: click a seat"
+      pool-locked:
+        - "<red>Not unlocked"
+
+  menu:
+    sealed:
+      # <archetype>
+      name: "<gray>Sealed Stone"
+      lore:
+        - "<#dcc291><archetype>"
+        - ""
+        - "<#8f8a80>The carving is hidden."
+        - "<#8f8a80>Not yet."
+    # <colour>, <archetype> and <spent>; a line that is just <description> becomes the archetype's lines
+    tab:
+      name: "<colour><archetype>"
+      lore:
+        - "<#8f8a80>Archetype"
+        - ""
+        - "<description>"
+        - ""
+        - "<gray>Points spent: <white><spent>"
+        - "<yellow>Click to view"
+    tab-open:
+      name: "<colour><archetype>"
+      lore:
+        - "<#8f8a80>Archetype"
+        - ""
+        - "<description>"
+        - ""
+        - "<gray>Points spent: <white><spent>"
+        - "<green>You are viewing this"
+    close:
+      name: "<yellow>Close"
+    back:
+      name: "<yellow>Back to the skill tree"
+    # <points>
+    reset:
+      name: "<yellow>Reset skills"
+      lore:
+        - "<gray>Points returned: <white><points>"
+        - ""
+        - "<yellow>Click to reset"
+    # <points> and <cooldown>
+    reset-confirm:
+      name: "<gold>Reset your skills?"
+      lore:
+        - "<gray>Points returned: <white><points>"
+        - "<gray>Next reset in <white><cooldown>s</white> after."
+        - ""
+        - "<gold>Click again to reset"
+    # <seconds>; updates when you click or reopen the page
+    reset-cooldown:
+      name: "<#8f8a80>Reset skills"
+      lore:
+        - "<red>Ready again in <white><seconds>s"
+    reset-empty:
+      name: "<#8f8a80>Reset skills"
+      lore:
+        - "<red>Nothing to reset"
+    scroll-down:
+      name: "<yellow>Scroll down"
+      lore:
+        - "<gray>Higher tiers of this"
+        - "<gray>archetype."
+    scroll-up:
+      name: "<yellow>Scroll up"
+      lore:
+        - "<gray>Lower tiers of this"
+        - "<gray>archetype."
+    loadout:
+      name: "<yellow>Spell loadout"
+      lore:
+        - "<gray>Set your four combo spells."
+        - ""
+        - "<yellow>Click to open"
+    # <class>, <level>, <max_level>, <free>, <archetype_1> to <archetype_3>, <spent_1> to <spent_3>
+    info:
+      name: "<yellow><class> skills"
+      lore:
+        - "<gray>Class level <white><level></white> of <white><max_level>"
+        - "<#8f8a80>A test value: no XP yet."
+        - "<gray>Free skill points: <white><free>"
+        - ""
+        - "<#dcc291><archetype_1><gray>: <white><spent_1>"
+        - "<#dcc291><archetype_2><gray>: <white><spent_2>"
+        - "<#dcc291><archetype_3><gray>: <white><spent_3>"
+    loadout-info:
+      name: "<yellow>How to cast"
+      lore:
+        - "<gray>Hold your class weapon and"
+        - "<gray>click a three-click pattern."
+        - "<gray>R is right, L is left."
+        - ""
+        - "<#8f8a80>Casting isn't available yet."
+    # <combo>
+    seat-empty:
+      name: "<gray>Empty seat"
+      lore:
+        - "<gray>Combo: <white><combo>"
+        - ""
+        - "<#8f8a80>Pick a skill below first."
+    # <combo> and <picked>
+    seat-empty-picked:
+      name: "<gray>Empty seat"
+      lore:
+        - "<gray>Combo: <white><combo>"
+        - ""
+        - "<yellow>Click to place <white><picked>"
+
+  archetypes:
+    warrior:
+      guardian:
+        name: "Warrior's Courage"
+        description:
+          - "<gray>Hold the line: shields, shouts"
+          - "<gray>and endurance."
+      berserker:
+        name: "Warrior's Rage"
+        description:
+          - "<gray>Charge in and keep swinging."
+          - "<gray>Fury feeds the fight."
+      duelist:
+        name: "Warrior's Honour"
+        description:
+          - "<gray>Precise strikes against one"
+          - "<gray>worthy foe."
+    archer:
+      marksman:
+        name: "Archer's Focus"
+        description:
+          - "<gray>Careful, heavy shots from"
+          - "<gray>a long way off."
+      skirmisher:
+        name: "Archer's Swiftness"
+        description:
+          - "<gray>Never stand still: speed and"
+          - "<gray>a rain of arrows."
+      hunter:
+        name: "Archer's Instinct"
+        description:
+          - "<gray>Fire, frost, tracking and"
+          - "<gray>a loyal wolf."
+    mage:
+      pyromancer:
+        name: "Mage's Flame"
+        description:
+          - "<gray>Burn your foes with flame"
+          - "<gray>and falling stars."
+      frostweaver:
+        name: "Mage's Frost"
+        description:
+          - "<gray>Slow, root and shatter with"
+          - "<gray>ice."
+      lifebinder:
+        name: "Mage's Grace"
+        description:
+          - "<gray>Mend your allies and sear"
+          - "<gray>your enemies with light."
+    captain:
+      vanguard:
+        name: "Captain's Command"
+        description:
+          - "<gray>Mark the quarry and lead the"
+          - "<gray>attack."
+      standard_bearer:
+        name: "Captain's Banner"
+        description:
+          - "<gray>Plant your colours and fight"
+          - "<gray>beside your herald."
+      warchanter:
+        name: "Captain's Song"
+        description:
+          - "<gray>Gather Verses, then turn song"
+          - "<gray>into steel and healing."
+
+  # Every skill's name and what it does
+  list:
+    warrior:
+      cleave:
+        name: "<#e8b33c>Cleave"
+        description:
+          - "<gray>Sweep your weapon, hitting all"
+          - "<gray>enemies in a <white><range></white>-block, <white><angle>-degree</white>"
+          - "<gray>cone for <white><damage>%</white> power."
+      shield_bash:
+        name: "<#e8b33c>Shield Bash"
+        description:
+          - "<gray>Bash one enemy within <white><range></white> blocks"
+          - "<gray>for <white><damage>%</white> power and stun it for <white><duration>s</white>."
+      iron_hide:
+        name: "<#e8b33c>Iron Hide"
+        description:
+          - "<gray>You take <white><reduction>%</white> less damage."
+      stalwart:
+        name: "<#e8b33c>Stalwart"
+        description:
+          - "<gray>Gain <white><health></white> max health and <white><resistance>%</white>"
+          - "<gray>knockback resistance."
+      challenging_shout:
+        name: "<#e8b33c>Challenging Shout"
+        description:
+          - "<gray>Mobs within <white><radius></white> blocks attack you"
+          - "<gray>for <white><duration>s</white>. You take <white><reduction>%</white> less damage"
+          - "<gray>meanwhile."
+      second_wind:
+        name: "<#e8b33c>Second Wind"
+        description:
+          - "<gray>Dropping below <white><threshold>%</white> health heals"
+          - "<gray><white><heal>%</white> of your max health. Once every"
+          - "<gray><white><interval>s</white>."
+      bulwark:
+        name: "<#e8b33c>Bulwark"
+        description:
+          - "<gray>Raise a shield that absorbs <white><amount>%</white>"
+          - "<gray>power for <white><duration>s</white>."
+      leaping_strike:
+        name: "<#e8b33c>Leaping Strike"
+        description:
+          - "<gray>Leap up to <white><range></white> blocks. Landing deals"
+          - "<gray><white><damage>%</white> power to enemies within <white><radius></white>"
+          - "<gray>blocks."
+      bloodthirst:
+        name: "<#e8b33c>Bloodthirst"
+        description:
+          - "<gray>Basic hits heal you for <white><heal>%</white> of the"
+          - "<gray>damage dealt."
+      fury:
+        name: "<#e8b33c>Fury"
+        description:
+          - "<gray>Each hit gives <white><speed>%</white> attack speed for"
+          - "<gray><white><duration>s</white>, up to <white><stacks></white> stacks."
+      whirlwind:
+        name: "<#e8b33c>Whirlwind"
+        description:
+          - "<gray>Spin for <white><duration>s</white>, striking <white><count></white> times"
+          - "<gray>for <white><damage>%</white> power each in a <white><radius></white>-block"
+          - "<gray>radius."
+      relentless:
+        name: "<#e8b33c>Relentless"
+        description:
+          - "<gray>Each kill restores <white><amount></white> mana."
+      execute:
+        name: "<#e8b33c>Execute"
+        description:
+          - "<gray>Hit one enemy for <white><damage>%</white> power, or"
+          - "<gray><white><finisher>%</white> if it is below <white><threshold>%</white> health."
+      lunge:
+        name: "<#e8b33c>Lunge"
+        description:
+          - "<gray>Dash up to <white><range></white> blocks to the enemy"
+          - "<gray>you aim at and strike it for <white><damage>%</white>"
+          - "<gray>power."
+      footwork:
+        name: "<#e8b33c>Footwork"
+        description:
+          - "<gray>Gain <white><speed>%</white> move speed and <white><haste>%</white> attack"
+          - "<gray>speed."
+      focus:
+        name: "<#e8b33c>Focus"
+        description:
+          - "<gray>Deal <white><bonus>%</white> more damage while only"
+          - "<gray>one enemy is within <white><radius></white> blocks."
+      riposte:
+        name: "<#e8b33c>Riposte"
+        description:
+          - "<gray>Guard for <white><duration>s</white>. The first melee or"
+          - "<gray>arrow hit is reduced <white><reduction>%</white>. A melee"
+          - "<gray>attacker takes <white><damage>%</white> power back."
+      opportunist:
+        name: "<#e8b33c>Opportunist"
+        description:
+          - "<gray>Deal <white><bonus>%</white> more damage from behind,"
+          - "<gray>or to slowed enemies."
+      hamstring:
+        name: "<#e8b33c>Hamstring"
+        description:
+          - "<gray>Cut one enemy for <white><damage>%</white> power and"
+          - "<gray>slow it <white><slow>%</white> for <white><duration>s</white>."
+    archer:
+      vault:
+        name: "<#6abf4b>Vault"
+        description:
+          - "<gray>Launch yourself backward about <white><range></white>"
+          - "<gray>blocks. You take no fall damage on"
+          - "<gray>landing."
+      power_shot:
+        name: "<#6abf4b>Power Shot"
+        description:
+          - "<gray>Fire a fast arrow that deals <white><damage>%</white>"
+          - "<gray>power."
+      eagle_eye:
+        name: "<#6abf4b>Eagle Eye"
+        description:
+          - "<gray>Arrows deal <white><bonus>%</white> more damage beyond"
+          - "<gray><white><range></white> blocks."
+      steady_aim:
+        name: "<#6abf4b>Steady Aim"
+        description:
+          - "<gray>After standing still <white><delay>s</white>, you"
+          - "<gray>deal <white><bonus>%</white> more damage."
+      piercing_shot:
+        name: "<#6abf4b>Piercing Shot"
+        description:
+          - "<gray>Fire an arrow that passes through"
+          - "<gray>up to <white><count></white> enemies for <white><damage>%</white> power."
+      weak_spot:
+        name: "<#6abf4b>Weak Spot"
+        description:
+          - "<gray><white><chance>%</white> chance to deal <white><damage>%</white> damage."
+      hunters_mark:
+        name: "<#6abf4b>Hunter's Mark"
+        description:
+          - "<gray>Mark a target for <white><duration>s</white>. It glows"
+          - "<gray>and takes <white><bonus>%</white> more damage from"
+          - "<gray>you."
+      volley:
+        name: "<#6abf4b>Volley"
+        description:
+          - "<gray>Fire <white><count></white> arrows in a spread for <white><damage>%</white>"
+          - "<gray>power each. At most <white><limit></white> hit the same"
+          - "<gray>target."
+      fleet_foot:
+        name: "<#6abf4b>Fleet Foot"
+        description:
+          - "<gray>Gain <white><speed>%</white> move speed."
+      momentum:
+        name: "<#6abf4b>Momentum"
+        description:
+          - "<gray>Arrow hits give <white><bonus>%</white> damage for <white><duration>s</white>,"
+          - "<gray>up to <white><stacks></white> stacks."
+      rapid_fire:
+        name: "<#6abf4b>Rapid Fire"
+        description:
+          - "<gray>Loose <white><count></white> arrows over <white><duration>s</white> for <white><damage>%</white>"
+          - "<gray>power each."
+      light_step:
+        name: "<#6abf4b>Light Step"
+        description:
+          - "<gray>Take <white><reduction>%</white> less fall damage. <white><chance>%</white>"
+          - "<gray>chance to dodge a hit."
+      tumble:
+        name: "<#6abf4b>Tumble"
+        description:
+          - "<gray>Dash <white><range></white> blocks the way you move."
+          - "<gray>Your next arrow within <white><duration>s</white> deals"
+          - "<gray><white><bonus>%</white> more damage."
+      flame_arrow:
+        name: "<#6abf4b>Flame Arrow"
+        description:
+          - "<gray>Fire an arrow for <white><damage>%</white> power that"
+          - "<gray>burns for <white><burn>%</white> power each second"
+          - "<gray>for <white><duration>s</white>."
+      tracker:
+        name: "<#6abf4b>Tracker"
+        description:
+          - "<gray>Enemies you hit below <white><threshold>%</white> health"
+          - "<gray>glow for <white><duration>s</white>."
+      survivalist:
+        name: "<#6abf4b>Survivalist"
+        description:
+          - "<gray>Out of combat, regain <white><heal>%</white> of max"
+          - "<gray>health each second."
+      wolf_companion:
+        name: "<#6abf4b>Wolf Companion"
+        description:
+          - "<gray>Call a wolf for <white><duration>s</white>. It bites for"
+          - "<gray><white><damage>%</white> power and has <white><health>%</white> of your"
+          - "<gray>health."
+      barbed_heads:
+        name: "<#6abf4b>Barbed Heads"
+        description:
+          - "<gray><white><chance>%</white> chance to make a target bleed"
+          - "<gray>for <white><damage>%</white> power each second for <white><duration>s</white>."
+      frost_arrow:
+        name: "<#6abf4b>Frost Arrow"
+        description:
+          - "<gray>Deal <white><damage>%</white> power and slow enemies"
+          - "<gray>within <white><radius></white> blocks by <white><slow>%</white> for <white><duration>s</white>."
+    mage:
+      blink:
+        name: "<#5aa9e6>Blink"
+        description:
+          - "<gray>Teleport up to <white><range></white> blocks where you"
+          - "<gray>look, stopping before walls."
+      fireball:
+        name: "<#5aa9e6>Fireball"
+        description:
+          - "<gray>Throw a fireball that deals <white><damage>%</white>"
+          - "<gray>power in <white><radius></white> blocks."
+      kindling:
+        name: "<#5aa9e6>Kindling"
+        description:
+          - "<gray>Your fire spells burn for <white><burn>%</white>"
+          - "<gray>power each second for <white><duration>s</white>."
+      inner_heat:
+        name: "<#5aa9e6>Inner Heat"
+        description:
+          - "<gray>Deal <white><bonus>%</white> more damage while above"
+          - "<gray><white><threshold>%</white> mana."
+      flame_wave:
+        name: "<#5aa9e6>Flame Wave"
+        description:
+          - "<gray>Burst a <white><range></white>-block cone of fire for"
+          - "<gray><white><damage>%</white> power and knock enemies back."
+      ash_siphon:
+        name: "<#5aa9e6>Ash Siphon"
+        description:
+          - "<gray>When a burning enemy dies, restore"
+          - "<gray><white><amount></white> mana."
+      meteor:
+        name: "<#5aa9e6>Meteor"
+        description:
+          - "<gray>Call a meteor within <white><range></white> blocks."
+          - "<gray>After <white><delay>s</white> it deals <white><damage>%</white> power in"
+          - "<gray><white><radius></white> blocks."
+      ice_lance:
+        name: "<#5aa9e6>Ice Lance"
+        description:
+          - "<gray>Hurl ice up to <white><range></white> blocks for <white><damage>%</white>"
+          - "<gray>power and slow the target <white><slow>%</white> for"
+          - "<gray><white><duration>s</white>."
+      chill_touch:
+        name: "<#5aa9e6>Chill Touch"
+        description:
+          - "<gray>Your slows last <white><duration>s</white> longer."
+      frost_armor:
+        name: "<#5aa9e6>Frost Armor"
+        description:
+          - "<gray>Take <white><reduction>%</white> less damage. Melee"
+          - "<gray>attackers are slowed <white><slow>%</white> for <white><duration>s</white>."
+      frost_nova:
+        name: "<#5aa9e6>Frost Nova"
+        description:
+          - "<gray>Deal <white><damage>%</white> power within <white><radius></white> blocks"
+          - "<gray>and root enemies for <white><duration>s</white>. Players"
+          - "<gray>and bosses are slowed <white><player_slow>%</white>"
+          - "<gray>instead."
+      shatter:
+        name: "<#5aa9e6>Shatter"
+        description:
+          - "<gray>Deal <white><bonus>%</white> more damage to slowed or"
+          - "<gray>rooted enemies."
+      blizzard:
+        name: "<#5aa9e6>Blizzard"
+        description:
+          - "<gray>Raise a storm up to <white><range></white> blocks"
+          - "<gray>away, with a <white><radius></white>-block radius, for"
+          - "<gray><white><duration>s</white>. It deals <white><damage>%</white> power each second"
+          - "<gray>and slows by <white><slow>%</white>."
+      mending_light:
+        name: "<#5aa9e6>Mending Light"
+        description:
+          - "<gray>Heal the ally you aim at, up to <white><range></white>"
+          - "<gray>blocks away, for <white><heal>%</white> power, or"
+          - "<gray>yourself if there is none."
+      gentle_soul:
+        name: "<#5aa9e6>Gentle Soul"
+        description:
+          - "<gray>Your healing is <white><bonus>%</white> stronger."
+      radiance:
+        name: "<#5aa9e6>Radiance"
+        description:
+          - "<gray>Your heals add <white><heal>%</white> power of"
+          - "<gray>healing over <white><duration>s</white>. It refreshes; it"
+          - "<gray>does not stack."
+      sanctuary:
+        name: "<#5aa9e6>Sanctuary"
+        description:
+          - "<gray>Bless a <white><radius></white>-block circle for <white><duration>s</white>."
+          - "<gray>Allies inside heal <white><heal>%</white> power each"
+          - "<gray>second."
+      smite:
+        name: "<#5aa9e6>Smite"
+        description:
+          - "<gray>Your spell damage heals the most"
+          - "<gray>hurt ally within <white><range></white> blocks for <white><heal>%</white>"
+          - "<gray>of it."
+      sunburst:
+        name: "<#5aa9e6>Sunburst"
+        description:
+          - "<gray>Burst light <white><radius></white> blocks around you:"
+          - "<gray><white><damage>%</white> power to enemies and <white><heal>%</white>"
+          - "<gray>power healing to allies."
+    captain:
+      rallying_strike:
+        name: "<#d9534f>Rallying Strike"
+        description:
+          - "<gray>Strike for <white><damage>%</white> power and heal you"
+          - "<gray>and allies within <white><radius></white> blocks for <white><heal>%</white>"
+          - "<gray>power. An Opening doubles the"
+          - "<gray>heal."
+      quarry_mark:
+        name: "<#d9534f>Quarry Mark"
+        description:
+          - "<gray>Deal <white><damage>%</white> power at up to <white><range></white> blocks"
+          - "<gray>and mark the target for <white><duration>s</white>. It"
+          - "<gray>takes <white><bonus>%</white> more damage from you and"
+          - "<gray>allies."
+      hardened_resolve:
+        name: "<#d9534f>Hardened Resolve"
+        description:
+          - "<gray>Spending an Opening: for <white><duration>s</white> take"
+          - "<gray><white><reduction>%</white> less damage and heal <white><bonus>%</white> more."
+      lead_from_the_front:
+        name: "<#d9534f>Lead from the Front"
+        description:
+          - "<gray>Deal <white><bonus>%</white> more damage, and another"
+          - "<gray><white><extra>%</white> to your marked enemy."
+      press_the_attack:
+        name: "<#d9534f>Press the Attack"
+        description:
+          - "<gray>Strike <white><count></white> times for <white><damage>%</white> power on up"
+          - "<gray>to <white><targets></white> enemies within <white><range></white> blocks."
+          - "<gray>Hitting your marked enemy grants"
+          - "<gray>an Opening, once every <white><interval>s</white>."
+      gallant_example:
+        name: "<#d9534f>Gallant Example"
+        description:
+          - "<gray>Spending an Opening restores <white><amount></white>"
+          - "<gray>mana."
+      scattering_shout:
+        name: "<#d9534f>Scattering Shout"
+        description:
+          - "<gray>Deal <white><damage>%</white> power within <white><radius></white> blocks."
+          - "<gray>With an Opening: <white><opening>%</white> power and a"
+          - "<gray><white><duration>s</white> stun."
+      plant_standard:
+        name: "<#d9534f>Plant Standard"
+        description:
+          - "<gray>Plant a banner for <white><duration>s</white>, hitting"
+          - "<gray>foes within <white><strike_radius></white> blocks for <white><damage>%</white>"
+          - "<gray>power. Allies within <white><radius></white> blocks of"
+          - "<gray>it deal <white><bonus>%</white> more damage."
+      tall_colours:
+        name: "<#d9534f>Tall Colours"
+        description:
+          - "<gray>Your standard reaches <white><radius></white> blocks"
+          - "<gray>farther and lasts <white><duration>s</white> longer."
+      close_ranks:
+        name: "<#d9534f>Close Ranks"
+        description:
+          - "<gray>Take <white><reduction>%</white> less damage inside your"
+          - "<gray>standard or within <white><range></white> blocks of"
+          - "<gray>your herald."
+      call_herald:
+        name: "<#d9534f>Call Herald"
+        description:
+          - "<gray>Call a herald for <white><duration>s</white>. It strikes"
+          - "<gray>for <white><damage>%</white> power every <white><interval>s</white> and has"
+          - "<gray><white><health>%</white> of your health."
+      steadfast_company:
+        name: "<#d9534f>Steadfast Company"
+        description:
+          - "<gray>Your herald has <white><health>%</white> more health."
+          - "<gray>Your standard heals allies <white><heal>%</white>"
+          - "<gray>power each second."
+      sworn_bond:
+        name: "<#d9534f>Sworn Bond"
+        description:
+          - "<gray>Bond the ally you aim at within"
+          - "<gray><white><range></white> blocks, else your herald or"
+          - "<gray>yourself, for <white><duration>s</white>. They get"
+          - "<gray>a <white><shield>%</white> power shield for <white><shield_duration>s</white>"
+          - "<gray>and <white><bonus>%</white> more damage. If not"
+          - "<gray>you, you gain <white><self_bonus>%</white> more."
+      war_ballad:
+        name: "<#d9534f>War Ballad"
+        description:
+          - "<gray>Sing at an enemy within <white><range></white> blocks"
+          - "<gray>for <white><damage>%</white> power and gain <white><count></white> Verse."
+      stirring_melody:
+        name: "<#d9534f>Stirring Melody"
+        description:
+          - "<gray>Each Verse gives <white><bonus>%</white> damage and <white><reduction>%</white>"
+          - "<gray>less damage taken."
+      long_refrain:
+        name: "<#d9534f>Long Refrain"
+        description:
+          - "<gray>Your Verses last <white><duration>s</white> longer."
+      anthem_of_courage:
+        name: "<#d9534f>Anthem of Courage"
+        description:
+          - "<gray>Needs a Verse; keeps it. Allies"
+          - "<gray>within <white><radius></white> blocks heal <white><heal>%</white> power"
+          - "<gray>per Verse over <white><duration>s</white>."
+      clear_voice:
+        name: "<#d9534f>Clear Voice"
+        description:
+          - "<gray>Heal <white><bonus>%</white> more. Anthem also gives"
+          - "<gray><white><speed>%</white> move speed for <white><duration>s</white>."
+      coda:
+        name: "<#d9534f>Coda"
+        description:
+          - "<gray>Needs <white><verses></white> Verse. Spend all"
+          - "<gray>Verses. Per Verse, deal"
+          - "<gray><white><damage>%</white> power to enemies and heal"
+          - "<gray>allies <white><heal>%</white> power within <white><radius></white> blocks."
+
+  # Characters from the resource pack font that draw each menu's background. Only change them with the pack.
+  titles:
+    loadout_archer: "<!shadow><white><font:arkenmmo:gui>\uf804\ue285\uf801\ue286\uf808\uf806\uf805\uf801\ue287\uf801\ue288</font></white>"
+    loadout_captain: "<!shadow><white><font:arkenmmo:gui>\uf804\ue28d\uf801\ue28e\uf808\uf806\uf805\uf801\ue28f\uf801\ue290</font></white>"
+    loadout_mage: "<!shadow><white><font:arkenmmo:gui>\uf804\ue289\uf801\ue28a\uf808\uf806\uf805\uf801\ue28b\uf801\ue28c</font></white>"
+    loadout_warrior: "<!shadow><white><font:arkenmmo:gui>\uf804\ue281\uf801\ue282\uf808\uf806\uf805\uf801\ue283\uf801\ue284</font></white>"
+    tree_archer_hunter_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue231\uf801\ue232\uf808\uf806\uf805\uf801\ue233\uf801\ue234</font></white>"
+    tree_archer_hunter_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue235\uf801\ue236\uf808\uf806\uf805\uf801\ue237\uf801\ue238</font></white>"
+    tree_archer_hunter_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue345\uf801\ue346\uf808\uf806\uf805\uf801\ue347\uf801\ue348</font></white>"
+    tree_archer_hunter_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue33d\uf801\ue33e\uf808\uf806\uf805\uf801\ue33f\uf801\ue340</font></white>"
+    tree_archer_hunter_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue341\uf801\ue342\uf808\uf806\uf805\uf801\ue343\uf801\ue344</font></white>"
+    tree_archer_marksman_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue221\uf801\ue222\uf808\uf806\uf805\uf801\ue223\uf801\ue224</font></white>"
+    tree_archer_marksman_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue225\uf801\ue226\uf808\uf806\uf805\uf801\ue227\uf801\ue228</font></white>"
+    tree_archer_marksman_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue32d\uf801\ue32e\uf808\uf806\uf805\uf801\ue32f\uf801\ue330</font></white>"
+    tree_archer_marksman_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue325\uf801\ue326\uf808\uf806\uf805\uf801\ue327\uf801\ue328</font></white>"
+    tree_archer_marksman_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue329\uf801\ue32a\uf808\uf806\uf805\uf801\ue32b\uf801\ue32c</font></white>"
+    tree_archer_skirmisher_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue229\uf801\ue22a\uf808\uf806\uf805\uf801\ue22b\uf801\ue22c</font></white>"
+    tree_archer_skirmisher_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue22d\uf801\ue22e\uf808\uf806\uf805\uf801\ue22f\uf801\ue230</font></white>"
+    tree_archer_skirmisher_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue339\uf801\ue33a\uf808\uf806\uf805\uf801\ue33b\uf801\ue33c</font></white>"
+    tree_archer_skirmisher_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue331\uf801\ue332\uf808\uf806\uf805\uf801\ue333\uf801\ue334</font></white>"
+    tree_archer_skirmisher_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue335\uf801\ue336\uf808\uf806\uf805\uf801\ue337\uf801\ue338</font></white>"
+    tree_captain_standard_bearer_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue269\uf801\ue26a\uf808\uf806\uf805\uf801\ue26b\uf801\ue26c</font></white>"
+    tree_captain_standard_bearer_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue26d\uf801\ue26e\uf808\uf806\uf805\uf801\ue26f\uf801\ue270</font></white>"
+    tree_captain_standard_bearer_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue381\uf801\ue382\uf808\uf806\uf805\uf801\ue383\uf801\ue384</font></white>"
+    tree_captain_standard_bearer_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue379\uf801\ue37a\uf808\uf806\uf805\uf801\ue37b\uf801\ue37c</font></white>"
+    tree_captain_standard_bearer_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue37d\uf801\ue37e\uf808\uf806\uf805\uf801\ue37f\uf801\ue380</font></white>"
+    tree_captain_vanguard_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue261\uf801\ue262\uf808\uf806\uf805\uf801\ue263\uf801\ue264</font></white>"
+    tree_captain_vanguard_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue265\uf801\ue266\uf808\uf806\uf805\uf801\ue267\uf801\ue268</font></white>"
+    tree_captain_vanguard_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue375\uf801\ue376\uf808\uf806\uf805\uf801\ue377\uf801\ue378</font></white>"
+    tree_captain_vanguard_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue36d\uf801\ue36e\uf808\uf806\uf805\uf801\ue36f\uf801\ue370</font></white>"
+    tree_captain_vanguard_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue371\uf801\ue372\uf808\uf806\uf805\uf801\ue373\uf801\ue374</font></white>"
+    tree_captain_warchanter_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue271\uf801\ue272\uf808\uf806\uf805\uf801\ue273\uf801\ue274</font></white>"
+    tree_captain_warchanter_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue275\uf801\ue276\uf808\uf806\uf805\uf801\ue277\uf801\ue278</font></white>"
+    tree_captain_warchanter_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue38d\uf801\ue38e\uf808\uf806\uf805\uf801\ue38f\uf801\ue390</font></white>"
+    tree_captain_warchanter_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue385\uf801\ue386\uf808\uf806\uf805\uf801\ue387\uf801\ue388</font></white>"
+    tree_captain_warchanter_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue389\uf801\ue38a\uf808\uf806\uf805\uf801\ue38b\uf801\ue38c</font></white>"
+    tree_mage_frostweaver_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue249\uf801\ue24a\uf808\uf806\uf805\uf801\ue24b\uf801\ue24c</font></white>"
+    tree_mage_frostweaver_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue24d\uf801\ue24e\uf808\uf806\uf805\uf801\ue24f\uf801\ue250</font></white>"
+    tree_mage_frostweaver_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue35d\uf801\ue35e\uf808\uf806\uf805\uf801\ue35f\uf801\ue360</font></white>"
+    tree_mage_frostweaver_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue355\uf801\ue356\uf808\uf806\uf805\uf801\ue357\uf801\ue358</font></white>"
+    tree_mage_frostweaver_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue359\uf801\ue35a\uf808\uf806\uf805\uf801\ue35b\uf801\ue35c</font></white>"
+    tree_mage_lifebinder_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue251\uf801\ue252\uf808\uf806\uf805\uf801\ue253\uf801\ue254</font></white>"
+    tree_mage_lifebinder_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue255\uf801\ue256\uf808\uf806\uf805\uf801\ue257\uf801\ue258</font></white>"
+    tree_mage_lifebinder_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue369\uf801\ue36a\uf808\uf806\uf805\uf801\ue36b\uf801\ue36c</font></white>"
+    tree_mage_lifebinder_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue361\uf801\ue362\uf808\uf806\uf805\uf801\ue363\uf801\ue364</font></white>"
+    tree_mage_lifebinder_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue365\uf801\ue366\uf808\uf806\uf805\uf801\ue367\uf801\ue368</font></white>"
+    tree_mage_pyromancer_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue241\uf801\ue242\uf808\uf806\uf805\uf801\ue243\uf801\ue244</font></white>"
+    tree_mage_pyromancer_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue245\uf801\ue246\uf808\uf806\uf805\uf801\ue247\uf801\ue248</font></white>"
+    tree_mage_pyromancer_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue351\uf801\ue352\uf808\uf806\uf805\uf801\ue353\uf801\ue354</font></white>"
+    tree_mage_pyromancer_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue349\uf801\ue34a\uf808\uf806\uf805\uf801\ue34b\uf801\ue34c</font></white>"
+    tree_mage_pyromancer_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue34d\uf801\ue34e\uf808\uf806\uf805\uf801\ue34f\uf801\ue350</font></white>"
+    tree_warrior_berserker_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue209\uf801\ue20a\uf808\uf806\uf805\uf801\ue20b\uf801\ue20c</font></white>"
+    tree_warrior_berserker_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue20d\uf801\ue20e\uf808\uf806\uf805\uf801\ue20f\uf801\ue210</font></white>"
+    tree_warrior_berserker_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue315\uf801\ue316\uf808\uf806\uf805\uf801\ue317\uf801\ue318</font></white>"
+    tree_warrior_berserker_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue30d\uf801\ue30e\uf808\uf806\uf805\uf801\ue30f\uf801\ue310</font></white>"
+    tree_warrior_berserker_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue311\uf801\ue312\uf808\uf806\uf805\uf801\ue313\uf801\ue314</font></white>"
+    tree_warrior_duelist_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue211\uf801\ue212\uf808\uf806\uf805\uf801\ue213\uf801\ue214</font></white>"
+    tree_warrior_duelist_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue215\uf801\ue216\uf808\uf806\uf805\uf801\ue217\uf801\ue218</font></white>"
+    tree_warrior_duelist_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue321\uf801\ue322\uf808\uf806\uf805\uf801\ue323\uf801\ue324</font></white>"
+    tree_warrior_duelist_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue319\uf801\ue31a\uf808\uf806\uf805\uf801\ue31b\uf801\ue31c</font></white>"
+    tree_warrior_duelist_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue31d\uf801\ue31e\uf808\uf806\uf805\uf801\ue31f\uf801\ue320</font></white>"
+    tree_warrior_guardian_a: "<!shadow><white><font:arkenmmo:gui>\uf804\ue201\uf801\ue202\uf808\uf806\uf805\uf801\ue203\uf801\ue204</font></white>"
+    tree_warrior_guardian_b: "<!shadow><white><font:arkenmmo:gui>\uf804\ue205\uf801\ue206\uf808\uf806\uf805\uf801\ue207\uf801\ue208</font></white>"
+    tree_warrior_guardian_b_both: "<!shadow><white><font:arkenmmo:gui>\uf804\ue309\uf801\ue30a\uf808\uf806\uf805\uf801\ue30b\uf801\ue30c</font></white>"
+    tree_warrior_guardian_b_left: "<!shadow><white><font:arkenmmo:gui>\uf804\ue301\uf801\ue302\uf808\uf806\uf805\uf801\ue303\uf801\ue304</font></white>"
+    tree_warrior_guardian_b_right: "<!shadow><white><font:arkenmmo:gui>\uf804\ue305\uf801\ue306\uf808\uf806\uf805\uf801\ue307\uf801\ue308</font></white>"

@@ -1,0 +1,83 @@
+# The numbers shown in skill descriptions (/skills). They are untested draft values, and the skills have
+# no effects yet. Each key fills the placeholder of the same name in the skill's description in
+# messages.yml. mana and cooldown (seconds) are only for actives. Changes need a server restart.
+warrior:
+  cleave: {mana: 20, cooldown: 4, range: 3.5, damage: 130, angle: 120}
+  shield_bash: {mana: 20, cooldown: 8, range: 3.5, damage: 110, duration: 1}
+  iron_hide: {reduction: 8}
+  stalwart: {health: 4, resistance: 20}
+  challenging_shout: {mana: 25, cooldown: 14, radius: 8, duration: 5, reduction: 20}
+  second_wind: {threshold: 30, heal: 20, interval: 60}
+  bulwark: {mana: 30, cooldown: 18, amount: 250, duration: 6}
+  leaping_strike: {mana: 25, cooldown: 8, range: 8, damage: 120, radius: 3}
+  bloodthirst: {heal: 4}
+  fury: {speed: 4, duration: 4, stacks: 5}
+  whirlwind: {mana: 35, cooldown: 10, duration: 1.5, count: 3, damage: 60, radius: 4}
+  relentless: {amount: 10}
+  execute: {mana: 30, cooldown: 9, damage: 180, finisher: 300, threshold: 30}
+  lunge: {mana: 20, cooldown: 6, range: 5, damage: 130}
+  footwork: {speed: 8, haste: 8}
+  focus: {bonus: 12, radius: 5}
+  riposte: {mana: 25, cooldown: 10, duration: 2, reduction: 80, damage: 200}
+  opportunist: {bonus: 15}
+  hamstring: {mana: 20, cooldown: 8, damage: 150, slow: 40, duration: 4}
+archer:
+  vault: {mana: 15, cooldown: 6, range: 7}
+  power_shot: {mana: 25, cooldown: 6, damage: 200}
+  eagle_eye: {bonus: 12, range: 12}
+  steady_aim: {delay: 1.5, bonus: 10}
+  piercing_shot: {mana: 30, cooldown: 9, count: 5, damage: 160}
+  weak_spot: {chance: 15, damage: 150}
+  hunters_mark: {mana: 20, cooldown: 12, duration: 10, bonus: 15}
+  volley: {mana: 25, cooldown: 6, count: 5, damage: 60, limit: 2}
+  fleet_foot: {speed: 10}
+  momentum: {bonus: 3, duration: 4, stacks: 5}
+  rapid_fire: {mana: 35, cooldown: 12, count: 10, duration: 2, damage: 35}
+  light_step: {reduction: 50, chance: 8}
+  tumble: {mana: 15, cooldown: 7, range: 5, duration: 3, bonus: 50}
+  flame_arrow: {mana: 20, cooldown: 6, damage: 120, burn: 20, duration: 4}
+  tracker: {threshold: 40, duration: 5}
+  survivalist: {heal: 1}
+  wolf_companion: {mana: 40, cooldown: 45, duration: 30, damage: 50, health: 40}
+  barbed_heads: {chance: 20, damage: 15, duration: 3}
+  frost_arrow: {mana: 25, cooldown: 10, damage: 110, radius: 3, slow: 40, duration: 4}
+mage:
+  blink: {mana: 25, cooldown: 5, range: 10}
+  fireball: {mana: 25, cooldown: 3, damage: 160, radius: 2.5}
+  kindling: {burn: 12, duration: 3}
+  inner_heat: {bonus: 8, threshold: 70}
+  flame_wave: {mana: 30, cooldown: 8, range: 8, damage: 150}
+  ash_siphon: {amount: 8}
+  meteor: {mana: 50, cooldown: 14, range: 24, delay: 1.2, damage: 280, radius: 4}
+  ice_lance: {mana: 20, cooldown: 3, range: 20, damage: 140, slow: 30, duration: 3}
+  chill_touch: {duration: 1}
+  frost_armor: {reduction: 5, slow: 25, duration: 2}
+  frost_nova: {mana: 30, cooldown: 14, damage: 100, radius: 5, duration: 2, player_slow: 60}
+  shatter: {bonus: 15}
+  blizzard: {mana: 40, cooldown: 16, range: 24, radius: 5, duration: 6, damage: 40, slow: 30}
+  mending_light: {mana: 30, cooldown: 3, range: 20, heal: 120}
+  gentle_soul: {bonus: 12}
+  radiance: {heal: 25, duration: 4}
+  sanctuary: {mana: 40, cooldown: 18, radius: 4, duration: 8, heal: 25}
+  smite: {range: 10, heal: 25}
+  sunburst: {mana: 35, cooldown: 9, radius: 6, damage: 120, heal: 70}
+captain:
+  rallying_strike: {mana: 25, cooldown: 6, damage: 110, radius: 8, heal: 30}
+  quarry_mark: {mana: 20, cooldown: 8, damage: 80, range: 20, duration: 12, bonus: 12}
+  hardened_resolve: {duration: 8, reduction: 10, bonus: 15}
+  lead_from_the_front: {bonus: 8, extra: 8}
+  press_the_attack: {mana: 25, cooldown: 7, count: 2, damage: 90, targets: 2, range: 3.5, interval: 10}
+  gallant_example: {amount: 15}
+  scattering_shout: {mana: 30, cooldown: 12, damage: 100, radius: 6, opening: 200, duration: 1.5}
+  plant_standard: {mana: 30, cooldown: 20, duration: 15, strike_radius: 3, damage: 100, radius: 7, bonus: 10}
+  tall_colours: {radius: 2, duration: 5}
+  close_ranks: {reduction: 10, range: 6}
+  call_herald: {mana: 40, cooldown: 45, duration: 45, damage: 45, interval: 1.5, health: 60}
+  steadfast_company: {health: 40, heal: 8}
+  sworn_bond: {mana: 25, cooldown: 20, duration: 30, shield: 150, shield_duration: 6, bonus: 12, self_bonus: 6, range: 20}
+  war_ballad: {mana: 12, cooldown: 3, range: 16, damage: 110, count: 1}
+  stirring_melody: {bonus: 4, reduction: 2}
+  long_refrain: {duration: 10}
+  anthem_of_courage: {mana: 30, cooldown: 12, radius: 12, heal: 40, duration: 6}
+  clear_voice: {bonus: 10, speed: 15, duration: 6}
+  coda: {mana: 25, cooldown: 6, damage: 90, heal: 30, radius: 8, verses: 1}

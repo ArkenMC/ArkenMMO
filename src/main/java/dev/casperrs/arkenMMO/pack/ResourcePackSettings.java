@@ -20,7 +20,8 @@ public record ResourcePackSettings(UUID id, URI url, String sha1) {
     /** Empty when the pack is switched off or incomplete; the reason is logged here. */
     public static Optional<ResourcePackSettings> read(ConfigurationSection config, Logger logger) {
         if (!config.getBoolean("resource-pack.enabled")) {
-            logger.warning("resource-pack.enabled is false: no pack is sent and menus open without their art.");
+            logger.info("resource-pack.enabled is false: ArkenMMO sends no pack. The menu art must come from "
+                    + "another one, such as the ItemsAdder pack.");
             return Optional.empty();
         }
         List<String> invalid = new ArrayList<>();

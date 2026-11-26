@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "arkenmmo:item/gui/button/reset_unavailable"
+  }
+}

@@ -1,3 +1,4 @@
 - [GUI 26.3 verified facts](gui-263-verified.md) — pack format 97.1, title-glyph GUI maths, item/tooltip rules
+- [Skills stage](skills-stage-verified.md) — MythicMobs/PAPI 26.3, tree GUI/art, casting input: notes, URLs, dead ends (2026-11-26)
 - [GUI + pixel art sources](gui-sources.md) — URL cache and dead ends for pack/GUI research
 - [MMO design sources](mmo-design-sources.md) — Wynncraft/ESO/LOTRO URLs, blocked sites, 26.3 skill-related Javadoc facts (2026-11-25)
