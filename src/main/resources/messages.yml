@@ -45,6 +45,16 @@ classes:
       - "<gray>A battlefield leader who"
       - "<gray>rallies and protects allies."
 
+# Combos typed with a class weapon, shown above the hotbar.
+casting:
+  clicks:
+    left: "L"
+    right: "R"
+    pending: "<dark_gray>?"
+  # <first> <second> <third> are the names above; completed also has <slot> (1-4)
+  progress: "<gray><first> <dark_gray>-</dark_gray> <second> <dark_gray>-</dark_gray> <third>"
+  completed: "<green><first> - <second> - <third>  <gold>Spell <slot>"
+
 menu:
   next-page: "<yellow>Next page"
   previous-page: "<yellow>Previous page"

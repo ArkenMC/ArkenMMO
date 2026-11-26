@@ -16,3 +16,7 @@ skills:
   # 1 to 30; some skills need level 8
   test-level: 30
   test-points: 18
+
+debug:
+  # true: logs every click event to the console, with what the combo did with it. Needs a restart.
+  casting: false
