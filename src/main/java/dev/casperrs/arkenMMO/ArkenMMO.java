@@ -8,7 +8,6 @@ import dev.casperrs.arkenMMO.casting.ComboInput;
 import dev.casperrs.arkenMMO.casting.ManaRules;
 import dev.casperrs.arkenMMO.casting.SkillAction;
 import dev.casperrs.arkenMMO.casting.SkillCaster;
-import dev.casperrs.arkenMMO.casting.SkillEffects;
 import dev.casperrs.arkenMMO.casting.SkillFeedback;
 import dev.casperrs.arkenMMO.combat.OngoingActions;
 import dev.casperrs.arkenMMO.combat.OngoingListener;
@@ -31,6 +30,7 @@ import dev.casperrs.arkenMMO.skill.SkillStorage;
 import dev.casperrs.arkenMMO.skill.SkillValues;
 import dev.casperrs.arkenMMO.skill.SkillsCommand;
 import dev.casperrs.arkenMMO.text.Messages;
+import dev.casperrs.arkenMMO.vfx.Effects;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import java.util.Map;
 import org.bukkit.plugin.PluginManager;
@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 public final class ArkenMMO extends JavaPlugin {
 
     private @Nullable OngoingActions ongoing;
+    private @Nullable Effects effects;
 
     @Override
     public void onEnable() {
@@ -71,13 +72,15 @@ public final class ArkenMMO extends JavaPlugin {
         if (ongoing != null) {
             ongoing.cancelAll();
         }
+        if (effects != null) {
+            effects.shutdown();
+        }
         MenuListener.closeAll();
     }
 
     private void startCasting(ClassStorage classes, SkillBook skills, SkillValues values, Messages messages) {
         SoundService sounds = SoundService.load(this);
-        // Visual effects are connected here once the vfx package exists
-        SkillEffects effects = (effectId, location) -> { };
+        effects = Effects.load(this);
         SkillFeedback feedback = new SkillFeedback(sounds, effects);
         ongoing = new OngoingActions(this);
         SkillDamage damage = new SkillDamage(() -> values.number("power.base")
