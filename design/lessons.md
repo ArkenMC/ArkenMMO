@@ -47,3 +47,6 @@
 - 2026-11-26 (A2): A banner relief with its emblem painted dark read as a flat square; leaving the emblem as uncut stone made it a banner.
 - 2026-11-26 (A2): No slot exists outside rows 0-5, so off-page paths go into the title art; lit lower views need their own backgrounds.
 - 2026-11-26 (A2): Comparing new renders with saved A1 pixels showed at once that the theme refactor had changed the approved core bars.
+- 2026-11-26 (A2): All 12 archetype names fit the large title lettering (widest about 232 of 268 art px). Check long titles against anything painted just below them: the incoming path outline nicked their bottom row.
+- 2026-11-26 (A2): Vanilla `dark_gray` all but disappears on the class tooltip backgrounds; a warm mid grey reads.
+- 2026-11-26 (A2): Writing hover text as one source with `{name:sample}` values gave placeholder templates, filled previews and the spec together, with line limits enforced by the renderer. Compare every description with the draft row: first versions dropped ranges and side effects.

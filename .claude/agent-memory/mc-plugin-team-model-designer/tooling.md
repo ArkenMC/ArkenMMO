@@ -16,6 +16,7 @@ metadata:
 - (2026-11-26) Without leaving the sandbox: run the scripts behind `assets`, `validate-assets` (`tools/validate_assets.py`) and `sound-check` (`tools/sound_check.py`) from the worktree root with `../../../.venv/bin/python -B`.
 - (2026-11-26) The worktree guard rejects shell lines holding the repo's absolute path next to loops or variables; use relative paths or a script file. Give Python `< /dev/null` and `timeout`.
 - Skill menus: `gui_skill_tree.py` builds the pack from `pixelkit/{treetheme,treeicons,iconkit,icons_*,treenodes,treerelief,treeslab,treestone,treebars}.py`; previews and pack checks in `zz_skill_tree_preview.py`; spec `design/gui-skill-tree.md`.
+- Hover text: `pixelkit/tooltip{text,skills}.py`; `zz_skill_tooltips.py` renders previews and generates `design/gui-skill-tooltips.md`. Archetype display names: `ARCHETYPE_NAMES` in `treetheme.py`. `design/gui-skill-tree.md` was written by a one-off generator, so edit it by hand now.
 - `pack.write_font` / `write_titles` merge, because several generators share `gui.json` and `titles.json`.
 - (2026-11-26) `rm -rf` of a preview folder was denied by permissions; leave old previews, don't work around it.
 - Before changing approved art, save its pixels to the scratchpad and compare afterwards.
