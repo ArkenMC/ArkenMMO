@@ -39,6 +39,11 @@ public final class SkillValues {
         return new SkillValues(yaml);
     }
 
+    /** The number at a path such as {@code warrior.cleave.damage}; 0 if neither file has one. */
+    public double number(String path) {
+        return yaml.getDouble(path);
+    }
+
     /** One placeholder per number of the skill, named like its key. */
     TagResolver placeholders(Skill skill) {
         String path = skill.playerClass().id() + "." + skill.key();

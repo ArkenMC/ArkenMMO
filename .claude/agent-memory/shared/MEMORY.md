@@ -11,6 +11,8 @@ Facts and user decisions every agent needs. Rules: `AGENTS.md`. Add one dated li
 - 2026-11-26: MythicMobs 5.14.0 and PlaceholderAPI 2.12.3 list 26.3 support (listings only, untested). Coordinates, plugin.yml setup, GUI approach and caveats: `docs/research/skills-integrations.md`, `skill-tree-gui.md`, `skill-tree-art.md`, `casting-input-sources.md`.
 - 2026-11-26: Tested in game by the user: `/papi parse <viewer> %arken_party_has_<name>%` returned `false` before the other player was in the viewer's party and `true` after they joined.
 - 2026-11-26: User reports it runs and works fine on their 26.2 server (said after the question about ArkenCore's 26.3 setting).
+- 2026-11-26: Unverified whether ItemsAdder 4.0.18 merges our raw `sounds.json`; its wiki shows that method as 4.0.10 and lower (wiki.itemsadder.com/adding-content/adding-sounds/).
+- 2026-11-26: In a fresh worktree `mise run assets-deps` can fail in the sandbox (pip can't read its certificate bundle). Report it; don't disable the sandbox on your own.
 
 ## User decisions
 - 2026-11-26: All skills stage decisions, including rebirth ideas for later: [skills-decisions.md](skills-decisions.md).
