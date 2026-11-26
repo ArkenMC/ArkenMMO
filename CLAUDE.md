@@ -50,3 +50,9 @@ Who may edit what is defined in `.claude/ownership.json` (human-controlled) and 
 - Never hardcode sounds or particles: sounds go through `sounds.yml` events, effects through `Effects.play(id)`.
 - If a feature needs something the target version or an integration doesn't support, stop and report it instead of working around it.
 - Only the user merges into `main`.
+
+## When you're not sure: grill
+If any agent or session is unsure about a plan, a design or what the user wants, don't guess: use the **`grilling`** skill (`.claude/skills/grilling/`, MIT, from mattpocock/skills; `/grill-me` starts it by hand).
+- **Main session:** run `grilling` with the user before building. Look up facts yourself; only put decisions to the user.
+- **Agents** can't load skills or talk to the user. Stop and return your open questions, each with a recommended answer, in your report. The main session then runs `grilling` with the user and passes the answers back.
+- The skill never overrides these rules: launch agents for its fact-finding only when the user allows it, otherwise look the facts up yourself.

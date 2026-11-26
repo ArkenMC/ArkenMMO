@@ -75,13 +75,13 @@ Paper API only (no NMS), Java 25, package root `dev.casperrs.arkenMMO` in `src/m
 - Build with `mise run build`, test with `mise run test`. Never run plain `mvn`.
 
 ## Useful skills
-Apart from `resourcepack-designer` (in `.claude/skills/`), skills are installed per person and aren't part of this repository. Use one when it's available. If it isn't, say so and give the user the link; don't search the computer for it or install it yourself. A skill never overrides these rules or the project's style guides.
+Apart from `resourcepack-designer`, `grilling` and `grill-me` (in `.claude/skills/`), skills are installed per person and aren't part of this repository. Use one when it's available. If it isn't, say so and give the user the link; don't search the computer for it or install it yourself. A skill never overrides these rules or the project's style guides.
 
 | Skill | Use it for | Source |
 |---|---|---|
 | `impeccable` | design critique: hierarchy, layout, colour, UX copy. It's made for web and app interfaces, so `design/gui-style-guide.md` wins for in-game art | https://github.com/pbakaus/impeccable |
 | `security-audit` | security questions and reviews: commands, permissions, stored player data, pack delivery, CI. Full audit only when the user asks | https://github.com/cloudflare/security-audit-skill |
-| `grilling` | stress-testing a plan or design before building it | https://github.com/mattpocock/skills |
+| `grilling` | stress-testing a plan or design before building it; **use it whenever you're unsure** (see `CLAUDE.md`). In the repo; `/grill-me` starts it | https://github.com/mattpocock/skills |
 | `playwright-cli` | checking web pages in a real browser | https://github.com/microsoft/playwright-cli |
 
 The designer agents can't load skills themselves: the main session runs the skill and passes them the findings.
