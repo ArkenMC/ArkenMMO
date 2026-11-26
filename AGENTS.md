@@ -45,7 +45,7 @@ All project knowledge lives in this repository as Markdown. Don't rely on memory
 | `textures/gui/sprites/tooltip/` | per-class tooltip sprites |
 | `items/gui/blank.json` | invisible clickable item |
 
-- Spec, glyph codes and slot layout: `design/gui-class-select.md`. Art rules: `design/gui-style-guide.md`.
+- Spec, glyph codes and slot layout: `design/gui-class-select.md`; skill menus: `design/gui-skill-tree.md` and `design/gui-skill-tooltips.md`. Art rules: `design/gui-style-guide.md`.
 - GUI textures are **generated** by `design/scripts/` (`pixelkit/` is the art library). Change the scripts and run `mise run assets`; don't hand-edit the PNGs.
 - Menu slots in the code must match the painted art. Some text is painted into the art, so editing config text doesn't change it.
 - Check: `mise run validate-assets` and `mise run sound-check`. Build the zips: `mise run pack` (`target/resourcepack.zip` and its SHA-1) and `mise run itemsadder`.
@@ -63,6 +63,7 @@ Paper API only (no NMS), Java 25, package root `dev.casperrs.arkenMMO` in `src/m
 | `pack` | `ResourcePackSettings`, `ResourcePackService` |
 | `menu` | `Menu` and `MenuListener`: generic locked menus that know nothing about features |
 | `playerclass` | `PlayerClass`, `ClassStorage`, `ClassSelection`, `ClassMenus`, `ClassCommand` |
+| `skill` | `/skills`: tree rules, saved skills and the tree and loadout menus; numbers in `skill-values.yml` |
 
 - Package by feature, one responsibility per class; classes under about 500 lines, methods under about 60. No wildcard imports or package cycles.
 - Write efficient, reusable methods; use overloads or overrides where they remove real duplication. No speculative abstractions.

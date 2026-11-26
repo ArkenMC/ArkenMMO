@@ -1,6 +1,7 @@
 # skills (skill trees, casting, weapons, levelling)
 
-**Status:** planned
+**Status:** in progress (menus built; levels, combat and weapons not yet)
+**Target:** Paper 26.2 with ItemsAdder (changed 2026-11-26). The `docs/research/skill*` notes were checked against 26.3: re-check integration and API facts before relying on them.
 **Created:** 2026-11-26 · **Depends on:** classes (on main)
 
 ## Goal
@@ -66,7 +67,7 @@ None.
 ## Contract (fixed names; change only via the orchestrator)
 | Kind | ID | Owner | Notes |
 |---|---|---|---|
-| command | `/skills` | plugin-coder | opens the tree |
+| command, permission | `/skills`, `arkenmmo.skills` | plugin-coder | opens the tree; default everyone |
 | command, permission | `/class weapon give <player> <id>`, `arkenmmo.class.weapon` | plugin-coder | default op |
 | branches | `warrior.guardian`, `warrior.berserker`, `warrior.duelist` | plugin-coder | |
 | core skill | `warrior.cleave` | plugin-coder | |
