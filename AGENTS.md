@@ -34,7 +34,7 @@ All project knowledge lives in this repository as Markdown. Don't rely on memory
 
 ## Resource pack
 - Plain vanilla resource pack in `resourcepack/`, for the Paper version in `pom.xml` (26.2 now). It stays the only source of the art.
-- The server delivers it through **ItemsAdder 4.0.18**: `mise run itemsadder` builds `target/itemsadder-arkenmmo.zip`, a content folder `arkenmmo/` with `resourcepack/assets/` copied from `resourcepack/` and the item configs from `itemsadder/contents/arkenmmo/configs/`. Unzip it into `plugins/ItemsAdder/contents/` and run `/iazip`; the plugin's own `resource-pack.enabled` stays false. Never copy art into `itemsadder/` by hand.
+- The server delivers it through **ItemsAdder 4.0.18**: `mise run itemsadder` builds `target/itemsadder-arkenmmo.zip`, a content folder `arkenmmo/` with `resourcepack/assets/` copied from `resourcepack/` and the item configs from `itemsadder/contents/arkenmmo/configs/`. Unzip it into `plugins/ItemsAdder/contents/` and run `/iazip`. ItemsAdder applies it before join and kicks players who decline or fail it, so the plugin never sends or waits for a pack itself. Never copy art into `itemsadder/` by hand.
 - `pack.mcmeta`: `min_format [88, 0]`, `max_format 88` (26.2 = 88.0). Check it again for any other version.
 - Our namespace is `arkenmmo`. `assets/minecraft/` is only for deliberate vanilla overrides; now it holds the transparent slot highlight, which hides the highlight in **every** inventory.
 
@@ -49,7 +49,7 @@ All project knowledge lives in this repository as Markdown. Don't rely on memory
 - GUI textures are **generated** by `design/scripts/` (`pixelkit/` is the art library). Change the scripts and run `mise run assets`; don't hand-edit the PNGs.
 - Menu slots in the code must match the painted art. Some text is painted into the art, so editing config text doesn't change it.
 - Check: `mise run validate-assets` and `mise run sound-check`. Build the zips: `mise run pack` (`target/resourcepack.zip` and its SHA-1) and `mise run itemsadder`.
-- A push to `main` publishes both zips as a `pack-<sha>` GitHub release (`.github/workflows/release.yml`). The server sets `url` and `sha1` under `resource-pack:` in `config.yml`.
+- A push to `main` publishes both zips as a `pack-<sha>` GitHub release (`.github/workflows/release.yml`). The `latest` release carries the jar and both zips too.
 - There are no custom sounds, particles, `sounds.yml`, `effects.yml` or 3D models yet.
 
 ## Code
@@ -60,7 +60,6 @@ Paper API only (no NMS), Java 25, package root `dev.casperrs.arkenMMO` in `src/m
 | Package | Responsibility |
 |---|---|
 | `text` | `Messages`: player-facing MiniMessage from `messages.yml` |
-| `pack` | `ResourcePackSettings`, `ResourcePackService` |
 | `menu` | `Menu` and `MenuListener`: generic locked menus that know nothing about features |
 | `playerclass` | `PlayerClass`, `ClassStorage`, `ClassSelection`, `ClassMenus`, `ClassCommand` |
 

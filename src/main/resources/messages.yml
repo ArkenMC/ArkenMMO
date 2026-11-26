@@ -3,12 +3,7 @@
 # The headings, class names and button labels painted into the menu art are part of the resource pack
 # and don't change with this file.
 
-resource-pack:
-  prompt: "<yellow>ArkenMMO needs its resource pack to show its menus."
-  failed: "<red>The resource pack didn't load, so the menu can't open. Type /class to try again."
-
 class:
-  waiting-for-pack: "<gray>The class selection opens once the resource pack has loaded."
   chosen: "<green>You chose your class: <class>"
   current: "<gray>Your class is <class>"
 

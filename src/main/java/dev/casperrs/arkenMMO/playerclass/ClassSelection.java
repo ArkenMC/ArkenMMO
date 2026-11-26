@@ -1,6 +1,5 @@
 package dev.casperrs.arkenMMO.playerclass;
 
-import dev.casperrs.arkenMMO.pack.ResourcePackService;
 import dev.casperrs.arkenMMO.text.Messages;
 import java.util.Optional;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -11,32 +10,23 @@ import org.bukkit.entity.Player;
 public final class ClassSelection {
 
     private final ClassStorage storage;
-    private final ResourcePackService resourcePack;
     private final Messages messages;
     private final ClassMenus menus;
 
-    public ClassSelection(ClassStorage storage, ResourcePackService resourcePack, Messages messages) {
+    public ClassSelection(ClassStorage storage, Messages messages) {
         this.storage = storage;
-        this.resourcePack = resourcePack;
         this.messages = messages;
         this.menus = new ClassMenus(messages, this::checkEligible, this::choose);
     }
 
     /**
-     * Opens the selection menu, or queues it until the player's resource pack has loaded.
-     * Returns the player's class if they already have one; then nothing happens.
+     * Opens the selection menu. Returns the player's class if they already have one; then nothing happens.
+     * ItemsAdder applies the resource pack before join and kicks players without it, so the art is loaded.
      */
     public Optional<PlayerClass> request(Player player) {
         Optional<PlayerClass> current = storage.get(player);
         if (current.isEmpty()) {
-            boolean opened = resourcePack.whenReady(player, () -> {
-                if (storage.get(player).isEmpty()) {
-                    menus.openFirstPage(player);
-                }
-            });
-            if (!opened) {
-                messages.send(player, "class.waiting-for-pack");
-            }
+            menus.openFirstPage(player);
         }
         return current;
     }
