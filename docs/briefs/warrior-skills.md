@@ -1,6 +1,6 @@
 # warrior-skills (first castable skills)
 
-**Status:** in progress
+**Status:** review (built; not tested in game)
 **Created:** 2026-11-26 · **Depends on:** skill menus (on main)
 
 ## Goal
@@ -72,7 +72,7 @@ Unit tests only for combo input and tree rules.
 ## Status
 | Agent | Status | Branch | Verdict | Notes |
 |---|---|---|---|---|
-| all | in progress | | | |
+| all | merged | `warrior-skills/*` | build and 19 tests pass | in-game test open |
 
 ## Merge order
 1. sound-designer
