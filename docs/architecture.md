@@ -16,7 +16,7 @@ Paper 26.2, Java 25, Paper API only. Package root: `dev.casperrs.arkenMMO`. `Ark
 - A new menu uses `Menu`; feature code does not listen to inventory events itself.
 - Skills are stored in one container per class under the player's `skills` key (`owned`, `loadout`, `reset_ready_at`); XP, level, rebirth and evolution values go beside them. `/class reset` keeps them. A saved tree the rules no longer allow is emptied when it is next read.
 - Skill numbers live in `skill-values.yml` and fill the placeholders of the same name in the skill's description in `messages.yml`.
-- Menu slots must match the painted art (see `docs/briefs/classes.md`).
+- Menu slots must match the painted art (see `docs/briefs/classes.md` and `design/gui-skill-tree.md`).
 
 ## Standards
 - Package by feature, one responsibility per class; classes under about 500 lines, methods under about 60. No wildcard imports or package cycles.
