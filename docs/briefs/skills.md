@@ -31,7 +31,17 @@ I get my class weapon, fight to earn XP and spend points in a dark, ancient-look
 - [ ] The plugin works without MythicMobs, PlaceholderAPI and ArkenCore.
 - [ ] Progress is stored per class and leaves room for rebirth and evolution.
 
-Archer, Mage and Captain follow after the user has tried Warrior.
+Archer, Mage and Captain code follows after the user has tried Warrior. Their **art** is made now (A1 approved 2026-11-26; the user asked for all classes), using the draft skill lists (research 7.2-7.4).
+
+## Next slice: menus (P2a, approved 2026-11-26)
+Built after the art is merged, before levels and combat. It doesn't wait for the casting prototype.
+- `/skills` opens the player's class tree, for **all four classes**: archetype tabs, scrolling, back and info.
+- Click twice to buy; stones and paths light up; sealed stones; reset and undo.
+- Loadout menu: arrange owned actives in the 4 combo slots.
+- Hover text and tooltip styles as in `design/gui-skill-tree.md`, like the class menu; text in config. Every skill's hover describes what it does and names its archetype.
+- Players get temporary test points from config; purchases and loadout are saved per class.
+- No XP, levels, mana, weapons or skill effects yet.
+- Paths, names, item keys, glyphs and slots come from the art spec. Archetype display names are in the user decisions.
 
 ## Out of scope
 Keystones, ultimates (including the sneak + 5-click combo), levels 31-50, rebirths, evolutions, fragments, reset tokens, mob levels of our own, PvP, a party system.

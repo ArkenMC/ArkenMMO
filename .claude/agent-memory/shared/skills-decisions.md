@@ -35,6 +35,14 @@ From a question round with the user. The base proposal is `docs/research/mmo-cla
 - One icon per skill (19 for Warrior): recognisable symbols carved like ancient runes. **Research MMO icon readability and carving references properly**, make original Warrior previews and get approval.
 - Future keystone and ultimate places show as sealed, unreadable stones.
 
+- 2026-11-26: The user **approved the Warrior tree preview** (look, icons, node states, layout choices in `design/gui-skill-tree.md` on `skills/model-designer`) and asked for the skill art of all other classes too. This replaces "Warrior first" **for art only**; code is still Warrior first. Other classes use the draft skill lists (research 7.2-7.4) as starting designs. The user also asked for a bit more locked-icon contrast and redraws of Whirlwind, Fury and Relentless.
+
+- 2026-11-26: Trees show paths running toward the page above/below. A combined skill needing both sides and a separate split-and-merge path were considered; the user prefers **the current layout and node rules**.
+
+- 2026-11-26: The three branches of a class are called **archetypes** to players. Display names (IDs stay unchanged): guardian = Warrior's Courage, berserker = Warrior's Rage, duelist = Warrior's Honour; marksman = Archer's Focus, skirmisher = Archer's Swiftness, hunter = Archer's Instinct; pyromancer = Mage's Flame, frostweaver = Mage's Frost, lifebinder = Mage's Grace; vanguard = Captain's Command, standard_bearer = Captain's Banner, warchanter = Captain's Song. All three are available from the start.
+
+- 2026-11-26: Build the menus first (trees for all classes plus loadout, with test points, no combat). Approved: merge the finished art into `feature/skills` and commit brief and decisions; no push, nothing into `main`. Skill menus need nice hover text like the class menu.
+
 ## For later (rebirths; don't build yet)
 - The user wants rebirths. After level 50, the first rebirth permanently evolves the class into an advanced form (example: Warrior to Champion, who dual wields; Warrior wields one). Rebirths 2-5 strengthen it; a choice of forms may come later. First release only keeps data that allows this.
 - Fragments: needed for the evolution, gained late. Proposal to revisit: drops from chosen MythicMobs bosses from class level 40, one per qualifying player, saved as class progress and not as items. Amount, bosses and chances are open.
