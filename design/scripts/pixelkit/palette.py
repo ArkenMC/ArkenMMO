@@ -6,6 +6,7 @@ RAMPS = {
     "forest": "#0f2228 #173a33 #24573a #3f7a3c #6fa043 #b4c95a",
     "violet": "#170f33 #281a5c #3d2c8f #5a49c4 #7b7ce8 #a9b8fa",
     "arcane": "#12374f #1f6f9e #35b5c9 #8ff0e4 #e4fffa",
+    "emerald": "#06261a #0b4a2c #12803f #1fb857 #4fe07e #a8f5b8 #f2fff4",
     "ivory": "#4a465e #6e6a7e #aaa5a8 #ddd6c4 #f7f1dc",
     "navy": "#101433 #1b2658 #2b3f82 #425fae #6a8ad0",
     # shared materials

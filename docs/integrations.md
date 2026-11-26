@@ -11,7 +11,7 @@ Last checked: 2026-10-18 (ItemsAdder, ModelEngine). Re-check the compatibility t
 
 | Plugin | 1.21.x | 26.1 / 26.2 | 26.3 |
 |---|---|---|---|
-| ItemsAdder (v4) | ✅ 1.20.6 – 1.21.11 | ✅ 26.1 listed; users run it on 26.2 | ⚠️ tracked for **4.1.0** ([issue #5527](https://github.com/PluginBugs/Issues-ItemsAdder/issues/5527)); users reported errors on 4.0.18 |
+| ItemsAdder (v4) | ✅ 1.20.6 – 1.21.11 | ✅ 26.1 listed; **4.0.18 runs fine on our 26.2 server** (user, 2026-11-26) | ⚠️ tracked for **4.1.0** ([issue #5527](https://github.com/PluginBugs/Issues-ItemsAdder/issues/5527)); users reported errors on 4.0.18 |
 | ModelEngine 4 | ✅ (supports 1.19.4+) | ✅ up to 26.2 (official listing) | ❌ not officially supported yet |
 
 

@@ -1,0 +1,14 @@
+# ItemsAdder item for the emerald (spec: design/item-emerald.md).
+# The model, texture and tooltip sprites are not here: `mise run itemsadder` copies them from
+# resourcepack/assets/ into this content folder's resourcepack/assets/ when it builds the zip.
+info:
+  namespace: arkenmmo
+items:
+  emerald:
+    display_name: Emerald
+    resource:
+      material: EMERALD
+      generate: false
+      model_path: arkenmmo:item/emerald
+    # vanilla tooltip_style id: textures/gui/sprites/tooltip/emerald_{background,frame}.png
+    tooltip_style: arkenmmo:emerald

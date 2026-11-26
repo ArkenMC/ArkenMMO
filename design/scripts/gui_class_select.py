@@ -21,8 +21,8 @@ CONFIRMS = {
     "confirm_mage": ("mage", glyphs(0xE109)),
     "confirm_captain": ("captain", glyphs(0xE10D)),
 }
-# resource pack format 97.1 is Java Edition 26.3 (minecraft.wiki/w/Pack_format)
-PACK_MCMETA = {"pack": {"description": "ArkenMMO", "min_format": [97, 1], "max_format": 97}}
+# resource pack format 88.0 is Java Edition 26.2 (minecraft.wiki/w/Pack_format)
+PACK_MCMETA = {"pack": {"description": "ArkenMMO", "min_format": [88, 0], "max_format": 88}}
 
 
 def background(body):

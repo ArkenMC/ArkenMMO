@@ -50,3 +50,6 @@
 - 2026-11-26 (A2): All 12 archetype names fit the large title lettering (widest about 232 of 268 art px). Check long titles against anything painted just below them: the incoming path outline nicked their bottom row.
 - 2026-11-26 (A2): Vanilla `dark_gray` all but disappears on the class tooltip backgrounds; a warm mid grey reads.
 - 2026-11-26 (A2): Writing hover text as one source with `{name:sample}` values gave placeholder templates, filled previews and the spec together, with line limits enforced by the renderer. Compare every description with the draft row: first versions dropped ranges and side effects.
+- 2026-11-26: Emerald item (16x16): a smooth left-to-right gradient made the gem read as a blob. Hard-edged facet blocks (light crown, a two-tone pavilion with a mid ridge) made it read as a cut gem at hotbar scale 2 and 3. A 10x14 px gem with a 1 px glint and a dark outline is enough.
+- 2026-11-26: A new item reuses `gui_items.save_sprite` and the tooltip geometry constants; tooltip corner studs are just a 2x2 block, so a gem accent needs no extra size.
+- 2026-11-26: Re-running `gui_class_select.py` and `gui_items.py` with a fresh venv (numpy 2.5.5, not the pinned 2.5.4) changed the committed GUI PNG bytes and pack.png. Restore them with `git checkout` after a local run unless the art was meant to change; use the pinned versions.

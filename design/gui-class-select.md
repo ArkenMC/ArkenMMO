@@ -2,7 +2,7 @@
 
 **Status:** placeholder until the user approves task A2 (A1 was approved before the "more minecraft ish" change)
 **Brief:** `docs/briefs/classes.md`
-**Pipeline:** plain vanilla resource pack, Paper 26.3. `pack.mcmeta` uses `min_format [97, 1]` and `max_format 97` ([Pack format](https://minecraft.wiki/w/Pack_format), 26.3 = 97.1, checked 2026-11-25). A 26.4 target needs a new check.
+**Pipeline:** plain vanilla resource pack, Paper 26.2 (was 26.3 until 2026-11-26). `pack.mcmeta` uses `min_format [88, 0]` and `max_format 88` ([Pack format](https://minecraft.wiki/w/Pack_format), 26.2 = 88.0, checked 2026-11-26). A 26.4 target needs a new check.
 **Style:** `design/gui-style-guide.md`
 
 ## Purpose
@@ -11,7 +11,7 @@ Painted backgrounds for the six class menu screens (9x6 chests), four tooltip st
 ## Files
 | File | What |
 |---|---|
-| `resourcepack/pack.mcmeta`, `pack.png` | pack format 97.1; 128x128 icon with the four heads |
+| `resourcepack/pack.mcmeta`, `pack.png` | pack format 88.0; 128x128 icon with the four heads |
 | `resourcepack/assets/arkenmmo/font/gui.json` | font `arkenmmo:gui`: shifts plus two bitmap providers per screen |
 | `resourcepack/assets/arkenmmo/textures/font/gui/<screen>_{top,bottom}.png` | 352x222 each; screens `class_select_1`, `class_select_2`, `confirm_{warrior,archer,mage,captain}` |
 | `resourcepack/assets/arkenmmo/textures/gui/sprites/tooltip/<class>_{background,frame}.png` (+ `.mcmeta`) | 100x100 tooltip sprites |
