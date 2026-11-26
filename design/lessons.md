@@ -57,3 +57,6 @@
 - 2026-11-26 (inventory texture): Generating cells from a formula and checking them against a measured literal list of the 46 vanilla origins, plus a one-art-px inner-wall test, catches any layout drift.
 - 2026-11-26 (inventory texture): A title plate whose bottom edge sits on the crafting cells' top row reads cramped; one GUI px of air (plate to y16) fixed it, at the cost of the `g` descender touching the plate's outline, as the menus' "Inventory" label already does.
 - 2026-11-26: A fresh venv on Python 3.15 regenerates every menu PNG pixel-identical to HEAD but with different bytes; restore them with `git checkout -- resourcepack` after a local run (compare pixels, not bytes, before deciding).
+- 2026-11-26 (creative inventory): Diffing all 28 vanilla tab sprites first showed that only tab 1 and 7 differ (the side that meets the panel wall, 3 overlap rows); building one selected tab and special-casing those two columns was enough.
+- 2026-11-26 (creative inventory): A gold line down the sides of the open tab stopped dead where the panel's iron wall began; keeping gold to a crest along the outer edge fixed the join.
+- 2026-11-26 (creative inventory): A gold rule running through the scroll track margin read as a stray stub; stopping it 2 GUI px before the track fixed it.

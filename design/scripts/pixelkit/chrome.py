@@ -7,6 +7,11 @@ from .layout import art, cell, player_cell
 from .palette import col
 
 DARK = col("iron", 0)
+# the shell's bevelled rim, outside in: (top/left, bottom/right) per ring
+RIM = [(DARK, DARK), (DARK, DARK),
+       (col("iron", 5), col("iron", 1)), (col("iron", 4), col("iron", 1)),
+       (col("iron", 3), col("iron", 2)), (col("iron", 3), col("iron", 2)),
+       (DARK, col("iron", 4))]
 
 
 def _diamond(cx, cy, rx, ry):
@@ -49,11 +54,7 @@ def shell(canvas, size=None):
     width, bottom = size or (layout.CANVAS[0], layout.VANILLA_H * layout.DENSITY)
     body = (0, 0, width, bottom)
     canvas.rect(body, col("iron", 2))
-    rim = [(DARK, DARK), (DARK, DARK),
-           (col("iron", 5), col("iron", 1)), (col("iron", 4), col("iron", 1)),
-           (col("iron", 3), col("iron", 2)), (col("iron", 3), col("iron", 2)),
-           (DARK, col("iron", 4))]
-    frame(canvas, body, rim)
+    frame(canvas, body, RIM)
     # one GUI pixel off each corner, which the vanilla texture also leaves clear
     for x in (0, width - 2):
         for y in (0, bottom - 2):
