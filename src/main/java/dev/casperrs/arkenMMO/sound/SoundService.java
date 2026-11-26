@@ -9,6 +9,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -17,7 +18,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,6 +40,8 @@ public final class SoundService {
     /** The server's file wins over the bundled one, event by event. Without either, nothing is played. */
     public static SoundService load(JavaPlugin plugin) {
         Map<String, SoundDef> sounds = new HashMap<>();
+        // The bundled file and the server's copy can share a mistake; it is reported once
+        Set<String> warnings = new LinkedHashSet<>();
         File file = new File(plugin.getDataFolder(), FILE_NAME);
         try (InputStream bundled = plugin.getResource(FILE_NAME)) {
             if (bundled != null) {
@@ -47,15 +49,16 @@ public final class SoundService {
                     plugin.saveResource(FILE_NAME, false);
                 }
                 try (Reader reader = new InputStreamReader(bundled, StandardCharsets.UTF_8)) {
-                    read(YamlConfiguration.loadConfiguration(reader), sounds, plugin.getLogger());
+                    read(YamlConfiguration.loadConfiguration(reader), sounds, warnings);
                 }
             }
         } catch (IOException e) {
             throw new UncheckedIOException("Could not read the bundled " + FILE_NAME, e);
         }
         if (file.exists()) {
-            read(YamlConfiguration.loadConfiguration(file), sounds, plugin.getLogger());
+            read(YamlConfiguration.loadConfiguration(file), sounds, warnings);
         }
+        warnings.forEach(plugin.getLogger()::warning);
         if (sounds.isEmpty()) {
             plugin.getLogger().warning("No sounds in " + FILE_NAME + ", so the plugin is silent.");
         }
@@ -85,16 +88,17 @@ public final class SoundService {
         }
     }
 
-    private static void read(YamlConfiguration yaml, Map<String, SoundDef> sounds, Logger logger) {
+    private static void read(YamlConfiguration yaml, Map<String, SoundDef> sounds, Set<String> warnings) {
         for (String event : yaml.getKeys(false)) {
             ConfigurationSection entry = yaml.getConfigurationSection(event);
             if (entry == null) {
                 continue;
             }
+            String where = FILE_NAME + ", sound " + event + ": ";
             try {
-                sounds.put(event, SoundDef.read(entry));
+                sounds.put(event, SoundDef.read(entry, problem -> warnings.add(where + problem)));
             } catch (IllegalArgumentException e) {
-                logger.warning("Ignored sound " + event + " in " + FILE_NAME + ": " + e.getMessage());
+                warnings.add(where + "ignored, " + e.getMessage());
             }
         }
     }
@@ -109,12 +113,7 @@ public final class SoundService {
     }
 
     private static void play(Player listener, Location at, SoundDef sound, float pitch) {
-        // Any loaded pack counts, because ItemsAdder may be the one sending ours
-        String key = sound.keyFor(listener.getResourcePackStatus()
-                == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED);
-        if (key != null) {
-            listener.playSound(at, key, sound.source(), sound.volume(), pitch);
-        }
+        listener.playSound(at, sound.key(), sound.source(), sound.volume(), pitch);
     }
 
     private static float pitch(SoundDef sound) {
