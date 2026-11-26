@@ -13,4 +13,5 @@ Verified 2026-11-26 (stable for 26.3). Source: PaperMC/Paper `main` (gradle.prop
 - Entity right-click: `handleInteract` fires `PlayerInteractAtEntityEvent`. It inherits `PlayerInteractEntityEvent`'s HandlerList, so one handler on the parent gets both.
 - Deprecated: `PlayerAnimationEvent`, `Material#isInteractable`.
 - Unverified (client side): when the client sends punch (after right-click use, drop, while mining), held-right repeat rate, bow draw vs left clicks.
+- 26.2 (checked 2026-11-26, stable; github PaperMC/Paper branch `ver/26.2`, `ServerGamePacketListenerImpl.java.patch`, second page of WebFetch at offset 100000): the swing packet is `ServerboundSwingPacket` (`handleAnimate`), with the same LEFT_CLICK_AIR and PlayerArmSwingEvent logic.
 - Applied in `casting/` (rules: docs/architecture.md "Casting input").
