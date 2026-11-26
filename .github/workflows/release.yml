@@ -39,3 +39,23 @@ jobs:
             --target "$SHA" \
             --title "Latest build (${SHA::7})" \
             --notes "Automatic build of main at $SHA"
+
+      # One release per pack version, never replaced, so a URL and SHA-1 in a server's config stay valid
+      - name: Publish resource pack release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        run: |
+          mise run pack
+          sha1=$(sha1sum target/resourcepack.zip | cut -d' ' -f1)
+          tag="pack-${sha1::7}"
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$tag/resourcepack.zip"
+          notes=$(printf 'config.yml, under resource-pack:\n\n    url: "%s"\n    sha1: "%s"\n' "$url" "$sha1")
+          if ! gh release view "$tag" > /dev/null 2>&1; then
+            gh release create "$tag" target/resourcepack.zip \
+              --target "$SHA" \
+              --title "Resource pack ${sha1::7}" \
+              --notes "$notes" \
+              --latest=false
+          fi
+          echo "$notes" >> "$GITHUB_STEP_SUMMARY"
