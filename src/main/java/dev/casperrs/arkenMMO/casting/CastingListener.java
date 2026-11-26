@@ -9,25 +9,27 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 /**
- * Turns server events into combo clicks. It only watches: vanilla behaviour stays, except that combo arrows
- * don't fly. The click events don't skip cancelled ones, because air clicks arrive already cancelled.
+ * Turns server events into combo clicks. It only watches, so vanilla behaviour stays. The click events
+ * don't skip cancelled ones, because air clicks arrive already cancelled.
  */
 public final class CastingListener implements Listener {
 
     private final ComboInput input;
+    private final CastingHud hud;
 
-    public CastingListener(ComboInput input) {
+    public CastingListener(ComboInput input, CastingHud hud) {
         this.input = input;
+        this.hud = hud;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -75,23 +77,22 @@ public final class CastingListener implements Listener {
         }
     }
 
-    // A client may swing after dropping, which the server reports as a left click in the air.
+    // A client also swings when it drops, which the server reports as a left click in the air.
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDrop(PlayerDropItemEvent event) {
-        input.ignore(event.getPlayer(), "dropped an item");
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onShoot(EntityShootBowEvent event) {
-        if (event.getEntity() instanceof Player player && input.swallowsShot(player)) {
-            event.setCancelled(true);
-            input.debug(player, () -> "arrow cancelled: its draw was a combo click");
-        }
+        input.drop(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onItemHeld(PlayerItemHeldEvent event) {
         input.reset(event.getPlayer());
+        // The new item is only in hand after this event; the bar checks it on its next redraw
+        hud.watch(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onJoin(PlayerJoinEvent event) {
+        hud.watch(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

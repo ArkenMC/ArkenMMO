@@ -45,15 +45,31 @@ classes:
       - "<gray>A battlefield leader who"
       - "<gray>rallies and protects allies."
 
-# Combos typed with a class weapon, shown above the hotbar.
+# Casting with a class weapon, shown above the hotbar.
 casting:
   clicks:
     left: "L"
     right: "R"
     pending: "<dark_gray>?"
-  # <first> <second> <third> are the names above; completed also has <slot> (1-4)
+  # <first> <second> <third> are the names above; cast also has <skill>
   progress: "<gray><first> <dark_gray>-</dark_gray> <second> <dark_gray>-</dark_gray> <third>"
-  completed: "<green><first> - <second> - <third>  <gold>Spell <slot>"
+  cast: "<green><first> - <second> - <third>  <skill>"
+  # <mana> and <max>
+  mana: "<#7fc8e8>Mana <white><mana></white>/<max>"
+  # <line> is the progress, cast or fail text; <mana_text> is the mana line above
+  bar: "<line>  <dark_gray>|</dark_gray>  <mana_text>"
+  # Why a cast failed; it cost nothing. All but "empty" have <skill>.
+  fail:
+    # <slot> (1-4)
+    empty: "<red>Combo slot <slot> is empty"
+    not-owned: "<skill> <red>isn't unlocked"
+    passive: "<skill> <red>is passive"
+    unavailable: "<skill> <red>can't be cast yet"
+    # <seconds>
+    cooldown: "<skill> <red>ready in <seconds>s"
+    # <cost>
+    mana: "<red>Not enough mana for <skill> <red>(<cost>)"
+    no-target: "<skill><red>: no target"
 
 menu:
   next-page: "<yellow>Next page"
@@ -258,7 +274,10 @@ skills:
         - "<gray>click a three-click pattern."
         - "<gray>R is right, L is left."
         - ""
-        - "<#8f8a80>Casting isn't available yet."
+        - "<#8f8a80>For now only Warriors can cast,"
+        - "<#8f8a80>with an iron sword: Cleave,"
+        - "<#8f8a80>Leaping Strike, Whirlwind"
+        - "<#8f8a80>and Execute."
     # <combo>
     seat-empty:
       name: "<gray>Empty seat"

@@ -8,8 +8,6 @@ import static dev.casperrs.arkenMMO.casting.ComboTracker.Status.NOT_STARTED;
 import static dev.casperrs.arkenMMO.casting.ComboTracker.Status.PROGRESS;
 import static dev.casperrs.arkenMMO.casting.ComboTracker.Status.SAME_TICK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -119,31 +117,5 @@ class ComboTrackerTest {
         at(0, RIGHT);
         tracker.reset();
         assertEquals(NOT_STARTED, at(400, LEFT).status());
-        assertFalse(tracker.drawInCombo());
-    }
-
-    @Test
-    void plainBowShotIsNotPartOfACombo() {
-        mirroredAt(0, RIGHT);
-        assertFalse(tracker.drawInCombo());
-    }
-
-    @Test
-    void drawStaysInTheComboAfterItCompletes() {
-        mirroredAt(0, LEFT);
-        mirroredAt(400, RIGHT);
-        assertTrue(tracker.drawInCombo());
-        mirroredAt(800, RIGHT);
-        assertTrue(tracker.drawInCombo());
-        mirroredAt(1300, RIGHT);
-        assertFalse(tracker.drawInCombo());
-    }
-
-    @Test
-    void aShotAfterTheComboTimedOutFlies() {
-        mirroredAt(0, LEFT);
-        mirroredAt(400, RIGHT);
-        mirroredAt(1500, RIGHT);
-        assertFalse(tracker.drawInCombo());
     }
 }

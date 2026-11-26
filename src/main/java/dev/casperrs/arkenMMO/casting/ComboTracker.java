@@ -35,7 +35,6 @@ final class ComboTracker {
     private long comboMillis;
     private @Nullable Click lastPress;
     private long lastPressMillis;
-    private boolean drawInCombo;
 
     /** Claims the tick for something that isn't a combo click, such as opening a door or dropping an item. */
     void ignoreTick(long tick) {
@@ -62,9 +61,6 @@ final class ComboTracker {
         }
         Click opener = mirrored ? Click.LEFT : Click.RIGHT;
         boolean counts = !clicks.isEmpty() || click == opener;
-        if (click == Click.RIGHT) {
-            drawInCombo = counts;
-        }
         if (!counts) {
             return Result.of(Status.NOT_STARTED);
         }
@@ -79,19 +75,10 @@ final class ComboTracker {
         return completed;
     }
 
-    /**
-     * Whether the latest right press was a combo click, so the arrow from the draw it started must not fly.
-     * Stays true after the combo completes, because the arrow is only released after the press.
-     */
-    boolean drawInCombo() {
-        return drawInCombo;
-    }
-
     /** Forgets the running combo, keeping the tick claim. */
     void reset() {
         clicks.clear();
         lastPress = null;
-        drawInCombo = false;
     }
 
     // With O the opening button and X the other one: 1 = O-X-O, 2 = O-O-O, 3 = O-X-X, 4 = O-O-X.
