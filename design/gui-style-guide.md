@@ -85,3 +85,11 @@ Layers, all darker and quieter than the figure: a vertical sky with 8 px dithere
 
 ## Checks every round
 `mise run assets`, then look in `target/previews/gui/`: each panel at x8, the contact sheet, the silhouettes (including Warrior against Captain), greyscale, every screen at GUI scales 2, 3 and 4, the slot views, tooltips and the printed colour counts. Work through section 6.6 of the research note, and judge at screen size, not only zoomed in.
+
+## Skill tree (next GUI, not started)
+The user's vision, from 2026-11-25:
+- A designed foreground the player sees, with open gaps that fill with glowing panes once a skill is selected and its requirements are met.
+- The same art style as the class menu (this guide): subtly Minecraft-like.
+- Art quality is the top priority. Show previews for approval.
+- Pack technique: `docs/research/custom-gui-and-pixel-art.md`.
+- The skills themselves are still a draft that isn't approved (`docs/research/mmo-classes-levelling.md`).
