@@ -1,40 +1,52 @@
 # Player inventory texture
 
-Status: **waiting for the user's approval** (2026-11-26). A deliberate vanilla override.
+Status: **waiting for the user's approval** (2026-11-27, second version; no offhand section, themed armour icons, gridless panel, block and bar). A deliberate vanilla override.
 
 | | |
 |---|---|
-| File | `resourcepack/assets/minecraft/textures/gui/container/inventory.png` |
-| Generator | `design/scripts/gui_inventory.py` (art and checks), `design/scripts/zz_inventory_preview.py` (previews) |
-| Size | 512x512; art in the top-left **352x332** (vanilla 176x166 on the 2x grid), everything else alpha 0 |
-| Look | the player-inventory area of the skill menus: iron shell, recessed iron cells, parchment plate with a gold gem, gold rule, gold corner brackets. Built from `pixelkit/chrome.py` (`shell`, `slot_cell`, `gem`, `corner_bracket`). No class colour |
-| Colours | 14, all from the frozen palette (iron, parchment, gold); alpha 0 or 255 |
+| Files | `resourcepack/assets/minecraft/textures/gui/container/inventory.png`; `.../textures/gui/sprites/recipe_book/button.png` and `button_highlighted.png`; `.../textures/gui/sprites/container/slot/helmet.png`, `chestplate.png`, `leggings.png`, `boots.png` (our silhouettes) and `shield.png` (fully clear) |
+| Generator | `design/scripts/gui_inventory.py` (art, recipe sprites and checks; rounded shapes in `pixelkit/rounded.py`), `design/scripts/gui_slot_icons.py` (empty-slot sprites and checks), `design/scripts/zz_inventory_preview.py` (previews) |
+| Size | 512x512; art in the top-left **352x332** (vanilla 176x166 on the 2x grid), everything else alpha 0. Recipe sprites 40x36 (vanilla 20x18 GUI px on the 2x grid), alpha 0 everywhere; slot sprites 32x32 (vanilla 16x16), binary alpha |
+| Look | the player-inventory area of the skill menus: iron shell with a rounded, bevelled rim (corner radius 8 art px = 4 GUI px), gridless recessed regions, parchment title plate with a gold gem, gold rule. Three flat regions: the character panel, the main inventory block and the hotbar bar (below). No class colour, no corner brackets (they clash with the rounded corners) |
+| Colours | 14, all from the frozen palette (iron, parchment, gold); alpha 0 or 255. Shell body `iron` 2 `#282a39`; region fill `iron` 3 `#3a3e50`, the crafting cells' floor; region edge: top/left `iron` 1 `#1a1925` then `#0d0b14`, bottom/right `iron` 3 (merges into the fill) then `iron` 4 `#525869` |
 
 ## Layout (GUI px, top-left of each 18x18 cell; art px are double)
+Three flat recessed regions replace every cell frame except the crafting grid and the result. All three share the fill `iron` 3 `#3a3e50` (the floor colour of the crafting cells, which are unchanged) and exactly the crafting cells' own ring recipe round that floor (top/left `iron` 1 then `#0d0b14`, bottom/right `iron` 3, which merges into the floor, then `iron` 4), so everything matches and a corner radius of 6 art px (3 GUI px; the shell's is 8). The game still draws items and ghost icons at cell + 1.
+
 | What | Position |
 |---|---|
-| Armour | x7, y 7 / 25 / 43 / 61 |
-| Offhand | (76, 61) |
-| Crafting 2x2 | x 97 / 115, y 17 / 35 |
+| Character panel | one rounded region: armour x7 y 7 / 25 / 43 / 61, model box outer (25,7)-(76,79), first four storage cells x 7 / 25 / 43 / 61 at y83, and the gap y79..83. Art rect (12,12)-(156,200): 1 GUI px of extra fill on the top and left, 1 GUI px less on the right and bottom (the seam). **Its right edge is one straight line at the column boundary x79 (art 158)** from the top to y101, ending on the left edge of storage column 4 (edge rings at art x156..157) |
+| Main inventory block | one L-shaped region: storage row y83 columns 4..8 (x 79..169) and rows y101 / y119 columns 0..8. Art rects (158,166)-(340,204) and (12,202)-(340,274), cut back to 4 art px from the panel. Outer corners rounded; the inner corner of the L is filleted, concentric with the panel's rounded corner |
+| Seam | panel and block meet along x79 (rows y83..101) and y101 (columns 0..3). They stay separate regions with a 4 art px (2 GUI px) divider that uses the cells' 2 art px item-free margin on each side: `iron` 3 (merged into the panel fill), `iron` 4 (the panel's lit edge), then `#0d0b14`, `iron` 1 (the block's dark edge, then its fill). Round the panel's corner and the divider follows it as a constant-width channel. The 16x16 item areas are untouched |
+| Hotbar bar | one rounded region over hotbar cells 1..8 (x7..151, y141..159), art rect (12,282)-(302,320). The ninth cell (151,141) is outside it, plain shell colour, still usable. 4 art px of shell between the block and the bar |
+| Offhand | (76, 61): no art, plain shell (the panel's right edge reaches its first 3 GUI px). The slot still exists: an item put there (F key) renders at (77,62) over the shell |
+| Crafting 2x2 | x 97 / 115, y 17 / 35: still framed `slot_cell` cells |
 | Crafting result | (153, 27); same cell with a gold first ring |
-| Main inventory | x = 7 + 18n (n 0..8), y 83 / 101 / 119 |
-| Hotbar | x = 7 + 18n, y 141 |
-| Player model box | black box (26,8)-(74,77); the recess outer frame is (25,7) to (75,78). Dark iron, a faint floor line 8 GUI px above the bottom. Keep it calm: the model draws on top |
-| Title plate | (94,5)-(163,16), parchment with a gold gem at the right end, behind the title text the game draws ("Crafting" at 97, 8; unverified, see below) |
+| Title plate | (94,4)-(163,15), parchment with a gold gem at the right end, centred on the title's text rows y6..y13 |
 | Arrow | gold block arrow, shaft from x135, tip at x151, centred on y35.5 |
-| Gold rule | art y 160..163, from art x7 to 345, between the crafting area and the main inventory |
-| Recipe book button | about (104,61), 20x18: kept plain iron; the game draws the button sprite on top |
+| Gold rule | art y 158..161, from art x162 (GUI 81, 2 art px beyond the panel's right edge) to 345; it sits 2 art px above the block's edge |
+| Recipe book button | hidden everywhere: both sprites are fully transparent (the button still clicks). The area (104,61)-(124,79) is plain shell colour |
 
-All 46 cell origins were measured from InventivetalentDev/minecraft-assets@26.2 `inventory.png` (every 18x18 cell: 55 grey top-left ring, 139 grey floor, white bottom-right) and match the list above. The result slot is a plain 18x18 cell in 26.2 (no larger frame), and the vanilla arrow is a grey 3-px shaft x135..149 with a head to x150. The model box outer ring is dark grey on the top and left, white on the bottom and right, and touches the offhand cell at x76.
+5 cells are drawn with frames. All 46 cell origins were measured from InventivetalentDev/minecraft-assets@26.2 `inventory.png` (every 18x18 cell: 55 grey top-left ring, 139 grey floor, white bottom-right) and match the vanilla list in the script; 41 of them (the panel, block and bar cells, offhand and ninth hotbar cell) get no frame. The result slot is a plain 18x18 cell in 26.2, and the vanilla arrow is a grey 3-px shaft x135..149 with a head to x150. `recipe_book/button.png` exists in 26.2 and has no `.mcmeta`, so a plain sprite stretches to the drawn size.
+
+## Slot sprites
+Verified at InventivetalentDev/minecraft-assets@26.2 (`assets/minecraft/textures/gui/sprites/container/slot/`): `helmet.png`, `chestplate.png`, `leggings.png`, `boots.png`, `shield.png` all exist, are 16x16 and have no `.mcmeta` (404), so ours stretch to the drawn 16 GUI px. The vanilla icons are single-colour grey (`#555555`) outlines.
+- Ours: original silhouettes (helmet with a visor slit, chestplate with a V neck and seam, leggings with a belt, a pair of boots), 1 art px `iron` 0 outline, body `iron` 5 `#747b8a`, bottom/right edge and details `iron` 4 `#525869`. Two steps lighter than the fill (`iron` 3; they were `iron` 4 and `iron` 3 until the fill was brightened, when they got too faint) and quieter than items. They are sprites, not painted into `inventory.png`, so they vanish under worn armour.
+- They also draw in the creative survival tab's armour cells (cell floor `iron` 3, the same as the regions): the outline and `iron` 5 body read there too (preview `inventory_icons_on_creative_tab_x2.png`).
+- `shield.png` is fully transparent (32x32), so the game's grey shield ghost does not appear on the plain shell where the offhand slot is. This also hides it in the creative survival tab's offhand cell (34,19), which is plain `iron` 3 floor there.
+
+36 cells are drawn. All 46 cell origins were measured from InventivetalentDev/minecraft-assets@26.2 `inventory.png` (every 18x18 cell: 55 grey top-left ring, 139 grey floor, white bottom-right) and match the vanilla list; the 10 not drawn are the 8 panel cells, the offhand and the ninth hotbar cell. The result slot is a plain 18x18 cell in 26.2, and the vanilla arrow is a grey 3-px shaft x135..149 with a head to x150. `recipe_book/button.png` exists in 26.2 and has no `.mcmeta`, so a plain sprite stretches to the drawn size.
 
 ## Build check
-`gui_inventory.py` fails the build when: the generated cell origins differ from the measured list; any art lies outside 352x332; alpha is not binary (only the four 2x2 corner texels may be clear); a colour is outside the palette; a cell's inner wall is not exactly one art px inside its rect (a one-pixel shift fails); the model box holds more than its three iron tones; the recipe button area is not plain.
+`gui_inventory.py` fails the build when: the generated cell origins differ from the measured list; any art lies outside 352x332; alpha is not binary; the silhouette is not exactly the rounded rectangle or a corner is not clear; a colour is outside the palette; a framed cell (crafting, result) has an inner wall that is not exactly one art px inside its rect or no floor; the 16x16 item area (cell + 1 GUI px) of any panel, block or bar cell, the model box or the panel's gap y79..83 is not one flat fill colour (only a rounded region corner may trim it, within 4 art px of its own corner); the ninth hotbar cell's or the offhand's item area is not plain shell colour (the offhand's first 3 art columns excepted); the panel's right edge is not one straight line at art x155 (the last filled column) from y34 to y189; any region has a square outer corner (listed corner pixels must be empty); regions overlap or are missing; the gold rule does not run from art x162 to the right wall or reaches left of it; a recipe sprite is not 40x36 and fully transparent. Not checked: the 2 art px margin of a cell where two regions meet holds edge rings by design. `gui_slot_icons.py` fails when a sprite is not 32x32, alpha is not binary, a colour is outside the palette or equals the region fill (`iron` 3), a silhouette is not solid inside 2 px margins, two silhouettes are equal, or `shield.png` is not fully transparent.
 
 ## Unverified
-- Title text position and that no "Inventory" label is drawn in the survival inventory (believed `titleLabelX = 97`, `titleLabelY = 8` from memory; no source page found). If the text sits elsewhere, move `TITLE_PLATE`.
-- Recipe button position (about x104, y61) is from memory of the vanilla code.
+- Title text position: the game draws "Crafting" at GUI (97, 6) in `#404040`, 8 px font, no shadow, and no "Inventory" label (`AbstractContainerScreen` defaults `titleLabelY = 6`; `InventoryScreen` only sets `titleLabelX = 97`). This is from knowledge of the vanilla source; it was not re-read from 26.2 because the network fetch failed. If the text sits elsewhere, move `TITLE_PLATE`.
+- Recipe button position (about x104, y61) is from memory of the vanilla code. With both sprites clear it does not matter visually.
 - A uniformly scaled 512x512 container texture: vanilla container backgrounds blit with an explicit 256x256 texture size, so the UVs are normalised and the file's real size should not matter (the same trick HD packs such as Faithful 64x use for the GUI), but this was not read from the 26.2 source or tested in game.
 - The plate is deliberately wide for longer translations of the title; a very long one still overflows.
+- The game draws the empty armour and offhand ghost icons itself, and the model on the panel's inner box; how they look on `iron` 3 is judged from a mock-up, not in game.
+- The hidden recipe book button stays clickable (user decision); it also hides on the crafting table, furnace, smoker and blast furnace.
 
 ## Follow-up
 The creative inventory (`creative_inventory/tab_inventory.png`) is not touched.

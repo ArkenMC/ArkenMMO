@@ -5,7 +5,9 @@ measured layout; the Mojang texture is never read or copied.
 """
 from PIL import Image, ImageDraw
 
+import gui_creative_inventory as creative
 import gui_inventory as inv
+import gui_slot_icons as slot_icons
 from pixelkit import layout, preview
 
 NEAREST = Image.Resampling.NEAREST
@@ -14,7 +16,7 @@ GUI_W, GUI_H = inv.GUI
 BACKDROP = (70, 70, 76, 255)
 MAGENTA = (255, 0, 255, 255)
 CYAN = (0, 255, 255, 255)
-# "Crafting" in the vanilla font is drawn at (97, 8) in colour #404040; our own 5x7 stand-in letters
+# "Crafting" in the vanilla font is drawn at (97, 6) in colour #404040; our own 5x7 stand-in letters
 LETTERS = dict(preview.LABEL_FONT)
 LETTERS.update({
     "C": (".###.|#...#|#....|#....|#....|#...#|.###.", 5),
@@ -56,12 +58,11 @@ def vanilla_mock():
         draw.rectangle((x, y, x + 17, y + 17), fill=(139, 139, 139, 255), outline=(55, 55, 55, 255))
     draw.rectangle((25, 7, 75, 78), fill=(0, 0, 0, 255), outline=(55, 55, 55, 255))
     draw.polygon([(135, 34), (144, 34), (144, 29), (151, 35), (144, 41), (144, 36), (135, 36)], fill=(139, 139, 139, 255))
-    draw.rectangle(inv.RECIPE_BUTTON[:2] + (inv.RECIPE_BUTTON[2] - 1, inv.RECIPE_BUTTON[3] - 1), outline=(120, 160, 60, 255))
     return image
 
 
-def screen(size, scale):
-    """Our texture over a dimmed world with items, label, a figure and the recipe button stand-in."""
+def screen(size, scale, worn=False):
+    """Our texture over a dimmed world with items, label and a figure; the recipe button is hidden."""
     image = preview._world(size, scale)
     origin = ((size[0] // scale - GUI_W) // 2, (size[1] // scale - GUI_H) // 2)
     panel = texture().resize((GUI_W * scale, GUI_H * scale), NEAREST)
@@ -69,26 +70,39 @@ def screen(size, scale):
     gui = Image.new("RGBA", (GUI_W * scale, GUI_H * scale))
     draw = ImageDraw.Draw(gui)
     stand_in_figure(draw, scale)
-    # recipe book button
-    x0, y0, x1, y1 = inv.RECIPE_BUTTON
-    draw.rectangle((x0 * scale, y0 * scale, x1 * scale - 1, y1 * scale - 1), fill=(150, 150, 150, 255), outline=(40, 40, 40, 255))
-    draw.rectangle(((x0 + 5) * scale, (y0 + 4) * scale, (x1 - 5) * scale - 1, (y1 - 4) * scale - 1), fill=(120, 80, 50, 255))
     x = 97
     for char in "Crafting":
         rows, width = LETTERS[char]
         for dy, row in enumerate(rows.split("|")):
             for dx, pixel in enumerate(row):
                 if pixel == "#":
-                    draw.rectangle(((x + dx) * scale, (8 + dy) * scale, (x + dx + 1) * scale - 1, (8 + dy + 1) * scale - 1),
+                    draw.rectangle(((x + dx) * scale, (6 + dy) * scale, (x + dx + 1) * scale - 1, (6 + dy + 1) * scale - 1),
                                    fill=(64, 64, 64, 255))
         x += width + 1
     image.alpha_composite(gui, (origin[0] * scale, origin[1] * scale))
     kinds = ["sword", "bread", "apple", "coal", "gem", "log"]
+    icons = slot_icons.icons()
+    for (x, y), name in zip(inv.ARMOUR, ("helmet", "chestplate", "leggings", "boots")):
+        # the game draws the icon only while the slot is empty; "worn" hides two of them
+        if worn and name in ("helmet", "leggings"):
+            sprite = preview._sample_item("gem" if name == "helmet" else "coal").resize((16 * scale,) * 2, NEAREST)
+        else:
+            sprite = icons[name].resize((16 * scale,) * 2, NEAREST)
+        image.alpha_composite(sprite, ((origin[0] + x + 1) * scale, (origin[1] + y + 1) * scale))
     for index, (x, y) in enumerate(inv.cells()):
-        if index % 3 == 0 and (x, y) != inv.RESULT:
+        if index % 3 == 0 and (x, y) != inv.RESULT and (x, y) not in inv.ARMOUR + [inv.OFFHAND]:
             sprite = preview._sample_item(kinds[index % len(kinds)]).resize((16 * scale, 16 * scale), NEAREST)
             image.alpha_composite(sprite, ((origin[0] + x + 1) * scale, (origin[1] + y + 1) * scale))
     return image
+
+
+def creative_tab(scale=4):
+    """The icons on the creative survival tab's armour cells (their floor is a lighter iron than the panel)."""
+    tab = Image.open(creative.BACKGROUNDS / "tab_inventory.png").convert("RGBA").crop((0, 0, 390, 272))
+    icons = slot_icons.icons()
+    for (x, y), name in zip(((53, 5), (53, 32), (107, 5), (107, 32)), ("helmet", "chestplate", "leggings", "boots")):
+        tab.alpha_composite(icons[name], ((x + 1) * 2, (y + 1) * 2))
+    return scaled(tab, scale // 2)
 
 
 def overlay():
@@ -101,8 +115,6 @@ def overlay():
     draw.rectangle((mx0 * 4, my0 * 4, mx1 * 4 - 1, my1 * 4 - 1), outline=CYAN)
     px0, py0, px1, py1 = inv.TITLE_PLATE
     draw.rectangle((px0 * 4, py0 * 4, px1 * 4 - 1, py1 * 4 - 1), outline=CYAN)
-    rx0, ry0, rx1, ry1 = inv.RECIPE_BUTTON
-    draw.rectangle((rx0 * 4, ry0 * 4, rx1 * 4 - 1, ry1 * 4 - 1), outline=(120, 255, 60, 255))
     mock = scaled(vanilla_mock(), 4)
     sheet = Image.new("RGBA", (art.width + mock.width + 36, art.height + 24), BACKDROP)
     sheet.alpha_composite(art, (12, 12))
@@ -123,6 +135,9 @@ def main():
         save(sheet, f"inventory_art_x{factor}.png")
     for scale, size in SCREENS.items():
         save(screen(size, scale), f"inventory_screen_{size[0]}x{size[1]}_scale{scale}.png")
+    save(screen(SCREENS[2], 2, worn=True), "inventory_screen_854x480_scale2_worn.png")
+    save(screen(SCREENS[3], 3, worn=True), "inventory_screen_1280x720_scale3_worn.png")
+    save(creative_tab(), "inventory_icons_on_creative_tab_x2.png")
     save(overlay(), "inventory_vs_vanilla_layout.png")
     print(f"inventory previews in {layout.PREVIEWS}")
 
