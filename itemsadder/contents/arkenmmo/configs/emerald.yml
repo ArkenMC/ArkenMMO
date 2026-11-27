@@ -10,5 +10,5 @@ items:
       material: EMERALD
       generate: false
       model_path: arkenmmo:item/emerald
-    # vanilla tooltip_style id: textures/gui/sprites/tooltip/emerald_{background,frame}.png
-    tooltip_style: arkenmmo:emerald
+    # ItemsAdder tooltip id: tools/itemsadder.py copies textures/gui/sprites/tooltip/emerald_{background,frame}.png to textures/tooltip/
+    tooltip_style: arkenmmo:tooltip/emerald
