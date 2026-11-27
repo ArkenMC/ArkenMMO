@@ -143,9 +143,26 @@ def crest(canvas, cx, cy):
     _crossed_swords(canvas, cx, cy + 1)
 
 
+def grid(canvas, cell_groups, region_masks, size=18, colour=None):
+    """A 1 art px line in the margin between every two neighbouring gridless cells of one region (the margin is
+    the 2 GUI px between their item areas), clipped to the region's fill. It never enters an item area."""
+    colour = colour if colour is not None else col("iron", 4)
+    for name, group in cell_groups.items():
+        fill = region_masks[name]
+        cells = set(group)
+        line = np.zeros_like(fill)
+        for x, y in group:
+            if (x + size, y) in cells:
+                line[y * 2:(y + size) * 2, (x + size) * 2 - 1] = True
+            if (x, y + size) in cells:
+                line[(y + size) * 2 - 1, x * 2:(x + size) * 2] = True
+        canvas.mask(line & fill, colour)
+
+
 def studs(canvas, cell_groups, region_masks, size=18):
-    """A recessed dot (2x2 GUI px: three dark, the bottom-right lit) on every corner shared by four gridless
-    cells of one region, where it lies inside that region's fill. `cell_groups` maps a region name to its cells."""
+    """A small gold stud (2x2 GUI px: gold body, lit top-left, shaded bottom-right) on every corner shared by four
+    gridless cells of one region, where it lies inside that region's fill. `cell_groups` maps a region name to
+    its cells."""
     placed = []
     for name, group in cell_groups.items():
         fill = region_masks[name]
@@ -157,7 +174,9 @@ def studs(canvas, cell_groups, region_masks, size=18):
             ax, ay = (gx - 1) * 2, (gy - 1) * 2
             if count < 4 or not fill[ay:ay + 4, ax:ax + 4].all():
                 continue
-            canvas.rect((ax, ay, ax + 4, ay + 4), col("iron", 2))
-            canvas.rect((ax + 2, ay + 2, ax + 4, ay + 4), col("iron", 4))
+            canvas.rect((ax, ay, ax + 4, ay + 4), col("gold", 3))
+            canvas.rect((ax + 3, ay, ax + 4, ay + 4), col("gold", 2))
+            canvas.rect((ax, ay + 3, ax + 4, ay + 4), col("gold", 2))
+            canvas.rect((ax, ay, ax + 2, ay + 2), col("gold", 4))
             placed.append((gx, gy))
     return placed
