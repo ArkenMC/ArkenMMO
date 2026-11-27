@@ -1,9 +1,9 @@
-"""The four accessory items (ring_1, ring_2, amulet, bracelet): 16x16 textures, item definitions, models and one
+"""The four accessory items (ring_1, ring_2, amulet, bracelet): 32x32 textures, item definitions, models and one
 shared tooltip style (see design/item-accessories.md).
 
 Same pipeline as the emerald: texture + model + item definition under resourcepack/assets/arkenmmo/. Shapes are
 built from small masks (a ring band is a distance ring, gems are hand-written facet rows) so the circles stay
-clean at 16 px; every colour is from the frozen palette.
+clean at this size; every colour is from the frozen palette.
 """
 import numpy as np
 
@@ -13,12 +13,12 @@ from pixelkit.palette import PALETTE, col
 
 import items_emerald
 
-SIZE = 16
+SIZE = 32
 IDS = {"ring_1": "Ring", "ring_2": "Signet Ring", "amulet": "Amulet", "bracelet": "Bracelet"}
 TOOLTIP = "accessory"
-# gui display scale of the item models: 0.5 makes one texel exactly one art px of the 512x512 inventory texture
-# (half a GUI px), so the painted placeholders line up with the item's own pixels (design/item-accessories.md)
-GUI_SCALE = 0.5
+# 32x32 textures: the model draws them over the slot's 16 GUI px, so one texel is exactly one art px of the 512x512
+# inventory texture (half a GUI px). The art is about 24 texels (12 GUI px) across and 4 texels in from the edge, so
+# the item reads medium-sized with no display transform (design/item-accessories.md)
 YY, XX = np.mgrid[0:SIZE, 0:SIZE]
 
 
@@ -102,18 +102,40 @@ AMETHYST = {"w": ("violet", 5), "A": ("violet", 4), "B": ("violet", 3), "C": ("v
 AQUA = {"w": ("arcane", 4), "A": ("arcane", 3), "B": ("arcane", 2), "C": ("arcane", 1), "D": ("arcane", 0)}
 LEAF = {"w": ("forest", 5), "A": ("forest", 4), "B": ("forest", 3), "C": ("forest", 2), "D": ("forest", 1)}
 
-# a diamond-cut gem, 6 wide and 5 tall, glint at the top left
-GEM_ROWS = [(2, 7, "AB"), (3, 6, "wABC"), (4, 5, "AABBCD"), (5, 6, "BBCD"), (6, 7, "CD")]
+
+def gem_mask(cx, cy, hw, hh):
+    """A cut gem: a diamond with its four tips cut off (an octagon), hw/hh half width and height."""
+    dx, dy = XX + 0.5 - cx, YY + 0.5 - cy
+    return (np.abs(dx) / hw + np.abs(dy) / hh <= 1.4) & (np.abs(dx) <= hw) & (np.abs(dy) <= hh)
+
+
+def paint_gem(px, cx, cy, hw, hh, legend):
+    """Facets by direction to the key light (bright top left, dark bottom right), a lighter table in the middle and a
+    two pixel glint."""
+    mask = gem_mask(cx, cy, hw, hh)
+    dx, dy = XX + 0.5 - cx, YY + 0.5 - cy
+    u = (dx / hw + dy / hh) / 2
+    tone = np.select([u < -0.45, u < 0.0, u < 0.45], [1, 2, 3], 4)
+    table = np.abs(dx) / hw + np.abs(dy) / hh <= 0.55
+    tone = np.where(table, np.maximum(tone - 1, 1), tone)
+    keys = "?ABCD"
+    for y, x in zip(*np.nonzero(mask)):
+        px[y, x] = col(*legend[keys[tone[y, x]]])
+    ys, xs = np.nonzero(table)
+    first = np.argmin((dx + dy)[ys, xs])
+    y, x = ys[first], xs[first]
+    px[y, x] = px[y + 1, x] = col(*legend["w"])
+    return mask
 
 
 def ring_1():
     """Gold band with a ruby in a gold setting."""
     px = new()
-    cx, cy = 8, 10
-    toned(px, band(cx, cy, 5, 3), "gold", (5, 4, 3, 1), cx, cy, (0.8, 0.2, -0.35))
-    gem = spans(GEM_ROWS)
+    cx, cy = 16, 18
+    toned(px, band(cx, cy, 9.5, 5.5), "gold", (5, 4, 3, 1), cx, cy, (0.8, 0.2, -0.35))
+    gem = gem_mask(16, 10, 6, 5)
     bezel(px, gem, col("gold", 4), col("gold", 2))
-    facets(px, GEM_ROWS, RUBY)
+    paint_gem(px, 16, 10, 6, 5, RUBY)
     outline(px, col("gold", 0))
     return px
 
@@ -121,44 +143,44 @@ def ring_1():
 def ring_2():
     """Iron signet ring: a steel band and a flat seal with a gold cross over a navy field and a small aqua gem."""
     px = new()
-    cx, cy = 8, 10
-    toned(px, band(cx, cy, 5, 3), "steel", (5, 4, 3, 1), cx, cy)
-    field = rows_mask([(y, 4, 11) for y in range(2, 6)])
-    seal = rows_mask([(y, 3, 12) for y in range(1, 7)])
-    px[seal] = col("gold", 3)
-    px[rows_mask([(1, 3, 12), (2, 3, 3), (3, 3, 3), (4, 3, 3), (5, 3, 3)])] = col("gold", 4)
-    px[rows_mask([(6, 3, 12)]) | rows_mask([(y, 12, 12) for y in range(2, 7)])] = col("gold", 2)
-    px[field] = col("navy", 2)
-    px[rows_mask([(2, 4, 11)])] = col("navy", 1)
-    px[[1, 1, 6, 6], [3, 12, 3, 12]] = 0  # rounded seal corners
-    cross = rows_mask([(y, 7, 8) for y in range(2, 6)] + [(y, 5, 10) for y in (3, 4)])
+    cx, cy = 16, 18
+    toned(px, band(cx, cy, 9.5, 5.5), "steel", (5, 4, 3, 1), cx, cy)
+    px[rows_mask([(y, 6, 25) for y in range(4, 16)])] = col("gold", 3)
+    px[rows_mask([(4, 6, 25)] + [(y, 6, 7) for y in range(5, 15)])] = col("gold", 4)
+    px[rows_mask([(15, 6, 25)] + [(y, 24, 25) for y in range(5, 16)])] = col("gold", 2)
+    px[rows_mask([(y, 8, 23) for y in range(6, 14)])] = col("navy", 2)
+    px[rows_mask([(6, 8, 23), (7, 8, 23)])] = col("navy", 1)
+    px[[4, 4, 5, 4, 4, 5, 15, 15, 14, 15, 15, 14], [6, 7, 6, 25, 24, 25, 6, 7, 6, 25, 24, 25]] = 0  # rounded corners
+    cross = rows_mask([(y, 15, 16) for y in range(6, 14)] + [(y, 10, 21) for y in (9, 10)])
     px[cross] = col("gold", 4)
-    px[rows_mask([(y, 8, 8) for y in range(2, 6)] + [(y, 10, 10) for y in (3, 4)])] = col("gold", 3)
-    facets(px, [(3, 7, "wA"), (4, 7, "BC")], AQUA)
+    px[rows_mask([(y, 16, 16) for y in range(6, 14)] + [(y, 10, 21) for y in (10,)])] = col("gold", 3)
+    facets(px, [(9, 15, "wA"), (10, 15, "BC")], AQUA)
     outline(px, col("steel", 0))
     return px
 
 
-AMULET_GEM = [(7, 7, "AB"), (8, 6, "wABB"), (9, 6, "AABC"), (10, 6, "ABCC"), (11, 6, "BCCD"), (12, 7, "CD")]
+def amulet_gem():
+    return gem_mask(16, 20, 4, 5)
 
 
 def amulet():
     """Gold chain and a round gold medallion with a violet gem."""
     px = new()
-    cx, cy = 8, 10
+    cx, cy = 16, 20
     for i in range(5):
-        for x in (1 + i, 14 - i):
-            px[i, x] = col("gold", 4 if i % 2 == 0 else 2)
-    # the chain's last links meet a small bail above the medallion
-    px[5, 6] = col("gold", 4)
-    px[5, 9] = col("gold", 2)
-    for x in (7, 8):
-        px[4, x] = col("gold", 3)
-        px[5, x] = col("gold", 2)
-    ring = band(cx, cy, 4.6, 3.1)
-    px[disc(cx, cy, 4.6)] = col("gold", 1)
-    toned(px, ring, "gold", (5, 4, 3, 2), cx, cy)
-    facets(px, AMULET_GEM, AMETHYST)
+        lit, dim = (("gold", 5), ("gold", 4)), (("gold", 4), ("gold", 3))
+        top, bottom = (lit, ("gold", 2)) if i % 2 == 0 else (dim, ("gold", 1))
+        for x0 in (4 + 2 * i, 26 - 2 * i):
+            y0 = 4 + 2 * i
+            px[y0, x0], px[y0, x0 + 1] = col(*top[0]), col(*top[1])
+            px[y0 + 1, x0], px[y0 + 1, x0 + 1] = col(*top[1]), col(*bottom)
+    # the last links meet a small bail above the medallion
+    px[rows_mask([(9, 14, 17), (10, 14, 14), (11, 14, 14)])] = col("gold", 4)
+    px[rows_mask([(10, 17, 17), (11, 17, 17)])] = col("gold", 2)
+    px[rows_mask([(10, 15, 16), (11, 15, 16)])] = 0
+    px[disc(cx, cy, 7.5)] = col("gold", 1)
+    toned(px, band(cx, cy, 7.5, 5.0), "gold", (5, 4, 3, 2), cx, cy)
+    paint_gem(px, cx, cy, 4, 5, AMETHYST)
     outline(px, col("gold", 0))
     return px
 
@@ -168,22 +190,22 @@ def bracelet():
     on the lower right with a green gem. Drawn by testing every pixel in the cuff's own rotated frame (geometry, not
     a resampled bitmap); lit from the top left, so the faces turned up and left are bright."""
     px = new()
-    sx, sy = XX + 0.5 - 8, YY + 0.5 - 8
+    sx, sy = XX + 0.5 - 16, YY + 0.5 - 16
     along, across = (sx - sy) / 2 ** 0.5, (sx + sy) / 2 ** 0.5  # across grows towards the front (lower right)
-    outer = np.hypot(along / 7.2, across / 5.4) <= 1
-    inner = np.hypot(along / 4.1, (across + 1.7) / 2.1) <= 1
+    outer = np.hypot(along / 13.3, across / 10.0) <= 1
+    inner = np.hypot(along / 7.6, (across + 3.2) / 3.9) <= 1
     cuff = outer & ~inner
     edge = cuff.copy()
     for shifted, _, _ in neighbours(~cuff):
         edge &= ~shifted
     px[cuff & ~edge] = col("steel", 0)
-    back = edge & (across < 1.0)
-    toned(px, back, "steel", (5, 4, 3, 2), 8, 8, thresholds=(0.3, -0.2, -0.7))
+    back = edge & (across < 1.8)
+    toned(px, back, "steel", (5, 4, 3, 2), 16, 16, thresholds=(0.3, -0.2, -0.7))
     # the near band is gold, brightest on the edge facing up and left, darker towards the outside
-    front = edge & (across >= 1.0)
-    for limit, step in ((1.9, 5), (3.0, 4), (4.0, 3), (4.7, 2), (99, 1)):
+    front = edge & (across >= 1.8)
+    for limit, step in ((3.6, 5), (5.6, 4), (7.4, 3), (8.7, 2), (99, 1)):
         px[front & (across < limit) & (px[..., 3] == 0)] = col("gold", step)
-    gem = (np.abs(along) <= 2.2) & (np.abs(across - 3.1) <= 1.0)
+    gem = (np.abs(along) <= 4.1) & (np.abs(across - 5.8) <= 1.9)
     tones = "wABC"
     ys, xs = np.nonzero(gem)
     rank = np.argsort(np.argsort((sx + sy)[ys, xs], kind="stable"), kind="stable")
@@ -209,12 +231,9 @@ def definitions():
     for name in IDS:
         pack.write_json(layout.ASSETS / "items" / f"{name}.json",
                         {"model": {"type": "minecraft:model", "model": f"arkenmmo:item/{name}"}})
-        # item/generated has no gui display of its own, so this entry is the whole gui transform; the other contexts
-        # (ground, hands, item frame, head) are inherited from the parent per context
+        # plain item/generated: the 32x32 texture is the whole size; the medium look is painted, not transformed
         pack.write_json(layout.ASSETS / "models" / "item" / f"{name}.json",
-                        {"parent": "minecraft:item/generated", "textures": {"layer0": f"arkenmmo:item/{name}"},
-                         "display": {"gui": {"rotation": [0, 0, 0], "translation": [0, 0, 0],
-                                             "scale": [GUI_SCALE] * 3}}})
+                        {"parent": "minecraft:item/generated", "textures": {"layer0": f"arkenmmo:item/{name}"}})
 
 
 def check():
@@ -228,11 +247,14 @@ def check():
         if colours - known:
             errors.append(f"{name} has colours outside the palette")
         ys, xs = np.nonzero(px[..., 3])
-        if xs.min() < 1 or ys.min() < 0 or xs.max() > 14 or ys.max() > 15:
-            errors.append(f"{name} touches the border (art must stay 1 px off the left and right)")
-        if not 70 < len(xs) < 200:
-            errors.append(f"{name} has {len(xs)} opaque pixels (70..200 expected)")
-        if len(colours) > 20:
+        if min(xs.min(), ys.min()) < 3 or max(xs.max(), ys.max()) > 28:
+            errors.append(f"{name} leaves the 3 px margin")
+        width, height = xs.max() - xs.min() + 1, ys.max() - ys.min() + 1
+        if not 22 <= max(width, height) <= 26:
+            errors.append(f"{name} is {width}x{height} texels, its longer side must be 22..26 (11..13 GUI px)")
+        if not 250 < len(xs) < 700:
+            errors.append(f"{name} has {len(xs)} opaque pixels (250..700 expected)")
+        if len(colours) > 24:
             errors.append(f"{name} uses {len(colours)} colours")
     if errors:
         raise ValueError("accessories: " + "; ".join(errors))

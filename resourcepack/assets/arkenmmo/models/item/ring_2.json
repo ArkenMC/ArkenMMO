@@ -2,24 +2,5 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "arkenmmo:item/ring_2"
-  },
-  "display": {
-    "gui": {
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "scale": [
-        0.5,
-        0.5,
-        0.5
-      ]
-    }
   }
 }
