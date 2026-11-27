@@ -7,7 +7,6 @@ Fails when a cell is off the vanilla slot grid, so a layout slip breaks the buil
 """
 import numpy as np
 from PIL import Image
-from scipy import ndimage
 
 from pixelkit import chrome, layout, rounded
 from pixelkit.chrome import DARK, gem, slot_cell
@@ -22,7 +21,6 @@ FILE = (512, 512)
 # vanilla GUI size; the rest of the 256x256 file (and of our 512x512) stays transparent
 GUI = (176, 166)
 CANVAS = (GUI[0] * DENSITY, GUI[1] * DENSITY)
-SHELL_RADIUS = 8  # art px (4 GUI px)
 
 SLOT = layout.SLOT
 ARMOUR = [(7, 7 + SLOT * i) for i in range(4)]
@@ -34,23 +32,28 @@ HOTBAR = [(7 + SLOT * c, 141) for c in range(9)]
 # Top-left corner of every 18x18 cell, measured from vanilla 26.2 inventory.png (46 cells).
 MEASURED = sorted([(7, 7), (97, 17), (115, 17), (7, 25), (153, 27), (97, 35), (115, 35), (7, 43), (7, 61), (76, 61)]
                   + [(7 + 18 * c, y) for y in (83, 101, 119, 141) for c in range(9)])
-# Three flat recessed regions without cell frames: the character panel (armour, model box and the four storage
-# cells under it), the L-shaped main inventory block (the other 23 storage cells) and the hotbar bar (cells 1..8).
-# The game still draws items and ghost icons at cell + 1. The offhand cell and the ninth hotbar cell have no art
-# at all: plain shell colour (an item in the offhand slot still renders there).
+# Four flat recessed regions without cell frames: the character panel (armour, model box and the four storage
+# cells under it), the L-shaped main inventory block (the other 23 storage cells), the hotbar bar (cells 1..8)
+# and the crafting block (behind the 2x2, arrow and result, whose framed cells stay). The game still draws items
+# and ghost icons at cell + 1. The offhand cell and the ninth hotbar cell have no art at all: plain shell colour
+# (an item in the offhand slot still renders there).
 PANEL_CELLS = ARMOUR + STORAGE[:4]
 BLOCK_CELLS = STORAGE[4:9] + STORAGE[9:]
 BAR_CELLS = HOTBAR[:8]
 SHELL_CELLS = [OFFHAND, HOTBAR[8]]
 MODEL_OUTER = (25, 7, 76, 79)
-# raw region rects in art px, before rounding. The panel's right and bottom edges sit 2 art px inside the cell
-# rects and the block starts SEAM art px beyond them, so the bevel rings of both fit exactly between the two
-PANEL_RAW = (12, 12, 156, 200)
-BLOCK_RAW = [(158, 166, 340, 204), (12, 202, 340, 274)]
-BAR_RAW = (12, 282, 302, 320)
-SEAM = 4
-CORNER = 6  # art px radius of the regions' outer corners
+# Region shapes in GUI px (every step of every outline is a whole GUI px, so a multiple of 2 art px). A region
+# reaches 1 GUI px beyond its cells where there is room. Where cells are contiguous the panel stops 1 GUI px
+# inside its cells (on the item area's edge) and the block starts 1 GUI px inside its own, which leaves
+# 2 GUI px: ring, 2 art px of shell, ring.
+PANEL_BOX = (6, 6, 78, 100)
+BLOCK_BOXES = [(79, 82, 170, 102), (6, 102, 170, 138)]
+BLOCK_CORNERS = [(80, 82, 1, 1), (169, 82, -1, 1), (6, 137, 1, -1), (169, 137, -1, -1), (6, 102, 1, 1)]
+BAR_BOX = (6, 140, 151, 160)
+CRAFT_BOX = (96, 16, 171, 54)
+SEAM = 2  # GUI px between the panel and the block
 FILL = col("iron", 3)
+CRAFT_FILL = col("iron", 1)
 # survival inventory title: the game draws "Crafting" at (97, 6), 8 px font, cap height 7 (rows y6..y13)
 TITLE_PLATE = (94, 4, 163, 15)
 # arrow between the crafting grid and the result, in GUI px: shaft x135..150, head to x151
@@ -81,14 +84,16 @@ def rect_mask(rects):
 
 
 def shell_mask():
-    return rounded.rounded_rect(CANVAS, SHELL_RADIUS)
+    return rounded.upscale(rounded.rounded_box(GUI, (0, 0) + GUI))
 
 
 def shell(canvas):
-    """Iron body with the menus' bevelled rim, following rounded corners."""
+    """Iron body with the menus' bevelled rim, following the stepped corners, and a soft shadow just inside the
+    rim along the top and left."""
     mask = shell_mask()
     canvas.mask(mask, col("iron", 2))
     number, lit = rounded.rings(mask, inside=True)
+    canvas.mask(((number == 8) | (number == 9)) & lit, col("iron", 1))
     for index, (top_left, bottom_right) in enumerate(chrome.RIM):
         ring = number == index + 1
         canvas.mask(ring & lit, top_left)
@@ -96,33 +101,55 @@ def shell(canvas):
 
 
 def region_masks():
-    """Fill masks of the panel, the block and the bar, outer corners rounded. The block is cut back to
-    SEAM art px from the panel (a disk, so the gap is a constant-width channel round the panel's rounded
-    corner and the block's inner corner is filleted to match)."""
-    panel = rounded.round_convex(rect_mask([PANEL_RAW]), CORNER)
-    near = ndimage.distance_transform_edt(~panel) <= SEAM
-    block = rounded.round_convex(rect_mask(BLOCK_RAW) & ~near, CORNER)
-    bar = rounded.round_convex(rect_mask([BAR_RAW]), CORNER)
-    return {"panel": panel, "block": block, "bar": bar}
+    """Fill masks (art px) of the four regions. The block is cut back from the panel by a diamond, so the gap
+    is constant and the block's inner corner follows the panel's rounded corner step for step."""
+    panel = rounded.rounded_box(GUI, PANEL_BOX)
+    block = np.zeros(GUI[::-1], bool)
+    for box in BLOCK_BOXES:
+        block |= rounded.rect(GUI, box)
+    block &= ~rounded.grow(panel, SEAM)
+    for x, y, sx, sy in BLOCK_CORNERS:
+        rounded.cut_corner(block, x, y, sx, sy)
+    bar = rounded.rounded_box(GUI, BAR_BOX)
+    craft = rounded.rounded_box(GUI, CRAFT_BOX)
+    return {name: rounded.upscale(mask) for name, mask in
+            (("panel", panel), ("block", block), ("bar", bar), ("craft", craft))}
+
+
+def inner_shadow(canvas, fill, colour):
+    """A 1 GUI px darker band just inside the top and left edges, where there is room."""
+    band = np.zeros_like(fill)
+    for step in (1, 2):
+        band |= fill & ~np.roll(fill, step, axis=1)
+        band |= fill & ~np.roll(fill, step, axis=0)
+    # never inside a cell: where regions meet, the edge ring is the only edge
+    items = rect_mask(list(map(cell_rect, cells())))
+    canvas.mask(band & ~items, colour)
 
 
 def recessed_regions(canvas):
-    """Flat recessed regions, each with the cells' own edge: dark top/left, lit bottom/right, two rings."""
+    """Flat recessed regions in the cells' own style: a dark ring top/left, a lit one bottom/right, 1 art px each."""
+    masks = region_masks()
     keep = ~rect_mask([(x0 + 1, y0 + 1, x1 - 1, y1 - 1) for x0, y0, x1, y1 in map(cell_rect, drawn_cells())])
-    fills = region_masks().values()
-    taken = np.logical_or.reduce(list(fills))
-    for fill in fills:
-        canvas.mask(fill, FILL)
+    taken = np.logical_or.reduce(list(masks.values()))
+    for name, fill in masks.items():
+        colour = CRAFT_FILL if name == "craft" else FILL
+        canvas.mask(fill, colour)
+        inner_shadow(canvas, fill, DARK if name == "craft" else col("iron", 2))
+    for fill in masks.values():
         number, lit = rounded.rings(fill, inside=False)
-        for index, (top_left, bottom_right) in ((1, (col("iron", 1), col("iron", 3))), (2, (DARK, col("iron", 4)))):
-            ring = (number == index) & keep & ~taken
-            canvas.mask(ring & lit, top_left)
-            canvas.mask(ring & ~lit, bottom_right)
+        ring = (number == 1) & keep & ~taken
+        canvas.mask(ring & lit, DARK)
+        canvas.mask(ring & ~lit, col("iron", 4))
 
 
 def title_plate(canvas):
     """Parchment plate behind the vanilla title, ending in a gold gem; built like the menu's "Inventory" plate."""
     px0, py0, px1, py1 = art(TITLE_PLATE)
+    shadow = np.zeros(CANVAS[::-1], bool)
+    shadow[py0 + 2:py1 + 2, px0 + 2:px1 + 2] = True
+    shadow[py0:py1, px0:px1] = False
+    canvas.mask(shadow, col("iron", 1))
     frame(canvas, (px0, py0, px1, py1), [(DARK, DARK), (col("parchment", 3), col("parchment", 0))])
     canvas.rect((px0 + 2, py0 + 2, px1 - 2, py1 - 2), col("parchment", 2))
     gem(canvas, px1 - 8, (py0 + py1) // 2, 4)
@@ -155,15 +182,22 @@ def build():
     shell(canvas)
     title_plate(canvas)
     separator(canvas)
+    recessed_regions(canvas)
     for origin in drawn_cells():
         # the crafting result gets a gold first ring, lit from the top left like every ring
         outer = (col("gold", 3), col("gold", 1)) if origin == RESULT else None
         slot_cell(canvas, cell_rect(origin), outer)
-    recessed_regions(canvas)
     arrow(canvas)
     full = Canvas(*FILE)
     full.px[:CANVAS[1], :CANVAS[0]] = canvas.px
     return full
+
+
+# one pixel of each region's outermost GUI px corner: it must be empty (art px)
+CORNER_PIXELS = {"panel": [(12, 12), (155, 12), (12, 199), (155, 199)],
+                 "block": [(160, 164), (339, 164), (12, 275), (339, 275), (12, 204)],
+                 "bar": [(12, 280), (301, 280), (12, 319), (301, 319)],
+                 "craft": [(192, 32), (341, 32), (192, 107), (341, 107)]}
 
 
 def check(canvas):
@@ -178,8 +212,8 @@ def check(canvas):
     if not set(inside.flatten().tolist()) <= {0, 255}:
         errors.append("alpha must be binary")
     if ((inside > 0) != shell_mask()).any():
-        errors.append("the silhouette must be the rounded rectangle, with nothing clear inside it")
-    if inside[0, 0] or inside[0, -1] or inside[-1, 0] or inside[-1, -1] or not inside[SHELL_RADIUS, SHELL_RADIUS]:
+        errors.append("the silhouette must be the stepped rounded rectangle, with nothing clear inside it")
+    if inside[0, 0] or inside[0, -1] or inside[-1, 0] or inside[-1, -1] or not inside[6, 6]:
         errors.append("the four outer corners must be clear and rounded")
     known = {c for ramp in PALETTE.values() for c in ramp}
     stray = {tuple(int(v) for v in p[:3]) for p in px[px[..., 3] > 0]} - known
@@ -201,38 +235,47 @@ def check(canvas):
             errors.append(f"cell {origin} has no recessed floor")
         if at(x0, y0 + 1) == dark or at(x0 + 1, y0) == dark:
             errors.append(f"cell {origin} has dark edge outside its rect")
-    # cells without a frame: the 16x16 item area (cell + 1 GUI px) is one flat colour; the margin round it may
-    # hold the regions' edge rings where two regions meet. The offhand and ninth hotbar cells are plain shell
+    masks = region_masks()
+    # every outline step lies on the GUI pixel grid: rows and columns come in identical pairs
+    for name, mask in {"shell": shell_mask(), **masks}.items():
+        if not (mask[0::2] == mask[1::2]).all() or not (mask[:, 0::2] == mask[:, 1::2]).all():
+            errors.append(f"{name} has a step off the GUI pixel grid")
+    # cells without a frame: the item area (cell + 1 GUI px) is flat fill apart from its outermost GUI px, which
+    # may hold a rounded corner cut. Ninth hotbar cell and offhand: plain shell
     fill = tuple(FILL[:3])
-    shrink = lambda r: (r[0] + 2, r[1] + 2, r[2] - 2, r[3] - 2)  # noqa: E731
+    shrink = lambda r: (r[0] + 4, r[1] + 4, r[2] - 4, r[3] - 4)  # noqa: E731
     flat = [(shrink(cell_rect(origin)), fill) for origin in PANEL_CELLS + BLOCK_CELLS + BAR_CELLS]
-    flat += [(art(MODEL_OUTER), fill), (art((7, 79, 78, 83)), fill)]
+    flat += [(shrink(art(MODEL_OUTER)), fill), (art((8, 79, 77, 83)), fill)]
     flat += [(shrink(cell_rect(HOTBAR[8])), iron["body"])]
     ox0, oy0, ox1, oy1 = shrink(cell_rect(OFFHAND))
-    flat += [((ox0 + 6, oy0, ox1, oy1), iron["body"])]  # the panel's right edge reaches the cell's first columns
+    flat += [((ox0 + 2, oy0, ox1, oy1), iron["body"])]  # the panel's right ring reaches the cell's first columns
     for (x0, y0, x1, y1), colour in flat:
-        wrong = (px[y0:y1, x0:x1, :3] != np.array(colour)).any(axis=2)
-        # only a rounded region corner may trim the area, within 4 art px of its own corner
-        near_x = (np.arange(x0, x1) - x0 < 4) | (x1 - 1 - np.arange(x0, x1) < 4)
-        near_y = (np.arange(y0, y1) - y0 < 4) | (y1 - 1 - np.arange(y0, y1) < 4)
-        if (wrong & ~(near_y[:, None] & near_x[None, :])).any():
+        if {tuple(int(v) for v in p[:3]) for p in px[y0:y1, x0:x1].reshape(-1, 4)} != {colour}:
             errors.append(f"area {(x0, y0, x1, y1)} is not one flat colour")
-    masks = region_masks()
-    panel = masks["panel"]
-    # one straight right edge for the whole panel, ending on the column boundary of the storage block
-    edge = [int(np.nonzero(panel[y])[0].max()) for y in range(34, 190)]
-    if set(edge) != {PANEL_RAW[2] - 1}:
+    for origin in drawn_cells():
+        x0, y0, x1, y1 = cell_rect(origin)
+        if not masks["craft"][y0:y1, x0:x1].all():
+            errors.append(f"crafting cell {origin} is not inside the crafting block")
+    for origin in PANEL_CELLS + BLOCK_CELLS + BAR_CELLS:
+        x0, y0, x1, y1 = cell_rect(origin)
+        owner = [m for m in (masks["panel"], masks["block"], masks["bar"]) if m[y0 + 2:y1 - 2, x0 + 2:x1 - 2].sum() > 200]
+        if len(owner) != 1:
+            errors.append(f"cell {origin} is not inside exactly one region")
+    # one straight right edge for the whole panel, centred on the column boundary x79 (the gap is art x156..159)
+    edge = [int(np.nonzero(masks["panel"][y])[0].max()) for y in range(34, 190)]
+    if set(edge) != {155}:
         errors.append("the panel's right edge is not one straight line")
-    rounded_corners = {"panel": [(12, 12), (155, 12), (12, 199), (155, 199)],
-                       "block": [(160, 166), (339, 166), (339, 273), (12, 273), (12, 204)],
-                       "bar": [(12, 282), (301, 282), (12, 319), (301, 319)]}
-    for name, points in rounded_corners.items():
+    gap = masks["block"][34:190, 156:160]
+    if gap.any():
+        errors.append("the seam between panel and block must stay free")
+    for name, points in CORNER_PIXELS.items():
         if any(masks[name][y, x] for x, y in points):
             errors.append(f"{name} has a square corner")
         if masks[name].sum() < 5000:
             errors.append(f"{name} is missing")
-    if (masks["panel"] & masks["block"]).any() or (masks["block"] & masks["bar"]).any():
-        errors.append("regions overlap")
+    overlap = [(a, b) for a in masks for b in masks if a < b and (masks[a] & masks[b]).any()]
+    if overlap:
+        errors.append(f"regions overlap: {overlap}")
     rule_rows = px[RULE_TOP + 2]
     gold = tuple(col("gold", 2)[:3])
     gold_columns = [x for x in range(CANVAS[0]) if tuple(int(v) for v in rule_rows[x, :3]) == gold]
@@ -241,7 +284,8 @@ def check(canvas):
     if errors:
         raise ValueError("inventory.png: " + "; ".join(errors))
     colours = {tuple(p) for p in px[px[..., 3] > 0].reshape(-1, 4)}
-    print(f"inventory.png: {len(drawn_cells())} drawn cells on the vanilla grid, {len(PANEL_CELLS + BLOCK_CELLS + BAR_CELLS)} gridless cells in 3 flat regions, "
+    print(f"inventory.png: {len(drawn_cells())} framed cells on the vanilla grid, "
+          f"{len(PANEL_CELLS + BLOCK_CELLS + BAR_CELLS)} gridless cells in 3 flat regions plus the crafting block, "
           f"{len(SHELL_CELLS)} shell cells plain, {len(colours)} colours, 512x512")
 
 

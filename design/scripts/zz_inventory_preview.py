@@ -105,6 +105,19 @@ def creative_tab(scale=4):
     return scaled(tab, scale // 2)
 
 
+def corners():
+    """Zoomed crops (x8) of the shell corner, the panel/block seam and the crafting block corner."""
+    base = texture()
+    boxes = [(0, 0, 60, 60), (110, 150, 200, 230), (180, 20, 260, 80)]
+    tiles = [scaled(base.crop(box), 8) for box in boxes]
+    sheet = Image.new("RGBA", (sum(t.width for t in tiles) + 12 * (len(tiles) + 1), max(t.height for t in tiles) + 24), BACKDROP)
+    x = 12
+    for tile in tiles:
+        sheet.alpha_composite(tile, (x, 12))
+        x += tile.width + 12
+    return sheet
+
+
 def overlay():
     """Left: our art with the vanilla slot outlines on top. Right: the vanilla layout mock. Both x4."""
     art = scaled(texture(), 2)
@@ -138,6 +151,7 @@ def main():
     save(screen(SCREENS[2], 2, worn=True), "inventory_screen_854x480_scale2_worn.png")
     save(screen(SCREENS[3], 3, worn=True), "inventory_screen_1280x720_scale3_worn.png")
     save(creative_tab(), "inventory_icons_on_creative_tab_x2.png")
+    save(corners(), "inventory_corners_x8.png")
     save(overlay(), "inventory_vs_vanilla_layout.png")
     print(f"inventory previews in {layout.PREVIEWS}")
 
