@@ -436,6 +436,34 @@ def small(canvas, text, centre_x, y, colour):
         x += len(glyph[0]) + 2
 
 
+# Tiny capitals for the inventory's "ACCESSORIES" label: 5 px tall, 1 px strokes, 1 art px = half a GUI px.
+TINY = {
+    "A": ".##.|#..#|####|#..#|#..#",
+    "C": ".###|#...|#...|#...|.###",
+    "E": "####|#...|###.|#...|####",
+    "I": "###|.#.|.#.|.#.|###",
+    "O": ".##.|#..#|#..#|#..#|.##.",
+    "R": "###.|#..#|###.|#.#.|#..#",
+    "S": ".###|#...|.##.|...#|###.",
+}
+TINY_HEIGHT = 5
+
+
+def tiny_width(text):
+    return sum(len(TINY[ch].split("|")[0]) for ch in text) + len(text) - 1
+
+
+def tiny(canvas, text, x, y, colour):
+    """Flat 5 px capitals starting at art px (x, y), one blank column between letters."""
+    for ch in text:
+        rows = TINY[ch].split("|")
+        for dy, row in enumerate(rows):
+            for dx, pixel in enumerate(row):
+                if pixel == "#":
+                    canvas.dot(x + dx, y + dy, colour)
+        x += len(rows[0]) + 1
+
+
 def _rows(letter):
     rows = GLYPHS[letter].strip("\n").split("\n")
     if len(rows) != HEIGHT or len({len(r) for r in rows}) != 1:

@@ -44,7 +44,8 @@ def panel_row(scale):
     empty = base.crop(box)
     filled = empty.copy()
     for (cx, cy), name in zip(inv.PANEL_CELLS, acc.IDS):
-        filled.alpha_composite(scaled(item(name), 2), ((cx + 1) * 2 - box[0], (cy + 1) * 2 - box[1]))
+        # gui scale 0.5: one texel is one art px, centred in the 32x32 item area
+        filled.alpha_composite(item(name), ((cx + 1) * 2 + slot_icons.ITEM_AT - box[0], (cy + 1) * 2 + slot_icons.ITEM_AT - box[1]))
     out = Image.new("RGBA", (empty.width, empty.height * 2 + 4), BACKDROP)
     out.alpha_composite(empty, (0, 0))
     out.alpha_composite(filled, (0, empty.height + 4))
@@ -60,7 +61,7 @@ def visible_placeholder_pixels():
         for item_name in slot_icons.COVERS[name]:
             x, y = inv.ghost_origin(origin)
             cell = base.copy()
-            cell.alpha_composite(scaled(item(item_name), 2), (x, y))
+            cell.alpha_composite(item(item_name), (x + slot_icons.ITEM_AT, y + slot_icons.ITEM_AT))
             area = cell.crop((x, y, x + 32, y + 32))
             total += int((np.asarray(area)[..., :3] == np.array(tone)).all(axis=-1).sum())
     return total
@@ -72,11 +73,15 @@ def tooltip_view():
 
 
 def hotbar(scale):
-    """The items in a mock hotbar over the dimmed world, at GUI scale 2 or 3."""
-    size = (20 * 4 * scale + 40, 16 * scale + 40)
+    """The items in a mock hotbar over the dimmed world at a GUI scale: at the model's gui scale 0.5 (top row, shrunken
+    like the game does it, nearest neighbour) and at 1.0 (bottom row, the old look) for comparison."""
+    size = (20 * 4 * scale + 40, 2 * 16 * scale + 60)
     out = preview._world(size, scale)
+    shrunk = round(16 * scale * acc.GUI_SCALE)
     for i, name in enumerate(acc.IDS):
-        out.alpha_composite(scaled(item(name), scale), (20 + i * 20 * scale, 20))
+        x = 20 + i * 20 * scale
+        out.alpha_composite(item(name).resize((shrunk, shrunk), NEAREST), (x + (16 * scale - shrunk) // 2, 20 + (16 * scale - shrunk) // 2))
+        out.alpha_composite(scaled(item(name), scale), (x, 40 + 16 * scale))
     return out
 
 
@@ -90,7 +95,7 @@ def main():
     panel_row(8).save(OUT / "panel_accessory_row_x4.png")
     print(f"placeholder pixels visible beside the matching items: {visible_placeholder_pixels()} (must be 0)")
     tooltip_view().save(OUT / "tooltip_accessory_x3.png")
-    for scale in (2, 3):
+    for scale in (2, 3, 4):
         hotbar(scale).save(OUT / f"items_hotbar_scale{scale}.png")
     print(f"accessory previews in {OUT}")
 
