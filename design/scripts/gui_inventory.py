@@ -8,6 +8,8 @@ Fails when a cell is off the vanilla slot grid, so a layout slip breaks the buil
 import numpy as np
 from PIL import Image
 
+import gui_slot_icons
+import items_accessories
 from pixelkit import chrome, invdecor, layout, rounded
 from pixelkit.chrome import DARK, corner_bracket, gem, slot_cell
 from pixelkit.draw import Canvas, dilate, frame, poly_mask, shift
@@ -41,6 +43,9 @@ PANEL_CELLS = STORAGE[:4]
 BLOCK_CELLS = STORAGE[4:9] + STORAGE[9:]
 BAR_CELLS = HOTBAR[:8]
 SHELL_CELLS = [OFFHAND]
+# the four storage cells in the character panel are the accessory slots (ring, ring, amulet, bracelet): their item
+# areas hold a faint silhouette painted into the texture, since a pack cannot give a storage slot a ghost icon
+ACCESSORY_SLOTS = dict(zip(PANEL_CELLS, ("ring", "ring", "amulet", "bracelet")))
 # framed sockets: the armour column, the crafting grid and result, and the ninth hotbar cell (gold ring, set apart
 # from the bar like the result)
 SOCKET_GOLD = [RESULT, HOTBAR[8]]
@@ -86,6 +91,11 @@ def drawn_cells():
 
 def region_cells():
     return {"panel": PANEL_CELLS, "block": BLOCK_CELLS, "bar": BAR_CELLS}
+
+
+def grid_cells():
+    """The panel row has no hairlines: its cells are the accessory slots, set apart from each other by their icons."""
+    return {name: group for name, group in region_cells().items() if name != "panel"}
 
 
 def cell_rect(origin):
@@ -159,6 +169,21 @@ def recessed_regions(canvas):
         canvas.mask(ring & ~lit, col("iron", 4))
 
 
+def ghost_origin(origin):
+    """Art px of the item area (cell + 1 GUI px, 16x16 GUI px) where the game draws items and ghost icons."""
+    return (origin[0] + 1) * DENSITY, (origin[1] + 1) * DENSITY
+
+
+def accessory_ghosts(canvas):
+    """Paint the ring, amulet and bracelet silhouettes (vanilla's ghost language) under the four accessory cells."""
+    icons = gui_slot_icons.accessory_icons()
+    for origin, name in ACCESSORY_SLOTS.items():
+        x, y = ghost_origin(origin)
+        sprite = np.asarray(icons[name])
+        solid = sprite[..., 3] > 0
+        canvas.px[y:y + 32, x:x + 32][solid] = sprite[solid]
+
+
 def title_plate(canvas):
     """Parchment plate behind the vanilla title, ending in a gold gem; built like the menu's "Inventory" plate."""
     px0, py0, px1, py1 = art(TITLE_PLATE)
@@ -200,8 +225,9 @@ def build():
     title_plate(canvas)
     separator(canvas)
     recessed_regions(canvas)
-    invdecor.grid(canvas, region_cells(), region_masks())
+    invdecor.grid(canvas, grid_cells(), region_masks())
     invdecor.studs(canvas, region_cells(), region_masks())
+    accessory_ghosts(canvas)
     invdecor.alcove(canvas, GUI, ALCOVE, DAIS_TOP)
     for origin in drawn_cells():
         # the crafting result and the ninth hotbar cell get a bright gold first ring on all four sides
@@ -269,13 +295,33 @@ def check(canvas):
     # may hold a rounded corner cut. Ninth hotbar cell and offhand: plain shell
     fill = tuple(FILL[:3])
     shrink = lambda r: (r[0] + 4, r[1] + 4, r[2] - 4, r[3] - 4)  # noqa: E731
-    flat = [(shrink(cell_rect(origin)), fill) for origin in PANEL_CELLS + BLOCK_CELLS + BAR_CELLS]
+    flat = [(shrink(cell_rect(origin)), fill) for origin in BLOCK_CELLS + BAR_CELLS]
     ox0, oy0, ox1, oy1 = shrink(cell_rect(OFFHAND))
     # the panel's right ring reaches the cell's first columns, and the pillar stands over the rest of the cell
     flat += [((ox0 + 2, oy0, PILLAR[0], oy1), iron["body"])]
     for (x0, y0, x1, y1), colour in flat:
         if {tuple(int(v) for v in p[:3]) for p in px[y0:y1, x0:x1].reshape(-1, 4)} != {colour}:
             errors.append(f"area {(x0, y0, x1, y1)} is not one flat colour")
+    # the four accessory cells: the same area is the fill plus exactly the ghost icon, whose colours are its only others
+    icons = gui_slot_icons.accessory_icons()
+    for origin, name in ACCESSORY_SLOTS.items():
+        sx0, sy0, sx1, sy1 = shrink(cell_rect(origin))
+        gx, gy = ghost_origin(origin)
+        sprite = np.asarray(icons[name])
+        expected = np.tile(np.array(fill + (255,), np.uint8), (32, 32, 1))
+        expected[sprite[..., 3] > 0] = sprite[sprite[..., 3] > 0]
+        got = px[gy:gy + 32, gx:gx + 32]
+        if (got[2:30, 2:30] != expected[2:30, 2:30]).any() or not (sx0, sy0) == (gx + 2, gy + 2):
+            errors.append(f"accessory cell {origin} ({name}): item area is not the fill plus its ghost icon")
+        # every placeholder pixel is hidden by each item that belongs in the cell: the 16x16 item texture drawn at the
+        # item origin, 1 texel = 2x2 art px, leaves no placeholder-coloured pixel in the item area
+        for item in gui_slot_icons.COVERS[name]:
+            shown = np.kron(items_accessories.DRAW[item]()[..., 3] > 0, np.ones((2, 2), bool))
+            if ((got[..., 3] > 0) & (got[..., :3] == np.array(gui_slot_icons.TONE[:3])).all(axis=-1) & ~shown).any():
+                errors.append(f"accessory cell {origin}: the placeholder shows beside the {item} item")
+        colours = {tuple(int(v) for v in p[:3]) for p in got[2:30, 2:30].reshape(-1, 4)}
+        if not colours == {fill, tuple(gui_slot_icons.TONE[:3])}:
+            errors.append(f"accessory cell {origin}: colours other than the fill and the icon's one tone")
     for origin in CRAFTING + [RESULT]:
         x0, y0, x1, y1 = cell_rect(origin)
         if not masks["craft"][y0:y1, x0:x1].all():
@@ -314,11 +360,16 @@ def check(canvas):
     # the grid lines lie in the margins: the 1 art px line between two gridless cells is the grid colour
     line = tuple(col("iron", 4)[:3])
     for a, b, vertical in ((BLOCK_CELLS[0], BLOCK_CELLS[1], True), (BAR_CELLS[0], BAR_CELLS[1], True),
-                           (STORAGE[0], STORAGE[1], True), (BLOCK_CELLS[0], STORAGE[9 + 4], False)):
+                           (BLOCK_CELLS[0], STORAGE[9 + 4], False)):
         x0, y0, _, _ = cell_rect(b)
         probe = (x0 - 1, y0 + 18) if vertical else (x0 + 18, y0 - 1)
         if at(*probe) != line:
             errors.append(f"missing grid line between {a} and {b}")
+    # the panel row has none: the margin between two accessory cells is plain fill
+    for a, b in zip(PANEL_CELLS, PANEL_CELLS[1:]):
+        x0, y0, _, _ = cell_rect(b)
+        if at(x0 - 1, y0 + 18) != fill or at(x0 - 1, y0 + 5) != fill:
+            errors.append(f"unexpected grid line between the accessory cells {a} and {b}")
     rule_rows = px[RULE_TOP + 2]
     gold = tuple(col("gold", 2)[:3])
     gold_columns = [x for x in range(CANVAS[0]) if tuple(int(v) for v in rule_rows[x, :3]) == gold]
