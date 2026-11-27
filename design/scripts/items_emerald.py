@@ -45,17 +45,18 @@ def definitions():
                     {"parent": "minecraft:item/generated", "textures": {"layer0": "arkenmmo:item/emerald"}})
 
 
-def tooltip():
-    """Same geometry as the class tooltips; emerald frame, small emerald gems on the corners."""
+def tooltip(name="emerald", ramp=RAMP, gem=(6, 5, 3, 2)):
+    """Same geometry as the class tooltips; frame and small corner gems in the ramp (glint, lit, mid, shade steps).
+    items_accessories.py reuses it with the gold ramp."""
     folder = layout.ASSETS / "textures" / "gui" / "sprites" / "tooltip"
     low, high = INSET, SIZE - INSET
 
     background = Canvas(SIZE, SIZE)
-    background.rect((low, low, high, high), col(RAMP, 0, BACKGROUND_ALPHA))
+    background.rect((low, low, high, high), col(ramp, 0, BACKGROUND_ALPHA))
     for x in (low, high - 1):
         for y in (low, high - 1):
             background.dot(x, y, CLEAR)
-    save_sprite(background, folder / "emerald_background.png", BACKGROUND_META)
+    save_sprite(background, folder / f"{name}_background.png", BACKGROUND_META)
 
     frame = Canvas(SIZE, SIZE)
     first, last = low + 1, high - 2
@@ -63,18 +64,18 @@ def tooltip():
     light = 4
     for y in range(first, last + 1):
         step = light - min(2, (y - first) // third)
-        frame.dot(first, y, col(RAMP, step))
-        frame.dot(last, y, col(RAMP, step))
-    frame.rect((first, first, last + 1, first + 1), col(RAMP, light))
-    frame.rect((first, last, last + 1, last + 1), col(RAMP, light - 2))
+        frame.dot(first, y, col(ramp, step))
+        frame.dot(last, y, col(ramp, step))
+    frame.rect((first, first, last + 1, first + 1), col(ramp, light))
+    frame.rect((first, last, last + 1, last + 1), col(ramp, light - 2))
     # corner gems, 2x2 with the glint top left and the shade bottom right
     for x in (low, last):
         for y in (low, last):
-            frame.dot(x, y, col(RAMP, 6))
-            frame.dot(x + 1, y, col(RAMP, 5))
-            frame.dot(x, y + 1, col(RAMP, 3))
-            frame.dot(x + 1, y + 1, col(RAMP, 2))
-    save_sprite(frame, folder / "emerald_frame.png", FRAME_META)
+            frame.dot(x, y, col(ramp, gem[0]))
+            frame.dot(x + 1, y, col(ramp, gem[1]))
+            frame.dot(x, y + 1, col(ramp, gem[2]))
+            frame.dot(x + 1, y + 1, col(ramp, gem[3]))
+    save_sprite(frame, folder / f"{name}_frame.png", FRAME_META)
 
 
 def main():

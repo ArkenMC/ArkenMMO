@@ -5,9 +5,7 @@ measured layout; the Mojang texture is never read or copied.
 """
 from PIL import Image, ImageDraw
 
-import gui_creative_inventory as creative
 import gui_inventory as inv
-import gui_slot_icons as slot_icons
 from pixelkit import layout, preview
 
 NEAREST = Image.Resampling.NEAREST
@@ -61,7 +59,7 @@ def vanilla_mock():
     return image
 
 
-def screen(size, scale, worn=False):
+def screen(size, scale):
     """Our texture over a dimmed world with items, label and a figure; the recipe button is hidden."""
     image = preview._world(size, scale)
     origin = ((size[0] // scale - GUI_W) // 2, (size[1] // scale - GUI_H) // 2)
@@ -81,28 +79,11 @@ def screen(size, scale, worn=False):
         x += width + 1
     image.alpha_composite(gui, (origin[0] * scale, origin[1] * scale))
     kinds = ["sword", "bread", "apple", "coal", "gem", "log"]
-    icons = slot_icons.icons()
-    for (x, y), name in zip(inv.ARMOUR, ("helmet", "chestplate", "leggings", "boots")):
-        # the game draws the icon only while the slot is empty; "worn" hides two of them
-        if worn and name in ("helmet", "leggings"):
-            sprite = preview._sample_item("gem" if name == "helmet" else "coal").resize((16 * scale,) * 2, NEAREST)
-        else:
-            sprite = icons[name].resize((16 * scale,) * 2, NEAREST)
-        image.alpha_composite(sprite, ((origin[0] + x + 1) * scale, (origin[1] + y + 1) * scale))
     for index, (x, y) in enumerate(inv.cells()):
         if index % 3 == 0 and (x, y) != inv.RESULT and (x, y) not in inv.ARMOUR + [inv.OFFHAND]:
             sprite = preview._sample_item(kinds[index % len(kinds)]).resize((16 * scale, 16 * scale), NEAREST)
             image.alpha_composite(sprite, ((origin[0] + x + 1) * scale, (origin[1] + y + 1) * scale))
     return image
-
-
-def creative_tab(scale=4):
-    """The icons on the creative survival tab's armour cells (their floor is a lighter iron than the panel)."""
-    tab = Image.open(creative.BACKGROUNDS / "tab_inventory.png").convert("RGBA").crop((0, 0, 390, 272))
-    icons = slot_icons.icons()
-    for (x, y), name in zip(((53, 5), (53, 32), (107, 5), (107, 32)), ("helmet", "chestplate", "leggings", "boots")):
-        tab.alpha_composite(icons[name], ((x + 1) * 2, (y + 1) * 2))
-    return scaled(tab, scale // 2)
 
 
 def corners():
@@ -148,9 +129,6 @@ def main():
         save(sheet, f"inventory_art_x{factor}.png")
     for scale, size in SCREENS.items():
         save(screen(size, scale), f"inventory_screen_{size[0]}x{size[1]}_scale{scale}.png")
-    save(screen(SCREENS[2], 2, worn=True), "inventory_screen_854x480_scale2_worn.png")
-    save(screen(SCREENS[3], 3, worn=True), "inventory_screen_1280x720_scale3_worn.png")
-    save(creative_tab(), "inventory_icons_on_creative_tab_x2.png")
     save(corners(), "inventory_corners_x8.png")
     save(overlay(), "inventory_vs_vanilla_layout.png")
     print(f"inventory previews in {layout.PREVIEWS}")
