@@ -4,8 +4,8 @@ from scipy import ndimage
 
 
 def disk(radius):
-    r = int(np.ceil(radius))
-    ys, xs = np.mgrid[-r:r + 1, -r:r + 1]
+    """Even-sized disk centred on a pixel corner, so opening a rectangle gives exactly `rounded_rect`'s corners."""
+    ys, xs = np.mgrid[-radius:radius, -radius:radius] + 0.5
     return xs * xs + ys * ys <= radius * radius
 
 
