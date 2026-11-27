@@ -50,7 +50,7 @@ ALCOVE = (25, 7, 77, 79)
 DAIS_TOP = 71
 # fluted column between the panel and the crafting block, above the offhand slot, and the crest under the
 # crafting block (art px)
-PILLAR = (162, 14, 186, 118)
+PILLAR = (162, 14, 186, 160)
 CREST_CENTRE = (267, 134)
 # Region shapes in GUI px (every step of every outline is a whole GUI px, so a multiple of 2 art px). A region
 # reaches 1 GUI px beyond its cells where there is room. Where cells are contiguous the panel stops 1 GUI px
@@ -200,11 +200,12 @@ def build():
     title_plate(canvas)
     separator(canvas)
     recessed_regions(canvas)
+    invdecor.grid(canvas, region_cells(), region_masks())
     invdecor.studs(canvas, region_cells(), region_masks())
     invdecor.alcove(canvas, GUI, ALCOVE, DAIS_TOP)
     for origin in drawn_cells():
-        # the crafting result and the ninth hotbar cell get a gold first ring, lit from the top left like every ring
-        outer = (col("gold", 3), col("gold", 1)) if origin in SOCKET_GOLD else None
+        # the crafting result and the ninth hotbar cell get a bright gold first ring on all four sides
+        outer = (col("gold", 3), col("gold", 3)) if origin in SOCKET_GOLD else None
         slot_cell(canvas, cell_rect(origin), outer)
     arrow(canvas)
     invdecor.pillar(canvas, *PILLAR)
@@ -270,7 +271,8 @@ def check(canvas):
     shrink = lambda r: (r[0] + 4, r[1] + 4, r[2] - 4, r[3] - 4)  # noqa: E731
     flat = [(shrink(cell_rect(origin)), fill) for origin in PANEL_CELLS + BLOCK_CELLS + BAR_CELLS]
     ox0, oy0, ox1, oy1 = shrink(cell_rect(OFFHAND))
-    flat += [((ox0 + 2, oy0, ox1, oy1), iron["body"])]  # the panel's right ring reaches the cell's first columns
+    # the panel's right ring reaches the cell's first columns, and the pillar stands over the rest of the cell
+    flat += [((ox0 + 2, oy0, PILLAR[0], oy1), iron["body"])]
     for (x0, y0, x1, y1), colour in flat:
         if {tuple(int(v) for v in p[:3]) for p in px[y0:y1, x0:x1].reshape(-1, 4)} != {colour}:
             errors.append(f"area {(x0, y0, x1, y1)} is not one flat colour")
@@ -298,6 +300,25 @@ def check(canvas):
     overlap = [(a, b) for a in masks for b in masks if a < b and (masks[a] & masks[b]).any()]
     if overlap:
         errors.append(f"regions overlap: {overlap}")
+    # the two gold sockets have one bright gold ring on all four sides
+    gold3 = tuple(col("gold", 3)[:3])
+    for origin in SOCKET_GOLD:
+        x0, y0, x1, y1 = cell_rect(origin)
+        ring = {at(x, y0) for x in range(x0 + 2, x1 - 2)} | {at(x, y1 - 1) for x in range(x0 + 2, x1 - 2)}
+        ring |= {at(x0, y) for y in range(y0 + 2, y1 - 2)} | {at(x1 - 1, y) for y in range(y0 + 2, y1 - 2)}
+        if ring != {gold3}:
+            errors.append(f"socket {origin}: the gold ring is not one bright gold on all four sides")
+    # the pillar's gold base stands on the gold rule: its last row touches the rule's top row
+    if PILLAR[3] != RULE_TOP + 2 or at((PILLAR[0] + PILLAR[2]) // 2, RULE_TOP + 1) != dark:
+        errors.append("the pillar must end on the gold rule")
+    # the grid lines lie in the margins: the 1 art px line between two gridless cells is the grid colour
+    line = tuple(col("iron", 4)[:3])
+    for a, b, vertical in ((BLOCK_CELLS[0], BLOCK_CELLS[1], True), (BAR_CELLS[0], BAR_CELLS[1], True),
+                           (STORAGE[0], STORAGE[1], True), (BLOCK_CELLS[0], STORAGE[9 + 4], False)):
+        x0, y0, _, _ = cell_rect(b)
+        probe = (x0 - 1, y0 + 18) if vertical else (x0 + 18, y0 - 1)
+        if at(*probe) != line:
+            errors.append(f"missing grid line between {a} and {b}")
     rule_rows = px[RULE_TOP + 2]
     gold = tuple(col("gold", 2)[:3])
     gold_columns = [x for x in range(CANVAS[0]) if tuple(int(v) for v in rule_rows[x, :3]) == gold]
