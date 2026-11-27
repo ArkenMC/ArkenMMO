@@ -44,7 +44,7 @@ def panel_row(scale):
     empty = base.crop(box)
     filled = empty.copy()
     for (cx, cy), name in zip(inv.PANEL_CELLS, acc.IDS):
-        # gui scale 0.5: one texel is one art px, centred in the 32x32 item area
+        # 32x32 textures: one texel is one art px, on the item area
         filled.alpha_composite(item(name), ((cx + 1) * 2 + slot_icons.ITEM_AT - box[0], (cy + 1) * 2 + slot_icons.ITEM_AT - box[1]))
     out = Image.new("RGBA", (empty.width, empty.height * 2 + 4), BACKDROP)
     out.alpha_composite(empty, (0, 0))
@@ -73,15 +73,15 @@ def tooltip_view():
 
 
 def hotbar(scale):
-    """The items in a mock hotbar over the dimmed world at a GUI scale: at the model's gui scale 0.5 (top row, shrunken
-    like the game does it, nearest neighbour) and at 1.0 (bottom row, the old look) for comparison."""
+    """The items in a mock hotbar over the dimmed world at a GUI scale (nearest neighbour; a 32x32 texture fills the
+    16 GUI px slot, its art about 12 of them). Bottom row: the old half-size look (8 GUI px) for comparison."""
     size = (20 * 4 * scale + 40, 2 * 16 * scale + 60)
     out = preview._world(size, scale)
-    shrunk = round(16 * scale * acc.GUI_SCALE)
+    full, half = 16 * scale, 8 * scale
     for i, name in enumerate(acc.IDS):
         x = 20 + i * 20 * scale
-        out.alpha_composite(item(name).resize((shrunk, shrunk), NEAREST), (x + (16 * scale - shrunk) // 2, 20 + (16 * scale - shrunk) // 2))
-        out.alpha_composite(scaled(item(name), scale), (x, 40 + 16 * scale))
+        out.alpha_composite(item(name).resize((full, full), NEAREST), (x, 20))
+        out.alpha_composite(item(name).resize((half, half), NEAREST), (x + (full - half) // 2, 40 + full + (full - half) // 2))
     return out
 
 
