@@ -16,6 +16,9 @@ import items_emerald
 SIZE = 16
 IDS = {"ring_1": "Ring", "ring_2": "Signet Ring", "amulet": "Amulet", "bracelet": "Bracelet"}
 TOOLTIP = "accessory"
+# gui display scale of the item models: 0.5 makes one texel exactly one art px of the 512x512 inventory texture
+# (half a GUI px), so the painted placeholders line up with the item's own pixels (design/item-accessories.md)
+GUI_SCALE = 0.5
 YY, XX = np.mgrid[0:SIZE, 0:SIZE]
 
 
@@ -206,8 +209,12 @@ def definitions():
     for name in IDS:
         pack.write_json(layout.ASSETS / "items" / f"{name}.json",
                         {"model": {"type": "minecraft:model", "model": f"arkenmmo:item/{name}"}})
+        # item/generated has no gui display of its own, so this entry is the whole gui transform; the other contexts
+        # (ground, hands, item frame, head) are inherited from the parent per context
         pack.write_json(layout.ASSETS / "models" / "item" / f"{name}.json",
-                        {"parent": "minecraft:item/generated", "textures": {"layer0": f"arkenmmo:item/{name}"}})
+                        {"parent": "minecraft:item/generated", "textures": {"layer0": f"arkenmmo:item/{name}"},
+                         "display": {"gui": {"rotation": [0, 0, 0], "translation": [0, 0, 0],
+                                             "scale": [GUI_SCALE] * 3}}})
 
 
 def check():

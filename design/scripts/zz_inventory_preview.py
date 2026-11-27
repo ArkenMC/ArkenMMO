@@ -6,6 +6,7 @@ measured layout; the Mojang texture is never read or copied.
 from PIL import Image, ImageDraw
 
 import gui_inventory as inv
+import items_accessories as acc
 from pixelkit import layout, preview
 
 NEAREST = Image.Resampling.NEAREST
@@ -83,6 +84,12 @@ def screen(size, scale):
         if index % 3 == 0 and (x, y) != inv.RESULT and (x, y) not in inv.ARMOUR + [inv.OFFHAND]:
             sprite = preview._sample_item(kinds[index % len(kinds)]).resize((16 * scale, 16 * scale), NEAREST)
             image.alpha_composite(sprite, ((origin[0] + x + 1) * scale, (origin[1] + y + 1) * scale))
+    # the accessory items at the models' gui scale 0.5, centred in the item area (nearest neighbour like the game)
+    shrunk = round(16 * scale * acc.GUI_SCALE)
+    for (cx, cy), name in zip(inv.PANEL_CELLS, acc.IDS):
+        sprite = Image.open(layout.ASSETS / "textures" / "item" / f"{name}.png").convert("RGBA").resize((shrunk, shrunk), NEAREST)
+        offset = (16 * scale - shrunk) // 2
+        image.alpha_composite(sprite, ((origin[0] + cx + 1) * scale + offset, (origin[1] + cy + 1) * scale + offset))
     return image
 
 

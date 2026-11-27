@@ -10,7 +10,7 @@ from PIL import Image
 
 import gui_slot_icons
 import items_accessories
-from pixelkit import chrome, invdecor, layout, rounded
+from pixelkit import chrome, invdecor, layout, lettering, rounded
 from pixelkit.chrome import DARK, corner_bracket, gem, slot_cell
 from pixelkit.draw import Canvas, dilate, frame, poly_mask, shift
 from pixelkit.layout import DENSITY, art
@@ -51,7 +51,8 @@ ACCESSORY_SLOTS = dict(zip(PANEL_CELLS, ("ring", "ring", "amulet", "bracelet")))
 SOCKET_GOLD = [RESULT, HOTBAR[8]]
 MODEL_OUTER = (25, 7, 76, 79)
 # the arched brick niche behind the player model (GUI px) and the top of the dais the model's feet stand on
-ALCOVE = (25, 7, 77, 79)
+# (the floor stops at y76: below the model's feet the strip y77..83 holds the accessories label)
+ALCOVE = (25, 7, 77, 76)
 DAIS_TOP = 71
 # fluted column between the panel and the crafting block, above the offhand slot, and the crest under the
 # crafting block (art px)
@@ -71,6 +72,11 @@ FILL = col("iron", 3)
 CRAFT_FILL = col("iron", 1)
 # survival inventory title: the game draws "Crafting" at (97, 6), 8 px font, cap height 7 (rows y6..y13)
 TITLE_PLATE = (94, 4, 163, 15)
+# "ACCESSORIES" label above the four accessory cells, in art px: a smaller sibling of the title plate (its text is
+# painted, since the game draws no title there). Ends at art y168 with its shadow, where the item areas start
+ACC_PLATE = (52, 154, 150, 166)
+ACC_TEXT = "ACCESSORIES"
+ACC_TEXT_COLOUR = col("iron", 3)  # the game's #404040 title colour is not in the palette; iron 3 is its nearest
 # arrow between the crafting grid and the result, in GUI px: shaft x135..150, head to x151
 ARROW_TIP = (151, 35.5)
 # the gold rule: art row of its top and where it starts (just right of the panel's edge)
@@ -186,14 +192,28 @@ def accessory_ghosts(canvas):
 
 def title_plate(canvas):
     """Parchment plate behind the vanilla title, ending in a gold gem; built like the menu's "Inventory" plate."""
+    plate(canvas, art(TITLE_PLATE), col("iron", 1))
     px0, py0, px1, py1 = art(TITLE_PLATE)
+    gem(canvas, px1 - 8, (py0 + py1) // 2, 4)
+
+
+def plate(canvas, box, shadow_colour):
+    """Parchment plate with a 2 art px shadow to the right and below, in the crafting title plate's build."""
+    px0, py0, px1, py1 = box
     shadow = np.zeros(CANVAS[::-1], bool)
     shadow[py0 + 2:py1 + 2, px0 + 2:px1 + 2] = True
     shadow[py0:py1, px0:px1] = False
-    canvas.mask(shadow, col("iron", 1))
+    canvas.mask(shadow, shadow_colour)
     frame(canvas, (px0, py0, px1, py1), [(DARK, DARK), (col("parchment", 3), col("parchment", 0))])
     canvas.rect((px0 + 2, py0 + 2, px1 - 2, py1 - 2), col("parchment", 2))
-    gem(canvas, px1 - 8, (py0 + py1) // 2, 4)
+
+
+def accessories_label(canvas):
+    """The plate above the accessory slots, with its text painted in and a small gold gem at the right end."""
+    plate(canvas, ACC_PLATE, col("iron", 1))
+    px0, py0, px1, py1 = ACC_PLATE
+    lettering.tiny(canvas, ACC_TEXT, px0 + 6, py0 + 2 + 2, ACC_TEXT_COLOUR)
+    gem(canvas, px1 - 8, (py0 + py1) // 2, 2)
 
 
 def separator(canvas):
@@ -228,6 +248,7 @@ def build():
     invdecor.grid(canvas, grid_cells(), region_masks())
     invdecor.studs(canvas, region_cells(), region_masks())
     accessory_ghosts(canvas)
+    accessories_label(canvas)
     invdecor.alcove(canvas, GUI, ALCOVE, DAIS_TOP)
     for origin in drawn_cells():
         # the crafting result and the ninth hotbar cell get a bright gold first ring on all four sides
@@ -313,10 +334,10 @@ def check(canvas):
         got = px[gy:gy + 32, gx:gx + 32]
         if (got[2:30, 2:30] != expected[2:30, 2:30]).any() or not (sx0, sy0) == (gx + 2, gy + 2):
             errors.append(f"accessory cell {origin} ({name}): item area is not the fill plus its ghost icon")
-        # every placeholder pixel is hidden by each item that belongs in the cell: the 16x16 item texture drawn at the
-        # item origin, 1 texel = 2x2 art px, leaves no placeholder-coloured pixel in the item area
+        # every placeholder pixel is hidden by each item that belongs in the cell: the 16x16 item texture drawn at gui
+        # scale 0.5 centred in the item area, 1 texel = 1 art px, leaves no placeholder-coloured pixel in the item area
         for item in gui_slot_icons.COVERS[name]:
-            shown = np.kron(items_accessories.DRAW[item]()[..., 3] > 0, np.ones((2, 2), bool))
+            shown = gui_slot_icons.on_item_area(items_accessories.DRAW[item]()[..., 3] > 0)
             if ((got[..., 3] > 0) & (got[..., :3] == np.array(gui_slot_icons.TONE[:3])).all(axis=-1) & ~shown).any():
                 errors.append(f"accessory cell {origin}: the placeholder shows beside the {item} item")
         colours = {tuple(int(v) for v in p[:3]) for p in got[2:30, 2:30].reshape(-1, 4)}
@@ -372,14 +393,27 @@ def check(canvas):
             errors.append(f"unexpected grid line between the accessory cells {a} and {b}")
     rule_rows = px[RULE_TOP + 2]
     gold = tuple(col("gold", 2)[:3])
-    gold_columns = [x for x in range(CANVAS[0]) if tuple(int(v) for v in rule_rows[x, :3]) == gold]
+    gold_columns = [x for x in range(156, CANVAS[0]) if tuple(int(v) for v in rule_rows[x, :3]) == gold]
     if not gold_columns or min(gold_columns) != RULE_START or max(gold_columns) < RULE_END - 1:
         errors.append("the gold rule must run from the panel's edge to the right wall, and not cross the panel")
     alcove = rounded.upscale(invdecor._arched(GUI, ALCOVE))
     if (alcove & ~masks["panel"]).any() or (alcove & rect_mask(list(map(cell_rect, ARMOUR)))).any():
         errors.append("the alcove must lie inside the panel and clear of the armour sockets")
-    if not alcove[art(MODEL_OUTER)[1] + 30:art(MODEL_OUTER)[3] - 4, 60:142].all():
-        errors.append("the alcove must fill the model box behind the player")
+    if not alcove[art(MODEL_OUTER)[1] + 30:art(ALCOVE)[3] - 2, 60:142].all():
+        errors.append("the alcove must fill the model box behind the player, down to its floor")
+    # the accessories label: inside the panel fill, below the alcove, clear of every item area, text in one colour
+    lx0, ly0, lx1, ly1 = ACC_PLATE
+    label = rect_mask([(lx0, ly0, lx1 + 2, ly1 + 2)])
+    if not masks["panel"][ly0:ly1 + 2, lx0:lx1 + 2].all() or (label & alcove).any():
+        errors.append("the accessories label must lie inside the panel and clear of the alcove")
+    if ly1 + 2 > min(ghost_origin(origin)[1] for origin in PANEL_CELLS):
+        errors.append("the accessories label (with its shadow) reaches the accessory item areas")
+    if (label & rect_mask([ghost_rect for ghost_rect in (cell_rect(o) for o in ARMOUR + [OFFHAND])])).any():
+        errors.append("the accessories label touches an armour or offhand cell")
+    ink = tuple(ACC_TEXT_COLOUR[:3])
+    text_rows = {y for y in range(ly0, ly1) for x in range(lx0 + 2, lx1 - 2) if at(x, y) == ink}
+    if len(text_rows) != lettering.TINY_HEIGHT:
+        errors.append(f"the accessories text must be {lettering.TINY_HEIGHT} rows tall, found {len(text_rows)}")
     if errors:
         raise ValueError("inventory.png: " + "; ".join(errors))
     colours = {tuple(p) for p in px[px[..., 3] > 0].reshape(-1, 4)}
