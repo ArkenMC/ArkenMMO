@@ -10,26 +10,26 @@ items:
       material: PAPER
       generate: false
       model_path: arkenmmo:item/ring_1
-    # vanilla tooltip_style id: textures/gui/sprites/tooltip/accessory_{background,frame}.png (shared by all four)
-    tooltip_style: arkenmmo:accessory
+    # ItemsAdder tooltip id: tools/itemsadder.py copies textures/gui/sprites/tooltip/accessory_{background,frame}.png to textures/tooltip/ (shared by all four)
+    tooltip_style: arkenmmo:tooltip/accessory
   ring_2:
     display_name: Signet Ring
     resource:
       material: PAPER
       generate: false
       model_path: arkenmmo:item/ring_2
-    tooltip_style: arkenmmo:accessory
+    tooltip_style: arkenmmo:tooltip/accessory
   amulet:
     display_name: Amulet
     resource:
       material: PAPER
       generate: false
       model_path: arkenmmo:item/amulet
-    tooltip_style: arkenmmo:accessory
+    tooltip_style: arkenmmo:tooltip/accessory
   bracelet:
     display_name: Bracelet
     resource:
       material: PAPER
       generate: false
       model_path: arkenmmo:item/bracelet
-    tooltip_style: arkenmmo:accessory
+    tooltip_style: arkenmmo:tooltip/accessory
