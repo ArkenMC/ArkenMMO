@@ -33,14 +33,14 @@ HOTBAR = [(7 + SLOT * c, 141) for c in range(9)]
 # Top-left corner of every 18x18 cell, measured from vanilla 26.2 inventory.png (46 cells).
 MEASURED = sorted([(7, 7), (97, 17), (115, 17), (7, 25), (153, 27), (97, 35), (115, 35), (7, 43), (7, 61), (76, 61)]
                   + [(7 + 18 * c, y) for y in (83, 101, 119, 141) for c in range(9)])
-# The character panel: armour, model box, offhand and the first four storage cells are one flat region without
-# cell frames (the game still draws items and ghost icons at cell + 1). The ninth hotbar cell is shell colour.
-PANEL_CELLS = ARMOUR + [OFFHAND] + STORAGE[:4]
-HOTBAR_HIDDEN = [HOTBAR[8]]
-# model box outer rect, and the three rects that make up the panel (GUI px)
+# The character panel: armour, model box and the first four storage cells are one flat region without cell
+# frames (the game still draws items and ghost icons at cell + 1). The offhand cell and the ninth hotbar cell
+# have no art at all: plain shell colour (an item in the offhand slot still renders there).
+PANEL_CELLS = ARMOUR + STORAGE[:4]
+SHELL_CELLS = [OFFHAND] + [HOTBAR[8]]
+# model box outer rect, and the two rects that make up the panel (GUI px)
 MODEL_OUTER = (25, 7, 76, 79)
 PANEL_TOP = (7, 7, 76, 79)
-PANEL_TAB = (76, 61, 94, 79)
 PANEL_BASE = (7, 79, 79, 101)
 PANEL_PAD = 2  # art px of panel colour beyond the cell rects, where there is room
 PANEL_CORNER = 6  # art px radius of the panel's outer corners
@@ -49,8 +49,8 @@ PANEL_FILL = col("iron", 1)
 TITLE_PLATE = (94, 4, 163, 15)
 # arrow between the crafting grid and the result, in GUI px: shaft x135..150, head to x151
 ARROW_TIP = (151, 35.5)
-# the gold rule starts here (art px): right of the panel's tab, in line with the crafting grid
-RULE_START = 97 * DENSITY
+# the gold rule starts here (art px): just right of the panel's edge
+RULE_START = 81 * DENSITY
 
 
 def cells():
@@ -58,7 +58,7 @@ def cells():
 
 
 def drawn_cells():
-    hidden = set(PANEL_CELLS + HOTBAR_HIDDEN)
+    hidden = set(PANEL_CELLS + SHELL_CELLS)
     return [origin for origin in cells() if origin not in hidden]
 
 
@@ -89,16 +89,16 @@ def shell(canvas):
 
 
 def panel_mask():
-    """The character panel: cell rects plus a little air where there is room, outer corners rounded.
+    """The character panel: the model/armour block over the four storage cells, plus a little air where there is room, outer corners rounded.
     The drawn cells next to it are added as support while rounding, so its flat bottom and right
     sides stay square and no hidden cell loses a corner."""
-    top, tab, base = (art(rect) for rect in (PANEL_TOP, PANEL_TAB, PANEL_BASE))
+    top, base = (art(rect) for rect in (PANEL_TOP, PANEL_BASE))
     pad = PANEL_PAD
     mask = rect_mask([(top[0] - pad, top[1] - pad, top[2] + pad, top[3]),
-                      (tab[0], tab[1] - pad, tab[2] + pad, tab[3] + pad),
                       (base[0] - pad, base[1], base[2], base[3])])
     mask = rounded.round_concave(mask, 3)
-    support = rect_mask([cell_rect(origin) for origin in drawn_cells()])
+    # the strip right of the base, above the next cell, is support too, so the base's top corner stays square
+    support = rect_mask([cell_rect(origin) for origin in drawn_cells()] + [(base[2], base[1], base[2] + 8, base[1] + 8)])
     return rounded.round_convex(mask | support, PANEL_CORNER) & ~support
 
 
@@ -196,11 +196,14 @@ def check(canvas):
             errors.append(f"cell {origin} has no recessed floor")
         if at(x0, y0 + 1) == dark or at(x0 + 1, y0) == dark:
             errors.append(f"cell {origin} has dark edge outside its rect")
-    # hidden cells: flat panel colour (shell colour for the hotbar's ninth), no frame pixels
+    # hidden cells: flat panel colour, no frame pixels; the offhand and ninth hotbar cells are plain shell
     fill = tuple(PANEL_FILL[:3])
     flat = [(cell_rect(origin), fill) for origin in PANEL_CELLS]
     flat += [(art(rect), fill) for rect in (MODEL_OUTER, (7, 79, 79, 83))]
-    flat += [(cell_rect(origin), iron["body"]) for origin in HOTBAR_HIDDEN]
+    flat += [(cell_rect(HOTBAR[8]), iron["body"])]
+    # the offhand area may only hold the panel's own edge (its first eight art columns); the rest is shell
+    ox0, oy0, ox1, oy1 = cell_rect(OFFHAND)
+    flat += [((ox0 + 8, oy0, ox1, oy1), iron["body"])]
     for (x0, y0, x1, y1), colour in flat:
         if {tuple(int(v) for v in p[:3]) for p in px[y0:y1, x0:x1].reshape(-1, 4)} != {colour}:
             errors.append(f"hidden area {(x0, y0, x1, y1)} is not one flat colour")
@@ -212,8 +215,8 @@ def check(canvas):
     if errors:
         raise ValueError("inventory.png: " + "; ".join(errors))
     colours = {tuple(p) for p in px[px[..., 3] > 0].reshape(-1, 4)}
-    print(f"inventory.png: {len(drawn_cells())} drawn cells on the vanilla grid, {len(PANEL_CELLS)} panel cells and "
-          f"{len(HOTBAR_HIDDEN)} hotbar cell flat, {len(colours)} colours, 512x512")
+    print(f"inventory.png: {len(drawn_cells())} drawn cells on the vanilla grid, {len(PANEL_CELLS)} panel cells flat, "
+          f"{len(SHELL_CELLS)} shell cells plain, {len(colours)} colours, 512x512")
 
 
 def recipe_sprite():
