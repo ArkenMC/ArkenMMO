@@ -16,9 +16,9 @@ from pixelkit.palette import PALETTE, col
 
 SPRITES = layout.PACK / "assets" / "minecraft" / "textures" / "gui" / "sprites" / "container" / "slot"
 SIZE = (32, 32)
-FILL = col("iron", 4)
-SHADE = col("iron", 3)
-PANEL = col("iron", 2)
+FILL = col("iron", 5)
+SHADE = col("iron", 4)
+PANEL = col("iron", 3)
 
 # silhouettes on the 32x32 grid; extra masks are painted over the body in the shade or outline colour
 HELMET = [(7, 26), (7, 14), (9, 9), (13, 6), (19, 6), (23, 9), (25, 14), (25, 26), (20, 26), (20, 19), (12, 19), (12, 26)]

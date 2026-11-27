@@ -50,7 +50,7 @@ BLOCK_RAW = [(158, 166, 340, 204), (12, 202, 340, 274)]
 BAR_RAW = (12, 282, 302, 320)
 SEAM = 4
 CORNER = 6  # art px radius of the regions' outer corners
-FILL = col("iron", 2)
+FILL = col("iron", 3)
 # survival inventory title: the game draws "Crafting" at (97, 6), 8 px font, cap height 7 (rows y6..y13)
 TITLE_PLATE = (94, 4, 163, 15)
 # arrow between the crafting grid and the result, in GUI px: shaft x135..150, head to x151
