@@ -8,8 +8,8 @@ Fails when a cell is off the vanilla slot grid, so a layout slip breaks the buil
 import numpy as np
 from PIL import Image
 
-from pixelkit import chrome, layout, rounded
-from pixelkit.chrome import DARK, gem, slot_cell
+from pixelkit import chrome, invdecor, layout, rounded
+from pixelkit.chrome import DARK, corner_bracket, gem, slot_cell
 from pixelkit.draw import Canvas, dilate, frame, poly_mask, shift
 from pixelkit.layout import DENSITY, art
 from pixelkit.palette import PALETTE, col
@@ -37,11 +37,21 @@ MEASURED = sorted([(7, 7), (97, 17), (115, 17), (7, 25), (153, 27), (97, 35), (1
 # and the crafting block (behind the 2x2, arrow and result, whose framed cells stay). The game still draws items
 # and ghost icons at cell + 1. The offhand cell and the ninth hotbar cell have no art at all: plain shell colour
 # (an item in the offhand slot still renders there).
-PANEL_CELLS = ARMOUR + STORAGE[:4]
+PANEL_CELLS = STORAGE[:4]
 BLOCK_CELLS = STORAGE[4:9] + STORAGE[9:]
 BAR_CELLS = HOTBAR[:8]
-SHELL_CELLS = [OFFHAND, HOTBAR[8]]
+SHELL_CELLS = [OFFHAND]
+# framed sockets: the armour column, the crafting grid and result, and the ninth hotbar cell (gold ring, set apart
+# from the bar like the result)
+SOCKET_GOLD = [RESULT, HOTBAR[8]]
 MODEL_OUTER = (25, 7, 76, 79)
+# the arched brick niche behind the player model (GUI px) and the top of the dais the model's feet stand on
+ALCOVE = (25, 7, 77, 79)
+DAIS_TOP = 71
+# fluted column between the panel and the crafting block, above the offhand slot, and the crest under the
+# crafting block (art px)
+PILLAR = (162, 14, 186, 118)
+CREST_CENTRE = (267, 134)
 # Region shapes in GUI px (every step of every outline is a whole GUI px, so a multiple of 2 art px). A region
 # reaches 1 GUI px beyond its cells where there is room. Where cells are contiguous the panel stops 1 GUI px
 # inside its cells (on the item area's edge) and the block starts 1 GUI px inside its own, which leaves
@@ -61,6 +71,8 @@ ARROW_TIP = (151, 35.5)
 # the gold rule: art row of its top and where it starts (just right of the panel's edge)
 RULE_TOP = 79 * DENSITY
 RULE_START = 81 * DENSITY
+RULE_END = CANVAS[0] - 18
+RULE_GEM = (CANVAS[0] - 13, RULE_TOP + 1)
 
 
 def cells():
@@ -70,6 +82,10 @@ def cells():
 def drawn_cells():
     hidden = set(PANEL_CELLS + BLOCK_CELLS + BAR_CELLS + SHELL_CELLS)
     return [origin for origin in cells() if origin not in hidden]
+
+
+def region_cells():
+    return {"panel": PANEL_CELLS, "block": BLOCK_CELLS, "bar": BAR_CELLS}
 
 
 def cell_rect(origin):
@@ -159,9 +175,10 @@ def separator(canvas):
     """The gold rule that closes the crafting area; it starts beyond the panel's edge instead of crossing it."""
     top = RULE_TOP
     width = CANVAS[0]
-    canvas.rect((RULE_START, top, width - 7, top + 2), DARK)
-    canvas.rect((RULE_START, top + 2, width - 7, top + 3), col("gold", 2))
-    canvas.rect((RULE_START, top + 3, width - 7, top + 4), DARK)
+    canvas.rect((RULE_START, top, RULE_END, top + 2), DARK)
+    canvas.rect((RULE_START, top + 2, RULE_END, top + 3), col("gold", 2))
+    canvas.rect((RULE_START, top + 3, RULE_END, top + 4), DARK)
+    gem(canvas, *RULE_GEM, 2)
 
 
 def arrow(canvas):
@@ -183,11 +200,18 @@ def build():
     title_plate(canvas)
     separator(canvas)
     recessed_regions(canvas)
+    invdecor.studs(canvas, region_cells(), region_masks())
+    invdecor.alcove(canvas, GUI, ALCOVE, DAIS_TOP)
     for origin in drawn_cells():
-        # the crafting result gets a gold first ring, lit from the top left like every ring
-        outer = (col("gold", 3), col("gold", 1)) if origin == RESULT else None
+        # the crafting result and the ninth hotbar cell get a gold first ring, lit from the top left like every ring
+        outer = (col("gold", 3), col("gold", 1)) if origin in SOCKET_GOLD else None
         slot_cell(canvas, cell_rect(origin), outer)
     arrow(canvas)
+    invdecor.pillar(canvas, *PILLAR)
+    invdecor.crest(canvas, *CREST_CENTRE)
+    for x, dx in ((4, 1), (CANVAS[0] - 4, -1)):
+        for y, dy in ((4, 1), (CANVAS[1] - 4, -1)):
+            corner_bracket(canvas, x, y, dx, dy, 11)
     full = Canvas(*FILE)
     full.px[:CANVAS[1], :CANVAS[0]] = canvas.px
     return full
@@ -245,14 +269,12 @@ def check(canvas):
     fill = tuple(FILL[:3])
     shrink = lambda r: (r[0] + 4, r[1] + 4, r[2] - 4, r[3] - 4)  # noqa: E731
     flat = [(shrink(cell_rect(origin)), fill) for origin in PANEL_CELLS + BLOCK_CELLS + BAR_CELLS]
-    flat += [(shrink(art(MODEL_OUTER)), fill), (art((8, 79, 77, 83)), fill)]
-    flat += [(shrink(cell_rect(HOTBAR[8])), iron["body"])]
     ox0, oy0, ox1, oy1 = shrink(cell_rect(OFFHAND))
     flat += [((ox0 + 2, oy0, ox1, oy1), iron["body"])]  # the panel's right ring reaches the cell's first columns
     for (x0, y0, x1, y1), colour in flat:
         if {tuple(int(v) for v in p[:3]) for p in px[y0:y1, x0:x1].reshape(-1, 4)} != {colour}:
             errors.append(f"area {(x0, y0, x1, y1)} is not one flat colour")
-    for origin in drawn_cells():
+    for origin in CRAFTING + [RESULT]:
         x0, y0, x1, y1 = cell_rect(origin)
         if not masks["craft"][y0:y1, x0:x1].all():
             errors.append(f"crafting cell {origin} is not inside the crafting block")
@@ -279,8 +301,13 @@ def check(canvas):
     rule_rows = px[RULE_TOP + 2]
     gold = tuple(col("gold", 2)[:3])
     gold_columns = [x for x in range(CANVAS[0]) if tuple(int(v) for v in rule_rows[x, :3]) == gold]
-    if not gold_columns or min(gold_columns) != RULE_START or max(gold_columns) != CANVAS[0] - 8:
+    if not gold_columns or min(gold_columns) != RULE_START or max(gold_columns) < RULE_END - 1:
         errors.append("the gold rule must run from the panel's edge to the right wall, and not cross the panel")
+    alcove = rounded.upscale(invdecor._arched(GUI, ALCOVE))
+    if (alcove & ~masks["panel"]).any() or (alcove & rect_mask(list(map(cell_rect, ARMOUR)))).any():
+        errors.append("the alcove must lie inside the panel and clear of the armour sockets")
+    if not alcove[art(MODEL_OUTER)[1] + 30:art(MODEL_OUTER)[3] - 4, 60:142].all():
+        errors.append("the alcove must fill the model box behind the player")
     if errors:
         raise ValueError("inventory.png: " + "; ".join(errors))
     colours = {tuple(p) for p in px[px[..., 3] > 0].reshape(-1, 4)}
