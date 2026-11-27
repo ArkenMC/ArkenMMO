@@ -14,7 +14,7 @@ GUI_W, GUI_H = inv.GUI
 BACKDROP = (70, 70, 76, 255)
 MAGENTA = (255, 0, 255, 255)
 CYAN = (0, 255, 255, 255)
-# "Crafting" in the vanilla font is drawn at (97, 8) in colour #404040; our own 5x7 stand-in letters
+# "Crafting" in the vanilla font is drawn at (97, 6) in colour #404040; our own 5x7 stand-in letters
 LETTERS = dict(preview.LABEL_FONT)
 LETTERS.update({
     "C": (".###.|#...#|#....|#....|#....|#...#|.###.", 5),
@@ -56,12 +56,11 @@ def vanilla_mock():
         draw.rectangle((x, y, x + 17, y + 17), fill=(139, 139, 139, 255), outline=(55, 55, 55, 255))
     draw.rectangle((25, 7, 75, 78), fill=(0, 0, 0, 255), outline=(55, 55, 55, 255))
     draw.polygon([(135, 34), (144, 34), (144, 29), (151, 35), (144, 41), (144, 36), (135, 36)], fill=(139, 139, 139, 255))
-    draw.rectangle(inv.RECIPE_BUTTON[:2] + (inv.RECIPE_BUTTON[2] - 1, inv.RECIPE_BUTTON[3] - 1), outline=(120, 160, 60, 255))
     return image
 
 
 def screen(size, scale):
-    """Our texture over a dimmed world with items, label, a figure and the recipe button stand-in."""
+    """Our texture over a dimmed world with items, label and a figure; the recipe button is hidden."""
     image = preview._world(size, scale)
     origin = ((size[0] // scale - GUI_W) // 2, (size[1] // scale - GUI_H) // 2)
     panel = texture().resize((GUI_W * scale, GUI_H * scale), NEAREST)
@@ -69,17 +68,13 @@ def screen(size, scale):
     gui = Image.new("RGBA", (GUI_W * scale, GUI_H * scale))
     draw = ImageDraw.Draw(gui)
     stand_in_figure(draw, scale)
-    # recipe book button
-    x0, y0, x1, y1 = inv.RECIPE_BUTTON
-    draw.rectangle((x0 * scale, y0 * scale, x1 * scale - 1, y1 * scale - 1), fill=(150, 150, 150, 255), outline=(40, 40, 40, 255))
-    draw.rectangle(((x0 + 5) * scale, (y0 + 4) * scale, (x1 - 5) * scale - 1, (y1 - 4) * scale - 1), fill=(120, 80, 50, 255))
     x = 97
     for char in "Crafting":
         rows, width = LETTERS[char]
         for dy, row in enumerate(rows.split("|")):
             for dx, pixel in enumerate(row):
                 if pixel == "#":
-                    draw.rectangle(((x + dx) * scale, (8 + dy) * scale, (x + dx + 1) * scale - 1, (8 + dy + 1) * scale - 1),
+                    draw.rectangle(((x + dx) * scale, (6 + dy) * scale, (x + dx + 1) * scale - 1, (6 + dy + 1) * scale - 1),
                                    fill=(64, 64, 64, 255))
         x += width + 1
     image.alpha_composite(gui, (origin[0] * scale, origin[1] * scale))
@@ -101,8 +96,6 @@ def overlay():
     draw.rectangle((mx0 * 4, my0 * 4, mx1 * 4 - 1, my1 * 4 - 1), outline=CYAN)
     px0, py0, px1, py1 = inv.TITLE_PLATE
     draw.rectangle((px0 * 4, py0 * 4, px1 * 4 - 1, py1 * 4 - 1), outline=CYAN)
-    rx0, ry0, rx1, ry1 = inv.RECIPE_BUTTON
-    draw.rectangle((rx0 * 4, ry0 * 4, rx1 * 4 - 1, ry1 * 4 - 1), outline=(120, 255, 60, 255))
     mock = scaled(vanilla_mock(), 4)
     sheet = Image.new("RGBA", (art.width + mock.width + 36, art.height + 24), BACKDROP)
     sheet.alpha_composite(art, (12, 12))
